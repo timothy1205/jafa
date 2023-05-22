@@ -1,9 +1,15 @@
 from flask import Blueprint
-from ..constants import API_NAME, API_PATH, API_GREETING
+from backend.blueprints import user
+
+API_NAME = "api"
+API_PATH = f"/{API_NAME}"
 
 blueprint = Blueprint(API_NAME, __name__, url_prefix=API_PATH)
+
 # Register sub blueprints
+blueprint.register_blueprint(user.blueprint)
+
 
 @blueprint.route("/")
 def index():
-    return API_GREETING
+    return "Jafa is running!"
