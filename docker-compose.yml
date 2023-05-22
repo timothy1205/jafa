@@ -4,8 +4,18 @@ services:
   jafa:
     container_name: jafa
     image: jafa
+    depends_on:
+      - mongo
     build:
       context: .
       dockerfile: ./Dockerfile
     ports:
       - 8080:8080
+  mongo:
+    image: mongo:6
+    restart: unless-stopped
+    volumes:
+      - mongo_data:/data/db
+
+volumes:
+  mongo_data:
