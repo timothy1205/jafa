@@ -12,3 +12,6 @@ services:
         "backend.app:create_app()",
         "--reload",
       ]
+  mongo:
+    ports:
+      - 27017:27017

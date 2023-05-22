@@ -1,3 +1,4 @@
 # Backend
 *.pyc
 .venv
+.vscode
