@@ -31,7 +31,7 @@ class MongoDatabase(AbstractDatabase):
 
     def get(self, location: str, query: dict) -> Optional[dict]:
         colleciton = self.__db[location]
-        result = colleciton.find_one(query)
+        result = colleciton.find_one(query, {"_id": False})
         return result
 
     def update(self, location: str, query: dict, data: dict) -> bool:
