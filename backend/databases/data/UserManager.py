@@ -55,16 +55,17 @@ class UserManager(DataManager):
 
         return True
 
-    def check_password(self, username: str, password: str) -> bool:
+    def check_password(self, username: str, password: str) -> tuple[bool, dict]:
         """Check if a given password corresponds to the saved hash
 
-        :returns: True if password is valid. False if the user does not exist or the password is invalid
+        :returns: Tuple[bool: password_is_valid, dict: user]
         """
-        hashed_password = self.__get_password_hash(username)
-        if hashed_password is None:
-            return False
+        user = self.__get_user(username)
+        if user is None:
+            return False, None
 
-        return checkpw(password.encode("utf-8"), hashed_password)
+        hashed_password = user["password"]
+        return checkpw(password.encode("utf-8"), hashed_password), user
 
     def create_user(self, username: str, password: str) -> bool:
         """Create a user inside the database if the username doesn't already exist
