@@ -4,10 +4,17 @@ from backend.databases.DatabaseManager import DatabaseManager
 from backend.databases.data.DataManager import DataManager
 
 USERS_LOCATION = "users"
-PASSWORD_LENGTH = 8
+PASSWORD_MIN = 8
+PASSWORD_MAX = 256
+USERNAME_MIN = 3
+USERNAME_MAX = 40
 
 
 class UsernameExistsError(Exception):
+    pass
+
+
+class InvalidUsernameError(Exception):
     pass
 
 
@@ -30,8 +37,14 @@ class UserManager(DataManager):
 
         return user["password"]
 
+    def __valid_username(self, username: str):
+        if not (USERNAME_MIN <= len(username) <= USERNAME_MAX):
+            return False
+
+        return True
+
     def __valid_password(self, password: str):
-        if len(password) < PASSWORD_LENGTH:
+        if not (PASSWORD_MIN <= len(password) <= PASSWORD_MAX):
             return False
         if re.search('[0-9]', password) is None:
             return False
@@ -58,14 +71,19 @@ class UserManager(DataManager):
 
         :returns: True if successfull, false otherwise.
         :raises UsernameExistsError: Username already in database
-        :raises Invali: Username already in database
+        :raises InvalidUsernameError: 
+        :raises InvalidPasswordError: 
         """
+        if not self.__valid_username(username):
+            raise InvalidUsernameError(
+                f"Username must be [{USERNAME_MIN}-{USERNAME_MAX}] characters")
+
         if self.__get_user(username) is not None:
             raise UsernameExistsError("Username taken")
 
         if not self.__valid_password(password):
             raise InvalidPasswordError(
-                f"Password must contain a lower/uppercase letter, number, and be at least {PASSWORD_LENGTH} characters")
+                f"Password must contain a lower/uppercase letter, number, and be [{PASSWORD_MIN}-{PASSWORD_MAX}] characters")
 
         hashed_password = hashpw(
             password.encode("utf-8"), gensalt())
