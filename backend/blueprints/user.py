@@ -1,6 +1,6 @@
 from flask import Blueprint, request, make_response, jsonify
 from backend.utils import make_error, make_success
-from backend.databases.data.UserManager import UserManager, UsernameExistsError, InvalidPasswordError
+from backend.databases.data.UserManager import UserManager, UsernameExistsError, InvalidUsernameError, InvalidPasswordError
 
 USER_NAME = "user"
 USER_PATH = f"/{USER_NAME}"
@@ -33,7 +33,7 @@ def register():
 
     try:
         created = user_manager.create_user(username, password)
-    except (UsernameExistsError, InvalidPasswordError) as e:
+    except (UsernameExistsError, InvalidUsernameError, InvalidPasswordError) as e:
         return make_error(str(e), CODE_UNAUTHORIZED)
     if not created:
         return make_error("Could not create!", CODE_UNAUTHORIZED)
