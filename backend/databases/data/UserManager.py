@@ -1,5 +1,7 @@
 import re
 from bcrypt import checkpw, hashpw, gensalt
+from hashlib import sha256
+from base64 import b64encode
 from backend.databases.DatabaseManager import DatabaseManager
 from backend.databases.data.DataManager import DataManager
 
@@ -37,6 +39,10 @@ class UserManager(DataManager):
 
         return user["password"]
 
+    def __pre_hash_password(self, password):
+        encoded = password.encode("utf-8")
+        return b64encode(sha256(encoded).digest())
+
     def __valid_username(self, username: str):
         if not (USERNAME_MIN <= len(username) <= USERNAME_MAX):
             return False
@@ -65,7 +71,7 @@ class UserManager(DataManager):
             return False, None
 
         hashed_password = user["password"]
-        return checkpw(password.encode("utf-8"), hashed_password), user
+        return checkpw(self.__pre_hash_password(password), hashed_password), user
 
     def create_user(self, username: str, password: str) -> bool:
         """Create a user inside the database if the username doesn't already exist
@@ -87,6 +93,7 @@ class UserManager(DataManager):
                 f"Password must contain a lower/uppercase letter, number, and be [{PASSWORD_MIN}-{PASSWORD_MAX}] characters")
 
         hashed_password = hashpw(
-            password.encode("utf-8"), gensalt())
+            self.__pre_hash_password(password),
+            gensalt())
         return self.__database.create(
             USERS_LOCATION, {"username": username, "password": hashed_password})
