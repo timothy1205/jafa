@@ -1,8 +1,10 @@
+from typing import Optional
 import re
 from bcrypt import checkpw, hashpw, gensalt
 from hashlib import sha256
 from base64 import b64encode
 from backend.databases.DatabaseManager import DatabaseManager
+from backend.databases.AbstractDatabase import AbstractDatabase
 from backend.databases.data.DataManager import DataManager
 
 USERS_LOCATION = "users"
@@ -25,11 +27,11 @@ class InvalidPasswordError(Exception):
 
 
 class UserManager(DataManager):
-    def __init__(self):
-        self.__database = DatabaseManager.get_instance()
+    def __init__(self, database: AbstractDatabase = None):
+        super().__init__(database)
 
     def __get_user(self, username):
-        user = self.__database.get(USERS_LOCATION, {"username": username})
+        user = self.database.get(USERS_LOCATION, {"username": username})
         return user
 
     def __get_password_hash(self, username):
@@ -95,5 +97,5 @@ class UserManager(DataManager):
         hashed_password = hashpw(
             self.__pre_hash_password(password),
             gensalt())
-        return self.__database.create(
+        return self.database.create(
             USERS_LOCATION, {"username": username, "password": hashed_password})
