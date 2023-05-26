@@ -73,7 +73,10 @@ class UserManager(DataManager):
             return False, None
 
         hashed_password = user["password"]
-        return checkpw(self.__pre_hash_password(password), hashed_password), user
+        if not checkpw(self.__pre_hash_password(password), hashed_password):
+            return False, None
+
+        return True, user
 
     def create_user(self, username: str, password: str) -> bool:
         """Create a user inside the database if the username doesn't already exist
