@@ -1,9 +1,11 @@
 from flask import Blueprint, request, make_response, jsonify, session
+from functools import wraps
 from backend.utils import make_error, make_success
 from backend.databases.data.UserManager import UserManager, UsernameExistsError, InvalidUsernameError, InvalidPasswordError
 
 USER_NAME = "user"
 USER_PATH = f"/{USER_NAME}"
+CODE_BAD_REQUEST = 400
 CODE_UNAUTHORIZED = 401
 CODE_CONFLICT = 409
 
@@ -11,7 +13,19 @@ blueprint = Blueprint(USER_NAME, __name__,
                       url_prefix=USER_PATH)
 
 
+def require_credentials(f):
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+        if "username" not in request.form \
+                or "password" not in request.form:
+            return make_error("Missing username and/or password", CODE_BAD_REQUEST)
+
+        return f(*args, **kwargs)
+    return wrapper
+
+
 @blueprint.route("/login", methods=["POST"])
+@require_credentials
 def login():
     if USER_NAME in session:
         return make_error("Already logged in", CODE_CONFLICT)
@@ -30,6 +44,7 @@ def login():
 
 
 @blueprint.route("/register", methods=["POST"])
+@require_credentials
 def register():
     username = request.form.get("username")
     password = request.form.get("password")
