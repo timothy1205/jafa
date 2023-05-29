@@ -40,7 +40,7 @@ def login():
         return make_error("Invalid credentials", CODE_UNAUTHORIZED)
 
     session[USER_NAME] = user
-    return "OK"
+    return make_success("Logged in")
 
 
 @blueprint.route("/register", methods=["POST"])
@@ -58,4 +58,4 @@ def register():
     if not created:
         return make_error("Could not create!", CODE_UNAUTHORIZED)
 
-    return "OK"
+    return make_success("User created")

@@ -11,3 +11,5 @@ def make_error(msg: str, code: int):
 def make_success(msg: str, code=200):
     response = make_response(jsonify({"msg": msg}), code)
     response.headers["Content-Type"] = "application/json"
+
+    return response
