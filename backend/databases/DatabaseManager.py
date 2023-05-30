@@ -25,9 +25,9 @@ class DatabaseManager:
             raise NotImplementedError("Invalid database type given")
 
     @staticmethod
-    def get_instance() -> AbstractDatabase:
+    def get_instance(force_create=False) -> AbstractDatabase:
         """Singleton method for retrieving whichever database was configured"""
-        if DatabaseManager.__database is None:
+        if DatabaseManager.__database is None or force_create:
             DatabaseManager.__database = DatabaseManager.__create_instance()
 
         return DatabaseManager.__database
