@@ -15,7 +15,8 @@ def create_app():
     app.register_blueprint(api.blueprint)
 
     # Connect to database
-    database = DatabaseManager.get_instance()
+    database = DatabaseManager.get_instance(
+        force_create=True)  # Always force create here for testing
     database.connect(config.database_host, config.database_port,
                      config.database_username, config.database_password)
     database.setup()
