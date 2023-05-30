@@ -1,5 +1,10 @@
 from backend.databases.AbstractDatabase import AbstractDatabase
 from backend.databases.MongoDatabase import MongoDatabase
+from backend.JafaConfig import JafaConfig
+
+
+class MissingDatabaseClass(Exception):
+    pass
 
 
 class DatabaseManager:
@@ -7,8 +12,17 @@ class DatabaseManager:
 
     @staticmethod
     def __create_instance():
-        # TODO: Choose based on config
-        return MongoDatabase()
+        config = JafaConfig()
+        if config.database_type == "mongo":
+            return MongoDatabase()
+        elif config.database_type == "custom":
+            if config.database_class == None:
+                raise MissingDatabaseClass(
+                    "Must set the field database_class to a valid class")
+
+            return config.database_class()
+        else:
+            raise NotImplementedError("Invalid database type given")
 
     @staticmethod
     def get_instance() -> AbstractDatabase:

@@ -2,6 +2,8 @@ version: "3.4"
 
 services:
   jafa:
+    env_file:
+      - .env
     volumes:
       - "./backend:/opt/jafa/backend:ro"
     command:
