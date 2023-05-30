@@ -10,11 +10,11 @@ The following proposed features are split between the backend and frontend. All 
 
 ### Backend
 
-- [ ] Locally stored user authentication
+- [x] Locally stored user authentication
 
-  - [ ] Hashed passwords
-  - [ ] Sensible password requirements
-  - [ ] Username-based login (email not necessary but can be used)
+  - [x] Hashed passwords
+  - [x] Sensible password requirements
+  - [x] Username-based login (email cannot be used, no special characters allowed besides .)
 
 - [ ] Ability to create subforums
 
