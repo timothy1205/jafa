@@ -2,6 +2,7 @@ import unittest
 from bcrypt import hashpw, gensalt
 from hashlib import sha256
 from base64 import b64encode
+import string
 import backend.databases.data.UserManager as um
 from backend.tests.databases.TestDatabase import TestDatabase
 
@@ -46,9 +47,27 @@ class UserManagerTestCase(unittest.TestCase):
             "r" * (um.USERNAME_MAX), "Password1"), "BOUNDARY: Username = USERNAME_MAX")
         self.db.delete(um.USERS_LOCATION, {})
 
-        with self.assertRaises(um.InvalidUsernameError, msg="Username = USERNAME_MAX + 1"):
+        with self.assertRaises(um.InvalidUsernameError, msg="BOUNDARY: Username = USERNAME_MAX + 1"):
             self.user_manager.create_user(
                 "r" * (um.USERNAME_MAX + 1), "Password1")
+
+        # Username consists only of alphanum characters
+        with self.assertRaises(um.InvalidUsernameError, msg="BOUNDARY: Symbol at start"):
+            self.user_manager.create_user(
+                '@' + "r" * (um.USERNAME_MIN - 1), "Password1")
+
+        with self.assertRaises(um.InvalidUsernameError, msg="BOUNDARY: Symbol at end"):
+            self.user_manager.create_user(
+                '@' + "r" * (um.USERNAME_MIN - 1), "Password1")
+
+        for char in string.punctuation:
+            with self.assertRaises(um.InvalidUsernameError, msg=f"Special character: '{char}'"):
+                username = "r" * (um.USERNAME_MIN * 2)
+                # Insert special character in middle
+                middle = len(username) // 2
+                username = username[:middle] + char + username[middle:]
+                self.user_manager.create_user(
+                    username, "Password1")
 
         # Duplicate username
         self.assertTrue(self.user_manager.create_user(

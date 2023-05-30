@@ -48,6 +48,8 @@ class UserManager(DataManager):
     def __valid_username(self, username: str):
         if not (USERNAME_MIN <= len(username) <= USERNAME_MAX):
             return False
+        if not username.isalnum():
+            return False
 
         return True
 
@@ -88,7 +90,7 @@ class UserManager(DataManager):
         """
         if not self.__valid_username(username):
             raise InvalidUsernameError(
-                f"Username must be [{USERNAME_MIN}-{USERNAME_MAX}] characters")
+                f"Username must be [{USERNAME_MIN}-{USERNAME_MAX}] characters and contain no special characters")
 
         if self.__get_user(username) is not None:
             raise UsernameExistsError("Username taken")
