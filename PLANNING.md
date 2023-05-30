@@ -14,7 +14,7 @@ The following proposed features are split between the backend and frontend. All 
 
   - [x] Hashed passwords
   - [x] Sensible password requirements
-  - [x] Username-based login (email cannot be used, no special characters allowed besides .)
+  - [x] Username-based login (email cannot be used, no special characters allowed)
 
 - [ ] Ability to create subforums
 
