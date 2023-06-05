@@ -34,13 +34,6 @@ class UserManager(DataManager):
         user = self.database.get(USERS_LOCATION, {"username": username})
         return user
 
-    def __get_password_hash(self, username):
-        user = self.__get_user(username)
-        if user is None:
-            return None
-
-        return user["password"]
-
     def __pre_hash_password(self, password):
         encoded = password.encode("utf-8")
         return b64encode(sha256(encoded).digest())
