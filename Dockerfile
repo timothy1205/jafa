@@ -23,4 +23,4 @@ RUN python -m pip install -r requirements.txt --no-cache-dir
 COPY . ./
 
 # During debugging, this entry point will be overridden. For more information, please refer to https://aka.ms/vscode-docker-python-debug
-CMD ["gunicorn", "--bind", "0.0.0.0:8080", "backend.app:create_app()"]
+CMD ["gunicorn", "--bind", "0.0.0.0:8080", "--worker-class", "gevent", "backend.app:create_app()"]
