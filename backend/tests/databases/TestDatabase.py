@@ -30,6 +30,7 @@ class TestDatabase(AbstractDatabase):
 
     def delete(self, location: str, query: dict):
         del self.__db[location]
+        return True
 
     def get_db(self):
         return self.__db
