@@ -18,11 +18,11 @@ The following proposed features are split between the backend and frontend. All 
 
 - [ ] Ability to create subforums
 
-  - [ ] Users are marked as a _Creator_ in their respective subforum (more info below)
-  - [ ] Must have a title
-  - [ ] Must have a description
-  - [ ] Can be edited later on (except for title - a new subforum should be made in this case)
-  - [ ] Can be deleted
+  - [x] Users are marked as a _Creator_ in their respective subforum (more info below)
+  - [x] Must have a title
+  - [x] Must have a description
+  - [x] Can be edited later on (except for title - a new subforum should be made in this case)
+  - [x] Can be deleted
   - [ ] Server must generate a unique url for it
 
 - [ ] Ability to post to subforums
