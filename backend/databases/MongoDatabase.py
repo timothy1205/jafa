@@ -36,7 +36,7 @@ class MongoDatabase(AbstractDatabase):
 
     def update(self, location: str, query: dict, data: dict) -> bool:
         collection = self.__db[location]
-        result = collection.update_one(query, data)
+        result = collection.update_one(query, {"$set": data})
         return result.modified_count != 0
 
     def delete(self, location: str, query: dict) -> bool:
