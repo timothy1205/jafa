@@ -4,7 +4,21 @@ from backend.app import create_app
 from backend.JafaConfig import JafaConfig
 
 
-class userEndpointTestCase(unittest.TestCase):
+REGISTER_ENDPOINT = "/api/user/register"
+LOGIN_ENDPOINT = "/api/user/login"
+
+
+def register(client, username, password):
+    return client.post(
+        REGISTER_ENDPOINT, data={"username": username, "password": password})
+
+
+def login(client, username, password):
+    return client.post(
+        LOGIN_ENDPOINT, data={"username": username, "password": password})
+
+
+class UserEndpointTestCase(unittest.TestCase):
     def setUp(self):
         self.config = JafaConfig()
         self.config.database_type = "custom"
@@ -19,23 +33,20 @@ class userEndpointTestCase(unittest.TestCase):
 
         This thought process should apply to all endpoint testings within this project
         """
-        res = self.client.post("/api/user/register")
+        res = self.client.post(REGISTER_ENDPOINT)
         self.assertIn(
             b'{"error":"Missing username and/or password"}', res.data, "Erroneous response")
 
-        res = self.client.post(
-            "/api/user/register", data={"username": "red", "password": "Password1"})
+        res = register(self.client, "red", "Password1")
         self.assertIn(
             b'{"msg":"User created"}', res.data, "Successful response")
 
     def test_login(self):
-        self.client.post(
-            "/api/user/register", data={"username": "red", "password": "Password1"})
-        res = self.client.post("/api/user/login")
+        register(self.client, "red", "Password1")
+        res = self.client.post(LOGIN_ENDPOINT)
         self.assertIn(
             b'{"error":"Missing username and/or password"}', res.data, "Erroneous response")
 
-        res = self.client.post(
-            "/api/user/login", data={"username": "red", "password": "Password1"})
+        res = login(self.client, "red", "Password1")
         self.assertIn(
             b'{"msg":"Logged in"}', res.data, "Successful response")
