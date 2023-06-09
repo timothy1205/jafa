@@ -24,6 +24,16 @@ def require_credentials(f):
     return wrapper
 
 
+def require_logged_in(f):
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+        if USER_NAME not in session:
+            return make_error("You must be logged in", CODE_UNAUTHORIZED)
+
+        return f(*args, **kwargs)
+    return wrapper
+
+
 @blueprint.route("/login", methods=["POST"])
 @require_credentials
 def login():
