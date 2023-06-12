@@ -1,7 +1,7 @@
 from flask import Blueprint, request, session
 from functools import wraps
 from backend.utils import make_error, make_success, require_form_keys
-from backend.databases.data.SubForumManager import \
+from backend.data.managers.SubForumManager import \
     SubForumManager, InvalidDescriptionError, InvalidTitleError, TitleExistsError, NoTitleFoundError, RolePermissionError, UnchangedDescriptionError
 from backend.blueprints.user import require_logged_in, USER_NAME
 

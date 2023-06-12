@@ -1,5 +1,5 @@
 import unittest
-from backend.tests.databases.TestDatabase import TestDatabase
+from backend.tests.data.databases.TestDatabase import TestDatabase
 from backend.app import create_app
 from backend.JafaConfig import JafaConfig
 from backend.tests.blueprints.user_test import login, register

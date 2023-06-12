@@ -1,7 +1,7 @@
 import unittest
 import string
-import backend.databases.data.SubForumManager as sfm
-from backend.tests.databases.TestDatabase import TestDatabase
+import backend.data.managers.SubForumManager as sfm
+from backend.tests.data.databases.TestDatabase import TestDatabase
 
 
 class SubForumManagerTestCase(unittest.TestCase):

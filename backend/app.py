@@ -1,6 +1,6 @@
 from flask import Flask
 from secrets import token_hex
-from backend.databases.DatabaseManager import DatabaseManager
+from backend.data.databases.DatabaseManager import DatabaseManager
 from backend.JafaConfig import JafaConfig
 
 

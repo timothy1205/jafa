@@ -3,9 +3,9 @@ import re
 from bcrypt import checkpw, hashpw, gensalt
 from hashlib import sha256
 from base64 import b64encode
-from backend.databases.DatabaseManager import DatabaseManager
-from backend.databases.AbstractDatabase import AbstractDatabase
-from backend.databases.data.DataManager import DataManager
+from backend.data.databases.DatabaseManager import DatabaseManager
+from backend.data.databases.AbstractDatabase import AbstractDatabase
+from backend.data.managers.DataManager import DataManager
 
 USERS_LOCATION = "users"
 PASSWORD_MIN = 8

@@ -3,8 +3,8 @@ from bcrypt import hashpw, gensalt
 from hashlib import sha256
 from base64 import b64encode
 import string
-import backend.databases.data.UserManager as um
-from backend.tests.databases.TestDatabase import TestDatabase
+import backend.data.managers.UserManager as um
+from backend.tests.data.databases.TestDatabase import TestDatabase
 
 
 class UserManagerTestCase(unittest.TestCase):

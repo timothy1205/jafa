@@ -1,6 +1,6 @@
 from typing import Optional
 from pymongo import MongoClient
-from backend.databases.AbstractDatabase import AbstractDatabase
+from backend.data.databases.AbstractDatabase import AbstractDatabase
 
 
 class MongoDatabase(AbstractDatabase):
