@@ -1,5 +1,5 @@
-from backend.databases.AbstractDatabase import AbstractDatabase
-from backend.databases.MongoDatabase import MongoDatabase
+from backend.data.databases.AbstractDatabase import AbstractDatabase
+from backend.data.databases.MongoDatabase import MongoDatabase
 from backend.JafaConfig import JafaConfig
 
 

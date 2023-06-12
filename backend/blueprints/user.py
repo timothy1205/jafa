@@ -1,7 +1,7 @@
 from flask import Blueprint, request, make_response, jsonify, session
 from functools import wraps
 from backend.utils import make_error, make_success, CODE_BAD_REQUEST
-from backend.databases.data.UserManager import UserManager, UsernameExistsError, InvalidUsernameError, InvalidPasswordError
+from backend.data.managers.UserManager import UserManager, UsernameExistsError, InvalidUsernameError, InvalidPasswordError
 
 USER_NAME = "user"
 USER_PATH = f"/{USER_NAME}"

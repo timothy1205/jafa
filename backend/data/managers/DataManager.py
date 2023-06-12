@@ -1,6 +1,6 @@
 from typing import Optional
-from backend.databases.DatabaseManager import DatabaseManager
-from backend.databases.AbstractDatabase import AbstractDatabase
+from backend.data.databases.DatabaseManager import DatabaseManager
+from backend.data.databases.AbstractDatabase import AbstractDatabase
 
 
 class DataManager:
