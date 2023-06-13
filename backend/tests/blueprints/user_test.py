@@ -1,7 +1,8 @@
+from flask import g
 import unittest
-from backend.tests.data.databases.TestDatabase import TestDatabase
 from backend.app import create_app
 from backend.JafaConfig import JafaConfig
+from backend.tests.data.models.TestModelFactory import TestModelFactory
 
 
 REGISTER_ENDPOINT = "/api/user/register"
@@ -21,10 +22,17 @@ def login(client, username, password):
 class UserEndpointTestCase(unittest.TestCase):
     def setUp(self):
         self.config = JafaConfig()
-        self.config.database_type = "custom"
-        self.config.database_class = TestDatabase
+        self.config.database_type = "testing"
 
         self.app = create_app()
+
+        with self.app.app_context():
+            TestModelFactory.reset()
+
+        @self.app.before_request
+        def before_request():
+            g.injected_model_factory = TestModelFactory
+
         self.client = self.app.test_client()
 
     def test_register(self):

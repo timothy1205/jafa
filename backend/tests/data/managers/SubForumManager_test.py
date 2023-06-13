@@ -1,13 +1,14 @@
 import unittest
 import string
 import backend.data.managers.SubForumManager as sfm
-from backend.tests.data.databases.TestDatabase import TestDatabase
+from backend.tests.data.models.TestModelFactory import TestModelFactory
 
 
 class SubForumManagerTestCase(unittest.TestCase):
     def setUp(self):
-        self.db = TestDatabase()
-        self.subforum_manager = sfm.SubForumManager(self.db)
+        TestModelFactory.reset()
+        self.subforum_model = TestModelFactory.create_subforum_model()
+        self.subforum_manager = sfm.SubForumManager(TestModelFactory)
 
     def test_create_subforum(self):
         test_description = "Test subforum"
@@ -28,15 +29,15 @@ class SubForumManagerTestCase(unittest.TestCase):
 
         self.assertTrue(self.subforum_manager.create_subforum(
             "test", "Test__Subforum", test_description), "VALID: Double underscore")
-        self.db.delete(sfm.SUBFORUM_LOCATION, {})
+        self.subforum_model.delete_subforum("Test__Subforum")
 
         self.assertTrue(self.subforum_manager.create_subforum(
             "test", "Test_Subforum", test_description), "VALID: Single underscore")
-        self.db.delete(sfm.SUBFORUM_LOCATION, {})
+        self.subforum_model.delete_subforum("Test_Subforum")
 
         self.assertTrue(self.subforum_manager.create_subforum(
             "test", "Test_Sub_forum", test_description), "VALID: Multiple nonconsecutive underscores")
-        self.db.delete(sfm.SUBFORUM_LOCATION, {})
+        self.subforum_model.delete_subforum("Test_Sub_forum")
 
         # Special characters
         with self.assertRaises(sfm.InvalidTitleError, msg="BOUNDARY: Symbol at start"):
@@ -63,19 +64,19 @@ class SubForumManagerTestCase(unittest.TestCase):
 
         self.assertTrue(self.subforum_manager.create_subforum(
             "test", "T" * (sfm.TITLE_MIN), test_description), "BOUNDARY: Title = TITLE_MIN")
-        self.db.delete(sfm.SUBFORUM_LOCATION, {})
+        self.subforum_model.delete_subforum("T" * (sfm.TITLE_MIN))
 
         self.assertTrue(self.subforum_manager.create_subforum(
             "test", "T" * (sfm.TITLE_MIN + 1), test_description), "BOUNDARY: Title = TITLE_MIN + 1")
-        self.db.delete(sfm.SUBFORUM_LOCATION, {})
+        self.subforum_model.delete_subforum("T" * (sfm.TITLE_MIN + 1))
 
         self.assertTrue(self.subforum_manager.create_subforum(
             "test", "T" * (sfm.TITLE_MAX - 1), test_description), "BOUNDARY: Title = TITLE_MAX - 1")
-        self.db.delete(sfm.SUBFORUM_LOCATION, {})
+        self.subforum_model.delete_subforum("T" * (sfm.TITLE_MAX - 1))
 
         self.assertTrue(self.subforum_manager.create_subforum(
             "test", "T" * (sfm.TITLE_MAX), test_description), "BOUNDARY: Title = TITLE_MAX")
-        self.db.delete(sfm.SUBFORUM_LOCATION, {})
+        self.subforum_model.delete_subforum("T" * (sfm.TITLE_MAX))
 
         with self.assertRaises(sfm.InvalidTitleError, msg="BOUNDARY: Title = TITLE_MAX + 1"):
             self.subforum_manager.create_subforum(
@@ -87,7 +88,7 @@ class SubForumManagerTestCase(unittest.TestCase):
         with self.assertRaises(sfm.TitleExistsError, msg="BOUNDARY: Title = TITLE_MAX + 1"):
             self.subforum_manager.create_subforum(
                 "test", "Test_SubForum", test_description)
-        self.db.delete(sfm.SUBFORUM_LOCATION, {})
+        self.subforum_model.delete_subforum("Test_SubForum")
 
         # Description
         # Empty
@@ -97,11 +98,11 @@ class SubForumManagerTestCase(unittest.TestCase):
             # Length
         self.assertTrue(self.subforum_manager.create_subforum(
             "test", "Test_SubForum", "T" * (sfm.DESCRIPTION_MAX - 1)), "BOUNDARY: Description = DESCRIPTION_MAX - 1")
-        self.db.delete(sfm.SUBFORUM_LOCATION, {})
+        self.subforum_model.delete_subforum("Test_SubForum")
 
         self.assertTrue(self.subforum_manager.create_subforum(
             "test", "Test_SubForum", "T" * (sfm.DESCRIPTION_MAX)), "BOUNDARY: Description = DESCRIPTION_MAX")
-        self.db.delete(sfm.SUBFORUM_LOCATION, {})
+        self.subforum_model.delete_subforum("Test_SubForum")
 
         with self.assertRaises(sfm.InvalidDescriptionError, msg="BOUNDARY: Description = DESCRIPTION_MAX + 1"):
             self.subforum_manager.create_subforum(

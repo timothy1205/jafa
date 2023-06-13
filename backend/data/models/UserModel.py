@@ -18,3 +18,7 @@ class UserModel(ABC, Model):
     @abstractmethod
     def get_by_username(self, username: str) -> Optional[User]:
         raise NotImplementedError()
+
+    @abstractmethod
+    def delete_user(self, username: str) -> bool:
+        raise NotImplementedError()

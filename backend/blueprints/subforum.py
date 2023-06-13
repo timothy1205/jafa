@@ -1,4 +1,4 @@
-from flask import Blueprint, request, session
+from flask import Blueprint, request, session, g
 from functools import wraps
 from backend.utils import make_error, make_success, require_form_keys
 from backend.data.managers.SubForumManager import \
