@@ -16,7 +16,7 @@ class TestUserModel(UserModel):
             registration_date=datetime.now())
         return True
 
-    def get_by_username(self, username) -> Optional[User]:
+    def get_user_by_username(self, username) -> Optional[User]:
         return self.db.get(username)
 
     def delete_user(self, username) -> bool:
@@ -47,7 +47,7 @@ class TestSubForumModel(SubForumModel):
         self.db[title]["description"] = description
         return True
 
-    def get_by_title(self, title) -> Optional[SubForumModel]:
+    def get_subforum_by_title(self, title) -> Optional[SubForumModel]:
         return self.db.get(title)
 
 

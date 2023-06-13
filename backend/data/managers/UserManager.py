@@ -58,7 +58,7 @@ class UserManager(DataManager):
         :returns: Tuple[bool: password_is_valid, dict: user]
         """
         user_model = self.model_factory.create_user_model()
-        user = user_model.get_by_username(username)
+        user = user_model.get_user_by_username(username)
         if user is None:
             return False, None
 
@@ -82,7 +82,7 @@ class UserManager(DataManager):
             raise InvalidUsernameError(
                 f"Username must be [{USERNAME_MIN}-{USERNAME_MAX}] characters and contain no special characters")
 
-        if user_model.get_by_username(username) is not None:
+        if user_model.get_user_by_username(username) is not None:
             raise UsernameExistsError("Username taken")
 
         if not self.__valid_password(password):
