@@ -30,7 +30,7 @@ class MongoSubForumModel(MongoMixin, SubForumModel):
             {"title": title}, {"$set": {"description": description}})
         return result.modified_count != 0
 
-    def get_by_title(self, title: str) -> Optional[SubForum]:
+    def get_subforum_by_title(self, title: str) -> Optional[SubForum]:
         subforum = self.__subforums_collection().find_one({"title": title})
 
         if subforum is None:

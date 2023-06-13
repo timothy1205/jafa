@@ -16,7 +16,7 @@ class UserModel(ABC, Model):
         raise NotImplementedError()
 
     @abstractmethod
-    def get_by_username(self, username: str) -> Optional[User]:
+    def get_user_by_username(self, username: str) -> Optional[User]:
         raise NotImplementedError()
 
     @abstractmethod

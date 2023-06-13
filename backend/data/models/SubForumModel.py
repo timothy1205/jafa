@@ -25,5 +25,5 @@ class SubForumModel(ABC, Model):
         raise NotImplementedError()
 
     @abstractmethod
-    def get_by_title(self, title: str) -> Optional[SubForum]:
+    def get_subforum_by_title(self, title: str) -> Optional[SubForum]:
         raise NotImplementedError()

@@ -69,7 +69,7 @@ class SubForumManager(DataManager):
         if not self.__valid_description(description):
             raise InvalidDescriptionError("Description cannot be empty")
 
-        if subforum_model.get_by_title(title) is not None:
+        if subforum_model.get_subforum_by_title(title) is not None:
             raise TitleExistsError("A subforum with that title already exists")
 
         if not self.__valid_title(title):
@@ -86,7 +86,8 @@ class SubForumManager(DataManager):
         :raises NoTitleFoundError:
         """
         subforum_model = self.model_factory.create_subforum_model()
-        subforum = self.__raise_or_return(subforum_model.get_by_title(title))
+        subforum = self.__raise_or_return(
+            subforum_model.get_subforum_by_title(title))
 
         if subforum["creator"] != username:
             # TODO: Allow moderators to bypass
@@ -103,7 +104,8 @@ class SubForumManager(DataManager):
         :raises InvalidDescriptionError:
         """
         subforum_model = self.model_factory.create_subforum_model()
-        subforum = self.__raise_or_return(subforum_model.get_by_title(title))
+        subforum = self.__raise_or_return(
+            subforum_model.get_subforum_by_title(title))
 
         if not self.__valid_description(description):
             raise InvalidDescriptionError("Description cannot be empty")
