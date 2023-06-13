@@ -1,8 +1,9 @@
+from flask import g
 import unittest
-from backend.tests.data.databases.TestDatabase import TestDatabase
 from backend.app import create_app
 from backend.JafaConfig import JafaConfig
 from backend.tests.blueprints.user_test import login, register
+from backend.tests.data.models.TestModelFactory import TestModelFactory
 
 CREATE_ENDPOINT = "/api/subforum/create"
 DELETE_ENDPOINT = "/api/subforum/delete"
@@ -17,10 +18,17 @@ def create(client, title, description):
 class SubForumEndpointTestCase(unittest.TestCase):
     def setUp(self):
         self.config = JafaConfig()
-        self.config.database_type = "custom"
-        self.config.database_class = TestDatabase
+        self.config.database_type = "testing"
 
         self.app = create_app()
+
+        with self.app.app_context():
+            TestModelFactory.reset()
+
+        @self.app.before_request
+        def before_request():
+            g.injected_model_factory = TestModelFactory
+
         self.client = self.app.test_client()
 
     def test_create(self):

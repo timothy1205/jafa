@@ -25,3 +25,8 @@ class MongoUserModel(MongoMixin, UserModel):
         return {"username": user["username"],
                 "password": user["password"],
                 "registration_date": user["registration_date"]}
+
+    def delete_user(self, username) -> bool:
+        result = self._get_collection(
+            USERS_COLLECTION).delete_one({"username": username})
+        return result.deleted_count != 0

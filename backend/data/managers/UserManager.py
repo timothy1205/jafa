@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Type
 import re
 from bcrypt import checkpw, hashpw, gensalt
 from hashlib import sha256
@@ -25,7 +25,7 @@ class InvalidPasswordError(Exception):
 
 
 class UserManager(DataManager):
-    def __init__(self, model_factory: Optional[AbstractModelFactory] = None):
+    def __init__(self, model_factory: Optional[Type[AbstractModelFactory]] = None):
         super().__init__(model_factory)
 
     def __pre_hash_password(self, password):

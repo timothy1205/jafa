@@ -4,22 +4,25 @@ from hashlib import sha256
 from base64 import b64encode
 import string
 import backend.data.managers.UserManager as um
-from backend.tests.data.databases.TestDatabase import TestDatabase
+from backend.tests.data.models.TestModelFactory import TestModelFactory
 
 
 class UserManagerTestCase(unittest.TestCase):
     def setUp(self):
-        self.db = TestDatabase()
-        self.user_manager = um.UserManager(self.db)
+        TestModelFactory.reset()
+        self.user_model = TestModelFactory.create_user_model()
+        self.user_manager = um.UserManager(TestModelFactory)
 
     def test_check_password(self):
         password = b64encode(sha256("Password1".encode("utf-8")).digest())
         hashed = hashpw(password, gensalt())
-        user = {"username": "Test", "password": hashed}
-        self.db.create(um.USERS_LOCATION, user)
+        self.user_model.create_user("Test", hashed)
 
-        self.assertEqual(self.user_manager.check_password(
-            "Test", "Password1"), (True, user), "Valid password")
+        result = self.user_manager.check_password("Test", "Password1")
+        self.assertTrue(result[0], "Returns True on success")
+        self.assertEqual(
+            result[1], result[1] | dict(username="Test", password=hashed))
+
         self.assertEqual(self.user_manager.check_password(
             "Test", "Password2"), (False, None), "Wrong character at end of password")
         self.assertEqual(self.user_manager.check_password(
@@ -33,19 +36,19 @@ class UserManagerTestCase(unittest.TestCase):
 
         self.assertTrue(self.user_manager.create_user(
             "r" * (um.USERNAME_MIN), "Password1"), "BOUNDARY: Username = USERNAME_MIN")
-        self.db.delete(um.USERS_LOCATION, {})
+        self.user_model.delete_user("r" * (um.USERNAME_MIN))
 
         self.assertTrue(self.user_manager.create_user(
             "r" * (um.USERNAME_MIN + 1), "Password1"), "BOUNDARY: Username = USERNAME_MIN + 1")
-        self.db.delete(um.USERS_LOCATION, {})
+        self.user_model.delete_user("r" * (um.USERNAME_MIN + 1))
 
         self.assertTrue(self.user_manager.create_user(
             "r" * (um.USERNAME_MAX - 1), "Password1"), "BOUNDARY: Username = USERNAME_MAX - 1")
-        self.db.delete(um.USERS_LOCATION, {})
+        self.user_model.delete_user("r" * (um.USERNAME_MAX - 1))
 
         self.assertTrue(self.user_manager.create_user(
             "r" * (um.USERNAME_MAX), "Password1"), "BOUNDARY: Username = USERNAME_MAX")
-        self.db.delete(um.USERS_LOCATION, {})
+        self.user_model.delete_user("r" * (um.USERNAME_MAX))
 
         with self.assertRaises(um.InvalidUsernameError, msg="BOUNDARY: Username = USERNAME_MAX + 1"):
             self.user_manager.create_user(
@@ -71,11 +74,11 @@ class UserManagerTestCase(unittest.TestCase):
 
         # Duplicate username
         self.assertTrue(self.user_manager.create_user(
-            "r" * (um.USERNAME_MIN), "Password1"), "Valid user")
+            "red", "Password1"), "Valid user")
 
         with self.assertRaises(um.UsernameExistsError, msg="Duplicate username"):
             self.user_manager.create_user("red", "Password1")
-        self.db.delete(um.USERS_LOCATION, {})
+        self.user_model.delete_user("red")
 
         # Password Length
         with self.assertRaises(um.InvalidPasswordError, msg="BOUNDARY: Password = PASSWORD_MIN - 1"):
@@ -84,19 +87,19 @@ class UserManagerTestCase(unittest.TestCase):
 
         self.assertTrue(self.user_manager.create_user(
             "r" * (um.USERNAME_MIN), "P1" + "p" * (um.PASSWORD_MIN - 2)), "BOUNDARY: Password = PASSWORD_MIN")
-        self.db.delete(um.USERS_LOCATION, {})
+        self.user_model.delete_user("r" * (um.USERNAME_MIN))
 
         self.assertTrue(self.user_manager.create_user(
             "r" * (um.USERNAME_MIN), "P1" + "p" * (um.PASSWORD_MIN - 1)), "BOUNDARY: Password = PASSWORD_MIN + 1")
-        self.db.delete(um.USERS_LOCATION, {})
+        self.user_model.delete_user("r" * (um.USERNAME_MIN))
 
         self.assertTrue(self.user_manager.create_user(
             "r" * (um.USERNAME_MIN), "P1" + "p" * (um.PASSWORD_MAX - 3)), "BOUNDARY: Password = PASSWORD_MAX - 1")
-        self.db.delete(um.USERS_LOCATION, {})
+        self.user_model.delete_user("r" * (um.USERNAME_MIN))
 
         self.assertTrue(self.user_manager.create_user(
             "r" * (um.USERNAME_MIN), "P1" + "p" * (um.PASSWORD_MAX - 2)), "BOUNDARY: Password = PASSWORD_MAX")
-        self.db.delete(um.USERS_LOCATION, {})
+        self.user_model.delete_user("r" * (um.USERNAME_MIN))
 
         with self.assertRaises(um.InvalidPasswordError, msg="BOUNDARY: Password = PASSWORD_MAX + 1"):
             self.user_manager.create_user(

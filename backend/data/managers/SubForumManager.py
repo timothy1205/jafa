@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Type
 import re
 from bcrypt import checkpw, hashpw, gensalt
 from hashlib import sha256
@@ -33,7 +33,7 @@ class UnchangedDescriptionError(Exception):
 
 
 class SubForumManager(DataManager):
-    def __init__(self, model_factory: Optional[AbstractModelFactory] = None):
+    def __init__(self, model_factory: Optional[Type[AbstractModelFactory]] = None):
         super().__init__(model_factory)
 
     def __raise_or_return(self, subforum):

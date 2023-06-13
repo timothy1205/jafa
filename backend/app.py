@@ -14,10 +14,11 @@ def create_app():
     from backend.blueprints import api
     app.register_blueprint(api.blueprint)
 
-    # Connect to database
-    database = DatabaseFactory.create_database(config.database_type)
-    database.connect(config.database_host, config.database_port,
-                     config.database_username, config.database_password)
-    database.setup()
+    # Connect to database if we are not testing
+    if config.database_type != "testing":
+        database = DatabaseFactory.create_database(config.database_type)
+        database.connect(config.database_host, config.database_port,
+                         config.database_username, config.database_password)
+        database.setup()
 
     return app

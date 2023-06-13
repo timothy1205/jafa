@@ -1,4 +1,4 @@
-from flask import Blueprint, request, make_response, jsonify, session
+from flask import Blueprint, request, make_response, jsonify, session, g
 from functools import wraps
 from backend.utils import make_error, make_success, CODE_BAD_REQUEST
 from backend.data.managers.UserManager import UserManager, UsernameExistsError, InvalidUsernameError, InvalidPasswordError
