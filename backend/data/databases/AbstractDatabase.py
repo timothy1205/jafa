@@ -24,17 +24,5 @@ class AbstractDatabase(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def create(self, location: str, data: dict) -> bool:
-        raise NotImplementedError
-
-    @abstractmethod
-    def get(self, location: str, query: dict) -> Optional[dict]:
-        raise NotImplementedError
-
-    @abstractmethod
-    def update(self, location: str, query: dict, data: dict):
-        raise NotImplementedError
-
-    @abstractmethod
-    def delete(self, location: str, query: dict):
+    def get_client(self):
         raise NotImplementedError

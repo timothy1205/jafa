@@ -1,6 +1,6 @@
 from flask import Flask
 from secrets import token_hex
-from backend.data.databases.DatabaseManager import DatabaseManager
+from backend.data.databases.DatabaseFactory import DatabaseFactory
 from backend.JafaConfig import JafaConfig
 
 
@@ -15,8 +15,7 @@ def create_app():
     app.register_blueprint(api.blueprint)
 
     # Connect to database
-    database = DatabaseManager.get_instance(
-        force_create=True)  # Always force create here for testing
+    database = DatabaseFactory.create_database(config.database_type)
     database.connect(config.database_host, config.database_port,
                      config.database_username, config.database_password)
     database.setup()
