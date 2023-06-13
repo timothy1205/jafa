@@ -1,8 +1,5 @@
 from typing import Optional, Type
 import re
-from bcrypt import checkpw, hashpw, gensalt
-from hashlib import sha256
-from base64 import b64encode
 from backend.data.models.AbstractModelFactory import AbstractModelFactory
 from backend.data.managers.DataManager import DataManager
 from backend.utils import RolePermissionError
