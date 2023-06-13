@@ -3,12 +3,10 @@ import re
 from bcrypt import checkpw, hashpw, gensalt
 from hashlib import sha256
 from base64 import b64encode
-from backend.data.databases.DatabaseManager import DatabaseManager
-from backend.data.databases.AbstractDatabase import AbstractDatabase
+from backend.data.models.AbstractModelFactory import AbstractModelFactory
 from backend.data.managers.DataManager import DataManager
 from backend.utils import RolePermissionError
 
-SUBFORUM_LOCATION = "subforums"
 TITLE_MIN = 3
 TITLE_MAX = 40
 DESCRIPTION_MAX = 650
@@ -35,15 +33,10 @@ class UnchangedDescriptionError(Exception):
 
 
 class SubForumManager(DataManager):
-    def __init__(self, database: AbstractDatabase = None):
-        super().__init__(database)
+    def __init__(self, model_factory: Optional[AbstractModelFactory] = None):
+        super().__init__(model_factory)
 
-    def __get_subforum(self, title):
-        subforum = self.database.get(SUBFORUM_LOCATION, {"title": title})
-        return subforum
-
-    def __get_subforum_or_raise(self, title):
-        subforum = self.__get_subforum(title)
+    def __raise_or_return(self, subforum):
         if subforum is None:
             raise NoTitleFoundError(
                 "A subforum with that title does not exist")
@@ -74,18 +67,19 @@ class SubForumManager(DataManager):
         :raises InvalidTitleError:
         :raises InvalidDescriptionError:
         """
+        subforum_model = self.model_factory.create_subforum_model()
+
         if not self.__valid_description(description):
             raise InvalidDescriptionError("Description cannot be empty")
 
-        if self.__get_subforum(title) is not None:
+        if subforum_model.get_by_title(title) is not None:
             raise TitleExistsError("A subforum with that title already exists")
 
         if not self.__valid_title(title):
             raise InvalidTitleError(
                 "Title may contain letters, numbers, and underscores. Underscores cannot be leading or trailing")
 
-        return self.database.create(
-            SUBFORUM_LOCATION, {"creator": creator, "title": title, "description": description})
+        return subforum_model.create_subforum(creator, title, description)
 
     def delete_subforum(self, username: str, title: str) -> bool:
         """Delete a subforum on behalf of a user as permitted
@@ -94,13 +88,14 @@ class SubForumManager(DataManager):
         :raises RolePermissionError:
         :raises NoTitleFoundError:
         """
-        subforum = self.__get_subforum_or_raise(title)
+        subforum_model = self.model_factory.create_subforum_model()
+        subforum = self.__raise_or_return(subforum_model.get_by_title(title))
 
         if subforum["creator"] != username:
             # TODO: Allow moderators to bypass
             raise RolePermissionError()
 
-        return self.database.delete(SUBFORUM_LOCATION, {"title": title})
+        return subforum_model.delete_subforum(title)
 
     def edit_subforum(self, username: str, title: str, description: str) -> bool:
         """Edit a subforum on behalf of a user as permitted
@@ -110,7 +105,8 @@ class SubForumManager(DataManager):
         :raises NoTitleFoundError:
         :raises InvalidDescriptionError:
         """
-        subforum = self.__get_subforum_or_raise(title)
+        subforum_model = self.model_factory.create_subforum_model()
+        subforum = self.__raise_or_return(subforum_model.get_by_title(title))
 
         if not self.__valid_description(description):
             raise InvalidDescriptionError("Description cannot be empty")
@@ -122,4 +118,4 @@ class SubForumManager(DataManager):
         if subforum["description"] == description:
             raise UnchangedDescriptionError("There is nothing to update")
 
-        return self.database.update(SUBFORUM_LOCATION, {"title": title}, {"description": description})
+        return subforum_model.edit_subforum(title, description)

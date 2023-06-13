@@ -1,11 +1,11 @@
 from typing import Optional
-from backend.data.databases.DatabaseManager import DatabaseManager
-from backend.data.databases.AbstractDatabase import AbstractDatabase
+from backend.data.models.AbstractModelFactory import AbstractModelFactory
+from backend.data.models.ModelFactory import ModelFactory
 
 
 class DataManager:
-    def __init__(self, database: Optional[AbstractDatabase] = None):
-        if database is None:
-            self.database = DatabaseManager().get_instance()
+    def __init__(self, model_factory: Optional[AbstractModelFactory] = None):
+        if model_factory is None:
+            self.model_factory = ModelFactory
         else:
-            self.database = database
+            self.model_factory = model_factory

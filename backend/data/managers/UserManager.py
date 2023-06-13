@@ -3,11 +3,9 @@ import re
 from bcrypt import checkpw, hashpw, gensalt
 from hashlib import sha256
 from base64 import b64encode
-from backend.data.databases.DatabaseManager import DatabaseManager
-from backend.data.databases.AbstractDatabase import AbstractDatabase
+from backend.data.models.AbstractModelFactory import AbstractModelFactory
 from backend.data.managers.DataManager import DataManager
 
-USERS_LOCATION = "users"
 PASSWORD_MIN = 8
 PASSWORD_MAX = 256
 USERNAME_MIN = 3
@@ -27,12 +25,8 @@ class InvalidPasswordError(Exception):
 
 
 class UserManager(DataManager):
-    def __init__(self, database: AbstractDatabase = None):
-        super().__init__(database)
-
-    def __get_user(self, username):
-        user = self.database.get(USERS_LOCATION, {"username": username})
-        return user
+    def __init__(self, model_factory: Optional[AbstractModelFactory] = None):
+        super().__init__(model_factory)
 
     def __pre_hash_password(self, password):
         encoded = password.encode("utf-8")
@@ -63,7 +57,8 @@ class UserManager(DataManager):
 
         :returns: Tuple[bool: password_is_valid, dict: user]
         """
-        user = self.__get_user(username)
+        user_model = self.model_factory.create_user_model()
+        user = user_model.get_by_username(username)
         if user is None:
             return False, None
 
@@ -81,11 +76,13 @@ class UserManager(DataManager):
         :raises InvalidUsernameError: 
         :raises InvalidPasswordError: 
         """
+        user_model = self.model_factory.create_user_model()
+
         if not self.__valid_username(username):
             raise InvalidUsernameError(
                 f"Username must be [{USERNAME_MIN}-{USERNAME_MAX}] characters and contain no special characters")
 
-        if self.__get_user(username) is not None:
+        if user_model.get_by_username(username) is not None:
             raise UsernameExistsError("Username taken")
 
         if not self.__valid_password(password):
@@ -95,5 +92,5 @@ class UserManager(DataManager):
         hashed_password = hashpw(
             self.__pre_hash_password(password),
             gensalt())
-        return self.database.create(
-            USERS_LOCATION, {"username": username, "password": hashed_password})
+
+        return user_model.create_user(username, hashed_password)
