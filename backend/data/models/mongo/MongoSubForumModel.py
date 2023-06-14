@@ -1,5 +1,4 @@
 from typing import Optional
-from datetime import datetime
 from backend.data.models.SubForumModel import SubForumModel, SubForum
 from backend.data.models.mongo.MongoMixin import MongoMixin
 
@@ -13,12 +12,12 @@ class MongoSubForumModel(MongoMixin, SubForumModel):
     def __subforums_collection(self):
         return self._get_collection(SUBFORUMS_COLLECTION)
 
-    def create_subforum(self, creator: str, title: str, description: str) -> bool:
+    def create_subforum(self, data: SubForum) -> bool:
         result = self.__subforums_collection().insert_one(
-            {"creator": creator,
-             "title": title,
-             "description": description,
-             "creation_date": datetime.now()})
+            {"creator": data["creator"],
+             "title": data["title"],
+             "description": data["description"],
+             "creation_date": data["creation_date"]})
         return result.acknowledged
 
     def delete_subforum(self, title: str) -> bool:

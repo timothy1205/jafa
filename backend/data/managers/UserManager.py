@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Optional, Type
 import re
 from bcrypt import checkpw, hashpw, gensalt
@@ -93,4 +94,7 @@ class UserManager(DataManager):
             self.__pre_hash_password(password),
             gensalt())
 
-        return user_model.create_user(username, hashed_password)
+        return user_model.create_user(dict(
+            username=username,
+            password=hashed_password,
+            registration_date=datetime.now()))
