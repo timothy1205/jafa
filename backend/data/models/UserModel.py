@@ -12,11 +12,11 @@ class User(TypedDict):
 
 class UserModel(ABC, Model):
     @abstractmethod
-    def create_user(self, username: str, password: str) -> bool:
+    def create_user(self, data: User) -> bool:
         raise NotImplementedError()
 
     @abstractmethod
-    def get_user_by_username(self, username: str) -> Optional[User]:
+    def get_by_username(self, username: str) -> Optional[User]:
         raise NotImplementedError()
 
     @abstractmethod

@@ -13,7 +13,7 @@ class SubForum(TypedDict):
 
 class SubForumModel(ABC, Model):
     @abstractmethod
-    def create_subforum(self, creator: str, title: str, description: str) -> bool:
+    def create_subforum(self, data: SubForum) -> bool:
         raise NotImplementedError()
 
     @abstractmethod

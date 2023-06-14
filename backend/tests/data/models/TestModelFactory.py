@@ -1,5 +1,4 @@
 from typing import Optional
-from datetime import datetime
 from backend.data.models.AbstractModelFactory import AbstractModelFactory
 from backend.data.models.UserModel import UserModel, User
 from backend.data.models.SubForumModel import SubForumModel, SubForum
@@ -9,11 +8,11 @@ class TestUserModel(UserModel):
     def __init__(self):
         self.db = {}
 
-    def create_user(self, username, password) -> bool:
+    def create_user(self, data: User) -> bool:
         self.db[username] = dict(
-            username=username,
-            password=password,
-            registration_date=datetime.now())
+            username=data["username"],
+            password=["password"],
+            registration_date=data["registration_date"])
         return True
 
     def get_user_by_username(self, username) -> Optional[User]:
@@ -28,12 +27,12 @@ class TestSubForumModel(SubForumModel):
     def __init__(self):
         self.db = {}
 
-    def create_subforum(self, creator, title, description) -> bool:
+    def create_subforum(self, data: SubForum) -> bool:
         self.db[title] = dict(
-            creator=creator,
-            title=title,
-            description=description,
-            creation_date=datetime.now())
+            creator=data["creator"],
+            title=data["title"],
+            description=data["description"],
+            creation_date=data["creation_date"])
         return True
 
     def delete_subforum(self, title) -> bool:

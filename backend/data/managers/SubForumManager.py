@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Optional, Type
 import re
 from backend.data.models.AbstractModelFactory import AbstractModelFactory
@@ -76,7 +77,11 @@ class SubForumManager(DataManager):
             raise InvalidTitleError(
                 "Title may contain letters, numbers, and underscores. Underscores cannot be leading or trailing")
 
-        return subforum_model.create_subforum(creator, title, description)
+        return subforum_model.create_subforum(dict(
+            creator=creator,
+            title=title,
+            description=description,
+            creation_date=datetime.now()))
 
     def delete_subforum(self, username: str, title: str) -> bool:
         """Delete a subforum on behalf of a user as permitted
