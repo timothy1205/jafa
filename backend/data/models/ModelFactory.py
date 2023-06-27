@@ -5,6 +5,7 @@ from backend.JafaConfig import JafaConfig
 from backend.data.models.AbstractModelFactory import AbstractModelFactory
 from backend.data.models.UserModel import UserModel
 from backend.data.models.SubForumModel import SubForumModel
+from backend.data.models.PostModel import PostModel
 
 
 class ModelFactory(AbstractModelFactory):
@@ -42,4 +43,9 @@ class ModelFactory(AbstractModelFactory):
     @staticmethod
     def create_subforum_model() -> SubForumModel:
         model = ModelFactory.__import_model("subforum")
+        return model()
+
+    @staticmethod
+    def create_post_model() -> PostModel:
+        model = ModelFactory.__import_model("post")
         return model()

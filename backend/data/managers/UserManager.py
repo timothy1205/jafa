@@ -53,6 +53,14 @@ class UserManager(DataManager):
 
         return True
 
+    def user_exists(self, username: str) -> bool:
+        """Check database for username
+
+        :returns: True if the username exists, false otherwise.
+        """
+        user_model = self.model_factory.create_user_model()
+        return user_model.get_by_username(username) is not None
+
     def check_password(self, username: str, password: str) -> tuple[bool, dict]:
         """Check if a given password corresponds to the saved hash
 
@@ -83,7 +91,7 @@ class UserManager(DataManager):
             raise InvalidUsernameError(
                 f"Username must be [{USERNAME_MIN}-{USERNAME_MAX}] characters and contain no special characters")
 
-        if user_model.get_user_by_username(username) is not None:
+        if self.user_exists(username):
             raise UsernameExistsError("Username taken")
 
         if not self.__valid_password(password):
