@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 from backend.data.models.UserModel import UserModel
 from backend.data.models.SubForumModel import SubForumModel
+from backend.data.models.PostModel import PostModel
 
 
 class AbstractModelFactory:
@@ -12,4 +13,9 @@ class AbstractModelFactory:
     @staticmethod
     @abstractmethod
     def create_subforum_model() -> SubForumModel:
+        raise NotImplementedError()
+
+    @staticmethod
+    @abstractmethod
+    def create_post_model() -> PostModel:
         raise NotImplementedError()

@@ -95,7 +95,7 @@ class SubForumManager(DataManager):
             subforum_model.get_subforum_by_title(title))
 
         if subforum["creator"] != username:
-            # TODO: Allow moderators to bypass
+            # TODO: Allow admins to bypass
             raise RolePermissionError()
 
         return subforum_model.delete_subforum(title)
