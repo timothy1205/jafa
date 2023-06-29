@@ -13,6 +13,7 @@ class NoVoteFoundError(Exception):
 class InvalidContentType(Exception):
     pass
 
+
 class InvalidContent(Exception):
     pass
 

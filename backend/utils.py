@@ -1,6 +1,6 @@
-from flask import make_response, jsonify, request, g
 from functools import wraps
 
+from flask import g, jsonify, make_response, request
 
 CODE_BAD_REQUEST = 400
 
@@ -37,5 +37,7 @@ def require_form_keys(keys: list[str]):
                 return make_error(f"Missing: {str(sorted(copy))}", CODE_BAD_REQUEST)
 
             return f(*args, **kwargs)
+
         return wrapper
+
     return decorator

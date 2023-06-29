@@ -60,7 +60,8 @@ class PostManager(DataManager):
 
         if not (TITLE_MIN <= len(title) <= TITLE_MAX):
             raise InvalidPostTitle(
-                f"Post title must be between [{TITLE_MIN}-{TITLE_MAX}] (inclusive) characters")
+                f"Post title must be between [{TITLE_MIN}-{TITLE_MAX}] (inclusive) characters"
+            )
 
         return title
 
@@ -68,7 +69,8 @@ class PostManager(DataManager):
         body = body.strip()
         if not (BODY_MIN <= len(body) <= BODY_MAX):
             raise InvalidPostBody(
-                f"Post body must be between [{BODY_MIN}-{BODY_MAX}] (inclusive) characters")
+                f"Post body must be between [{BODY_MIN}-{BODY_MAX}] (inclusive) characters"
+            )
 
         return body
 

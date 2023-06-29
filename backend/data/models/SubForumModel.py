@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
-from typing import Optional, TypedDict
 from datetime import date
+from typing import Optional, TypedDict
+
 from backend.data.models.Model import Model
 
 

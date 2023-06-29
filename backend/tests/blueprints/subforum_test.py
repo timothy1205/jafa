@@ -1,5 +1,7 @@
-from flask import g
 import unittest
+
+from flask import g
+
 from backend.app import create_app
 from backend.JafaConfig import JafaConfig
 from backend.tests.blueprints.user_test import login, register
@@ -12,7 +14,8 @@ EDIT_ENDPOINT = "/api/subforum/edit"
 
 def create(client, title, description):
     return client.post(
-        CREATE_ENDPOINT, data={"title": title, "description": description})
+        CREATE_ENDPOINT, data={"title": title, "description": description}
+    )
 
 
 class SubForumEndpointTestCase(unittest.TestCase):
@@ -43,13 +46,14 @@ class SubForumEndpointTestCase(unittest.TestCase):
         res = self.client.post(CREATE_ENDPOINT)
         self.assertIn(
             f'{{"error":"Missing: {sorted(["title", "description"])}"}}'.encode(
-                'utf-8'),
-            res.data, "Erroneous response")
+                "utf-8"
+            ),
+            res.data,
+            "Erroneous response",
+        )
 
         res = create(self.client, "TestSubforum", "Test subforum")
-        self.assertIn(
-            b'{"msg":"Subforum created"}',
-            res.data, "Successful response")
+        self.assertIn(b'{"msg":"Subforum created"}', res.data, "Successful response")
 
     def test_delete(self):
         register(self.client, "red", "Password1")
@@ -59,15 +63,13 @@ class SubForumEndpointTestCase(unittest.TestCase):
 
         res = self.client.delete(DELETE_ENDPOINT)
         self.assertIn(
-            f'{{"error":"Missing: {["title"]}"}}'.encode(
-                'utf-8'),
-            res.data, "Erroneous response")
+            f'{{"error":"Missing: {["title"]}"}}'.encode("utf-8"),
+            res.data,
+            "Erroneous response",
+        )
 
-        res = self.client.delete(DELETE_ENDPOINT, data={
-                                 "title": "TestSubforum"})
-        self.assertIn(
-            b'{"msg":"Subforum deleted"}',
-            res.data, "Successful response")
+        res = self.client.delete(DELETE_ENDPOINT, data={"title": "TestSubforum"})
+        self.assertIn(b'{"msg":"Subforum deleted"}', res.data, "Successful response")
 
     def test_edit(self):
         register(self.client, "red", "Password1")
@@ -78,11 +80,14 @@ class SubForumEndpointTestCase(unittest.TestCase):
         res = self.client.post(EDIT_ENDPOINT)
         self.assertIn(
             f'{{"error":"Missing: {sorted(["title", "description"])}"}}'.encode(
-                'utf-8'),
-            res.data, "Erroneous response")
+                "utf-8"
+            ),
+            res.data,
+            "Erroneous response",
+        )
 
-        res = self.client.post(EDIT_ENDPOINT, data={
-            "title": "TestSubforum", "description": "Updated description"})
-        self.assertIn(
-            b'{"msg":"Subforum updated"}',
-            res.data, "Successful response")
+        res = self.client.post(
+            EDIT_ENDPOINT,
+            data={"title": "TestSubforum", "description": "Updated description"},
+        )
+        self.assertIn(b'{"msg":"Subforum updated"}', res.data, "Successful response")

@@ -1,9 +1,10 @@
-from flask import g
 import unittest
+
+from flask import g
+
 from backend.app import create_app
 from backend.JafaConfig import JafaConfig
 from backend.tests.data.models.TestModelFactory import TestModelFactory
-
 
 REGISTER_ENDPOINT = "/api/user/register"
 LOGIN_ENDPOINT = "/api/user/login"
@@ -11,12 +12,14 @@ LOGIN_ENDPOINT = "/api/user/login"
 
 def register(client, username, password):
     return client.post(
-        REGISTER_ENDPOINT, data={"username": username, "password": password})
+        REGISTER_ENDPOINT, data={"username": username, "password": password}
+    )
 
 
 def login(client, username, password):
     return client.post(
-        LOGIN_ENDPOINT, data={"username": username, "password": password})
+        LOGIN_ENDPOINT, data={"username": username, "password": password}
+    )
 
 
 class UserEndpointTestCase(unittest.TestCase):
@@ -43,18 +46,22 @@ class UserEndpointTestCase(unittest.TestCase):
         """
         res = self.client.post(REGISTER_ENDPOINT)
         self.assertIn(
-            b'{"error":"Missing username and/or password"}', res.data, "Erroneous response")
+            b'{"error":"Missing username and/or password"}',
+            res.data,
+            "Erroneous response",
+        )
 
         res = register(self.client, "red", "Password1")
-        self.assertIn(
-            b'{"msg":"User created"}', res.data, "Successful response")
+        self.assertIn(b'{"msg":"User created"}', res.data, "Successful response")
 
     def test_login(self):
         register(self.client, "red", "Password1")
         res = self.client.post(LOGIN_ENDPOINT)
         self.assertIn(
-            b'{"error":"Missing username and/or password"}', res.data, "Erroneous response")
+            b'{"error":"Missing username and/or password"}',
+            res.data,
+            "Erroneous response",
+        )
 
         res = login(self.client, "red", "Password1")
-        self.assertIn(
-            b'{"msg":"Logged in"}', res.data, "Successful response")
+        self.assertIn(b'{"msg":"Logged in"}', res.data, "Successful response")
