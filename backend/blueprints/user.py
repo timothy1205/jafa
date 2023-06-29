@@ -1,25 +1,31 @@
-from flask import Blueprint, request, make_response, jsonify, session, g
 from functools import wraps
-from backend.utils import make_error, make_success, CODE_BAD_REQUEST
-from backend.data.managers.UserManager import UserManager, UsernameExistsError, InvalidUsernameError, InvalidPasswordError
+
+from flask import Blueprint, g, request, session
+
+from backend.data.managers.UserManager import (
+    InvalidPasswordError,
+    InvalidUsernameError,
+    UserManager,
+    UsernameExistsError,
+)
+from backend.utils import CODE_BAD_REQUEST, make_error, make_success
 
 USER_NAME = "user"
 USER_PATH = f"/{USER_NAME}"
 CODE_UNAUTHORIZED = 401
 CODE_CONFLICT = 409
 
-blueprint = Blueprint(USER_NAME, __name__,
-                      url_prefix=USER_PATH)
+blueprint = Blueprint(USER_NAME, __name__, url_prefix=USER_PATH)
 
 
 def require_credentials(f):
     @wraps(f)
     def wrapper(*args, **kwargs):
-        if "username" not in request.form \
-                or "password" not in request.form:
+        if "username" not in request.form or "password" not in request.form:
             return make_error("Missing username and/or password", CODE_BAD_REQUEST)
 
         return f(*args, **kwargs)
+
     return wrapper
 
 
@@ -30,6 +36,7 @@ def require_logged_in(f):
             return make_error("You must be logged in", CODE_UNAUTHORIZED)
 
         return f(*args, **kwargs)
+
     return wrapper
 
 

@@ -1,8 +1,9 @@
 from abc import ABC, abstractmethod
-from backend.data.models.UserModel import UserModel
-from backend.data.models.SubForumModel import SubForumModel
-from backend.data.models.VoteModel import VoteModel
+
 from backend.data.models.PostModel import PostModel
+from backend.data.models.SubForumModel import SubForumModel
+from backend.data.models.UserModel import UserModel
+from backend.data.models.VoteModel import VoteModel
 
 
 class AbstractModelFactory:

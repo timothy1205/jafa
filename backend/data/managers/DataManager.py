@@ -1,5 +1,7 @@
-from flask import g
 from typing import Optional, Type
+
+from flask import g
+
 from backend.data.models.AbstractModelFactory import AbstractModelFactory
 from backend.data.models.ModelFactory import ModelFactory
 

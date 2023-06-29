@@ -3,6 +3,7 @@ from typing import Optional
 from bson.objectid import ObjectId
 
 from backend.data.models.mongo.MongoMixin import MongoMixin
+from backend.data.models.VoteModel import BaseVote, Vote, VoteModel
 
 VOTES_COLLECTION = "votes"
 
@@ -71,8 +72,9 @@ class MongoVoteModel(MongoMixin, VoteModel):
         return result.deleted_count != 0
 
     def clear_votes_by_username(self, username: str) -> bool:
-        result = self._get_collection(VOTES_COLLECTION).delete_many(dict(
-            username=username))
+        result = self._get_collection(VOTES_COLLECTION).delete_many(
+            dict(username=username)
+        )
         return result.acknowledged
 
     def clear_votes_by_id(self, content_id: str) -> bool:

@@ -1,7 +1,8 @@
 from typing import Optional
+
 from backend.data.models.AbstractModelFactory import AbstractModelFactory
-from backend.data.models.UserModel import UserModel, User
-from backend.data.models.SubForumModel import SubForumModel, SubForum
+from backend.data.models.SubForumModel import SubForum, SubForumModel
+from backend.data.models.UserModel import User, UserModel
 
 
 class TestUserModel(UserModel):
@@ -12,7 +13,8 @@ class TestUserModel(UserModel):
         self.db[username] = dict(
             username=data["username"],
             password=["password"],
-            registration_date=data["registration_date"])
+            registration_date=data["registration_date"],
+        )
         return True
 
     def get_user_by_username(self, username) -> Optional[User]:
@@ -32,7 +34,8 @@ class TestSubForumModel(SubForumModel):
             creator=data["creator"],
             title=data["title"],
             description=data["description"],
-            creation_date=data["creation_date"])
+            creation_date=data["creation_date"],
+        )
         return True
 
     def delete_subforum(self, title) -> bool:
@@ -54,7 +57,8 @@ class TestModelFactory(AbstractModelFactory):
     @staticmethod
     def reset():
         TestModelFactory._cache = dict(
-            user=TestUserModel(), subforum=TestSubForumModel())
+            user=TestUserModel(), subforum=TestSubForumModel()
+        )
 
     @staticmethod
     def create_user_model() -> UserModel:

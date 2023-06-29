@@ -1,8 +1,9 @@
+import re
 from datetime import datetime
 from typing import Optional, Type
-import re
-from backend.data.models.AbstractModelFactory import AbstractModelFactory
+
 from backend.data.managers.DataManager import DataManager
+from backend.data.models.AbstractModelFactory import AbstractModelFactory
 from backend.utils import RolePermissionError
 
 TITLE_MIN = 3
@@ -36,15 +37,14 @@ class SubForumManager(DataManager):
 
     def __raise_or_return(self, subforum):
         if subforum is None:
-            raise NoTitleFoundError(
-                "A subforum with that title does not exist")
+            raise NoTitleFoundError("A subforum with that title does not exist")
 
         return subforum
 
     def __valid_title(self, title):
         if not (TITLE_MIN <= len(title) <= TITLE_MAX):
             return False
-        if re.match('^[a-zA-Z0-9]+(_*[a-zA-Z0-9]+)*$', title) is None:
+        if re.match("^[a-zA-Z0-9]+(_*[a-zA-Z0-9]+)*$", title) is None:
             return False
 
         return True
@@ -75,13 +75,17 @@ class SubForumManager(DataManager):
 
         if not self.__valid_title(title):
             raise InvalidTitleError(
-                "Title may contain letters, numbers, and underscores. Underscores cannot be leading or trailing")
+                "Title may contain letters, numbers, and underscores. Underscores cannot be leading or trailing"
+            )
 
-        return subforum_model.create_subforum(dict(
-            creator=creator,
-            title=title,
-            description=description,
-            creation_date=datetime.now()))
+        return subforum_model.create_subforum(
+            dict(
+                creator=creator,
+                title=title,
+                description=description,
+                creation_date=datetime.now(),
+            )
+        )
 
     def delete_subforum(self, username: str, title: str) -> bool:
         """Delete a subforum on behalf of a user as permitted
@@ -91,8 +95,7 @@ class SubForumManager(DataManager):
         :raises NoTitleFoundError:
         """
         subforum_model = self.model_factory.create_subforum_model()
-        subforum = self.__raise_or_return(
-            subforum_model.get_subforum_by_title(title))
+        subforum = self.__raise_or_return(subforum_model.get_subforum_by_title(title))
 
         if subforum["creator"] != username:
             # TODO: Allow admins to bypass
@@ -109,8 +112,7 @@ class SubForumManager(DataManager):
         :raises InvalidDescriptionError:
         """
         subforum_model = self.model_factory.create_subforum_model()
-        subforum = self.__raise_or_return(
-            subforum_model.get_subforum_by_title(title))
+        subforum = self.__raise_or_return(subforum_model.get_subforum_by_title(title))
 
         if not self.__valid_description(description):
             raise InvalidDescriptionError("Description cannot be empty")
