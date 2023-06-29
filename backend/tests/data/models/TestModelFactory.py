@@ -10,7 +10,7 @@ class TestUserModel(UserModel):
         self.db = {}
 
     def create_user(self, data: User) -> bool:
-        self.db[username] = dict(
+        self.db[data["username"]] = dict(
             username=data["username"],
             password=["password"],
             registration_date=data["registration_date"],
@@ -30,7 +30,7 @@ class TestSubForumModel(SubForumModel):
         self.db = {}
 
     def create_subforum(self, data: SubForum) -> bool:
-        self.db[title] = dict(
+        self.db[data["title"]] = dict(
             creator=data["creator"],
             title=data["title"],
             description=data["description"],
