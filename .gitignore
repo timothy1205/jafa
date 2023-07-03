@@ -1,5 +1,4 @@
 # Backend
 *.pyc
 .venv
-.vscode
 .env
