@@ -2,7 +2,7 @@ bcrypt==4.0.1
 blinker==1.6.2
 click==8.1.4
 Flask==2.3.2
-gevent==22.10.2
+gevent==23.7.0
 greenlet==2.0.2
 gunicorn==20.1.0
 itsdangerous==2.1.2
