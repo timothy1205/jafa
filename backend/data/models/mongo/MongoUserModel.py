@@ -19,7 +19,7 @@ class MongoUserModel(MongoMixin, UserModel):
             }
         )
 
-    def get_user_by_username(self, username: str) -> Optional[User]:
+    def get_by_username(self, username: str) -> Optional[User]:
         user = self._get_collection(USERS_COLLECTION).find_one({"username": username})
 
         if user is None:

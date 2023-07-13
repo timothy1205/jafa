@@ -69,7 +69,7 @@ class UserManager(DataManager):
         :returns: Tuple[bool: password_is_valid, dict: user]
         """
         user_model = self.model_factory.create_user_model()
-        user = user_model.get_user_by_username(username)
+        user = user_model.get_by_username(username)
         if user is None:
             return False, None
 
