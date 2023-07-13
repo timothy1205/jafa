@@ -4,6 +4,7 @@ from typing import Optional, Type
 
 from backend.data.managers.DataManager import DataManager
 from backend.data.models.AbstractModelFactory import AbstractModelFactory
+from backend.data.models.SubForumModel import SubForum
 from backend.utils import RolePermissionError
 
 TITLE_MIN = 3
@@ -56,6 +57,15 @@ class SubForumManager(DataManager):
             return False
 
         return True
+
+    def get_subforum(self, title: str) -> SubForum:
+        """Return a subforum with a given title
+
+        :raises NoTitleFoundError:
+        """
+        subforum_model = self.model_factory.create_subforum_model()
+
+        return self.__raise_or_return(subforum_model.get_subforum_by_title(title))
 
     def create_subforum(self, creator: str, title: str, description: str) -> bool:
         """Create a subforum inside the database if the title doesn't already exist
@@ -112,7 +122,7 @@ class SubForumManager(DataManager):
         :raises InvalidDescriptionError:
         """
         subforum_model = self.model_factory.create_subforum_model()
-        subforum = self.__raise_or_return(subforum_model.get_subforum_by_title(title))
+        subforum = self.get_subforum(title)
 
         if not self.__valid_description(description):
             raise InvalidDescriptionError("Description cannot be empty")
