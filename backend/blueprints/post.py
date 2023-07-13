@@ -94,6 +94,7 @@ def edit():
         InvalidPostBody,
         InvalidPostTag,
         TagLimitExceeded,
+        NoPostFoundError,
         RolePermissionError,
     ) as e:
         return make_error(str(e), CODE_BAD_REQUEST)
