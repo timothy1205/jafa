@@ -17,7 +17,7 @@ class TestUserModel(UserModel):
         )
         return True
 
-    def get_user_by_username(self, username) -> Optional[User]:
+    def get_by_username(self, username) -> Optional[User]:
         return self.db.get(username)
 
     def delete_user(self, username) -> bool:
