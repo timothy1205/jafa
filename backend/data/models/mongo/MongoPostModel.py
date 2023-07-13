@@ -1,5 +1,6 @@
 from typing import Optional
 
+from bson.errors import InvalidId
 from bson.objectid import ObjectId
 
 from backend.data.models.mongo.MongoMixin import MongoMixin
@@ -32,7 +33,10 @@ class MongoPostModel(MongoMixin, PostModel):
         return result.acknowledged
 
     def get_by_post_id(self, post_id: str) -> Optional[Post]:
-        post = self.__posts_collection().find_one({"_id": ObjectId(post_id)})
+        try:
+            post = self.__posts_collection().find_one({"_id": ObjectId(post_id)})
+        except InvalidId:
+            return None
 
         if post is None:
             return None
@@ -50,7 +54,10 @@ class MongoPostModel(MongoMixin, PostModel):
         )
 
     def delete_by_post_id(self, post_id: str) -> bool:
-        result = self.__posts_collection().delete_one({"_id": ObjectId(post_id)})
+        try:
+            result = self.__posts_collection().delete_one({"_id": ObjectId(post_id)})
+        except InvalidId:
+            return False
 
         return result.deleted_count != 0
 
@@ -60,32 +67,41 @@ class MongoPostModel(MongoMixin, PostModel):
         return result.acknowledged
 
     def edit_post(self, post_id: str, data: BasePost) -> bool:
-        result = self.__posts_collection().update_one(
-            {"_id": ObjectId(post_id)},
-            {
-                "$set": dict(
-                    op=data["op"],
-                    title=data["title"],
-                    body=data["body"],
-                    media=data["media"],
-                    tags=data["tags"],
-                    modified_date=data["modified_date"],
-                )
-            },
-        )
+        try:
+            result = self.__posts_collection().update_one(
+                {"_id": ObjectId(post_id)},
+                {
+                    "$set": dict(
+                        op=data["op"],
+                        title=data["title"],
+                        body=data["body"],
+                        media=data["media"],
+                        tags=data["tags"],
+                        modified_date=data["modified_date"],
+                    )
+                },
+            )
+        except InvalidId:
+            return False
 
         return result.modified_count != 0
 
     def lock_post(self, post_id: str) -> bool:
-        result = self.__posts_collection().update_one(
-            {"_id": ObjectId(post_id)}, {"$set": dict(locked=True)}
-        )
+        try:
+            result = self.__posts_collection().update_one(
+                {"_id": ObjectId(post_id)}, {"$set": dict(locked=True)}
+            )
+        except InvalidId:
+            return False
 
         return result.modified_count != 0
 
     def unlock_post(self, post_id: str) -> bool:
-        result = self.__posts_collection().update_one(
-            {"_id": ObjectId(post_id)}, {"$set": dict(locked=False)}
-        )
+        try:
+            result = self.__posts_collection().update_one(
+                {"_id": ObjectId(post_id)}, {"$set": dict(locked=False)}
+            )
+        except InvalidId:
+            return False
 
         return result.modified_count != 0
