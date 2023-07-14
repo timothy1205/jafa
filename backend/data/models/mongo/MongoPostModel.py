@@ -27,6 +27,8 @@ class MongoPostModel(MongoMixin, PostModel):
                 creation_date=data["creation_date"],
                 locked=data["locked"],
                 modified_date=data["modified_date"],
+                likes=data["likes"],
+                dislikes=data["dislikes"],
             )
         )
 
@@ -51,6 +53,8 @@ class MongoPostModel(MongoMixin, PostModel):
             locked=post["locked"],
             post_id=str(post["_id"]),
             modified_date=post["modified_date"],
+            likes=post["likes"],
+            dislikes=post["dislikes"],
         )
 
     def delete_by_post_id(self, post_id: str) -> bool:
@@ -78,6 +82,8 @@ class MongoPostModel(MongoMixin, PostModel):
                         media=data["media"],
                         tags=data["tags"],
                         modified_date=data["modified_date"],
+                        likes=data["likes"],
+                        dislikes=data["dislikes"],
                     )
                 },
             )

@@ -12,6 +12,8 @@ class BasePost(TypedDict):
     media: Optional[list[str]]
     tags: Optional[list[str]]
     modified_date: Optional[date]
+    likes: int
+    dislikes: int
 
 
 class CreatePost(BasePost):

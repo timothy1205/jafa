@@ -25,9 +25,11 @@ class VoteManager(DataManager):
     def __init__(self, model_factory: Optional[Type[AbstractModelFactory]] = None):
         super().__init__(model_factory)
 
-    def __raise_or_return(self, post):
-        if post is None:
+    def __raise_or_return(self, vote):
+        if vote is None:
             raise NoVoteFoundError("A vote with that ID and type does not exist")
+
+        return vote
 
     def get_vote(
         self, username: str, content_id: str, content_type: ContentType
@@ -73,12 +75,14 @@ class VoteManager(DataManager):
         :returns: True if successful, false otherwise.
         :raises InvalidContentType:
         """
-        if content_type == ContentType.POST:
-            from backend.data.managers.PostMananger import PostManager
+        from backend.data.managers.PostMananger import PostManager
 
-            post_manager = PostManager()
+        post_manager = PostManager()
+
+        if content_type == ContentType.POST:
             if not post_manager.post_exists(content_id):
                 raise InvalidContent("Invalid post given")
+
         elif content_type == ContentType.COMMENT:
             # TODO: Check if comment exists
             pass
@@ -88,8 +92,18 @@ class VoteManager(DataManager):
         vote_model = self.model_factory.create_vote_model()
 
         try:
-            self.get_vote(username, content_id, content_type)
+            vote = self.get_vote(username, content_id, content_type)
         except NoVoteFoundError:
+            if content_type == ContentType.POST:
+                # Update post likes
+                post_manager.add_likes(content_id, is_like, 1)
+            elif content_type == ContentType.COMMENT:
+                # TODO: Update comment likes
+                pass
+            else:
+                # Unreachable code
+                pass
+
             # Create new vote
             return vote_model.add_vote(
                 dict(
@@ -102,6 +116,20 @@ class VoteManager(DataManager):
             )
 
         # No exception raised, update existing vote
+        if vote["is_like"] != is_like:
+            # If is_like is changing, update counts
+
+            if content_type == ContentType.POST:
+                # Update post likes
+                post_manager.add_likes(content_id, is_like, 1)
+                post_manager.add_likes(content_id, vote["is_like"], -1)
+            elif content_type == ContentType.COMMENT:
+                # TODO: Update comment likes
+                pass
+            else:
+                # Unreachable code
+                pass
+
         return vote_model.update_vote(
             dict(
                 username=username,
@@ -116,7 +144,26 @@ class VoteManager(DataManager):
         """Remove a user vote for some content
 
         :returns: True if successful, false otherwise.
+        :raises NoVoteFoundError:
+        :raises InvalidContentType:
         """
+        vote = self.get_vote(username, content_id, content_type)
+
+        if content_type == ContentType.POST:
+            from backend.data.managers.PostMananger import PostManager
+
+            post_manager = PostManager()
+            if not post_manager.post_exists(content_id):
+                raise InvalidContent("Invalid post given")
+
+            # Update post like/dislike counts
+            post_manager.add_likes(content_id, vote["is_like"], -1)
+        elif content_type == ContentType.COMMENT:
+            # TODO: Check if comment exists
+            pass
+        else:
+            raise InvalidContentType("Unknown content type: " + str(content_type))
+
         vote_model = self.model_factory.create_vote_model()
 
         return vote_model.remove_vote(

@@ -14,10 +14,11 @@ from backend.data.managers.PostMananger import (
 )
 from backend.data.managers.SubForumManager import NoTitleFoundError
 from backend.data.managers.VoteManager import (
-    VoteManager,
     ContentType,
-    InvalidContentType,
     InvalidContent,
+    InvalidContentType,
+    NoVoteFoundError,
+    VoteManager,
 )
 from backend.utils import make_error, make_success, require_form_keys
 
@@ -173,7 +174,7 @@ def unvote():
 
     try:
         removed = vote_manager.remove_vote(username, post_id, ContentType.POST)
-    except (InvalidContentType, InvalidContent) as e:
+    except (InvalidContentType, InvalidContent, NoVoteFoundError) as e:
         return make_error(str(e), CODE_BAD_REQUEST)
     if not removed:
         return make_error("Could not remove post vote", CODE_BAD_REQUEST)
