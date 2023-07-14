@@ -1,5 +1,7 @@
-from flask import Flask
 from secrets import token_hex
+
+from flask import Flask
+
 from backend.data.databases.DatabaseFactory import DatabaseFactory
 from backend.JafaConfig import JafaConfig
 
@@ -12,13 +14,18 @@ def create_app():
 
     # Register blueprint endpoints
     from backend.blueprints import api
+
     app.register_blueprint(api.blueprint)
 
     # Connect to database if we are not testing
     if config.database_type != "testing":
         database = DatabaseFactory.create_database(config.database_type)
-        database.connect(config.database_host, config.database_port,
-                         config.database_username, config.database_password)
+        database.connect(
+            config.database_host,
+            config.database_port,
+            config.database_username,
+            config.database_password,
+        )
         database.setup()
 
     return app

@@ -1,16 +1,24 @@
-from flask import Blueprint, request, session, g
 from functools import wraps
+
+from flask import Blueprint, g, request, session
+
+from backend.blueprints.user import USER_NAME, require_logged_in
+from backend.data.managers.SubForumManager import (
+    InvalidDescriptionError,
+    InvalidTitleError,
+    NoTitleFoundError,
+    RolePermissionError,
+    SubForumManager,
+    TitleExistsError,
+    UnchangedDescriptionError,
+)
 from backend.utils import make_error, make_success, require_form_keys
-from backend.data.managers.SubForumManager import \
-    SubForumManager, InvalidDescriptionError, InvalidTitleError, TitleExistsError, NoTitleFoundError, RolePermissionError, UnchangedDescriptionError
-from backend.blueprints.user import require_logged_in, USER_NAME
 
 SUBFORUM_NAME = "subforum"
 SUBFORUM_PATH = f"/{SUBFORUM_NAME}"
 CODE_BAD_REQUEST = 400
 
-blueprint = Blueprint(SUBFORUM_NAME, __name__,
-                      url_prefix=SUBFORUM_PATH)
+blueprint = Blueprint(SUBFORUM_NAME, __name__, url_prefix=SUBFORUM_PATH)
 
 
 @blueprint.route("/create", methods=["POST"])
@@ -23,10 +31,9 @@ def create():
 
     subforum_manager = SubForumManager()
     try:
-        created = subforum_manager.create_subforum(
-            creator, title, description)
+        created = subforum_manager.create_subforum(creator, title, description)
     except (InvalidDescriptionError, InvalidTitleError, TitleExistsError) as e:
-        return make_error(str(e), CODE_BAD_REQUEST)
+        return make_error(str(e), CODE_BAD_REQUEST, e)
     if not created:
         return make_error("Could not create", CODE_BAD_REQUEST)
     return make_success("Subforum created")
@@ -43,7 +50,7 @@ def delete():
     try:
         deleted = subforum_manager.delete_subforum(username, title)
     except (NoTitleFoundError, RolePermissionError) as e:
-        return make_error(str(e), CODE_BAD_REQUEST)
+        return make_error(str(e), CODE_BAD_REQUEST, e)
     if not deleted:
         return make_error("Could not delete", CODE_BAD_REQUEST)
 
@@ -62,7 +69,7 @@ def edit():
     try:
         updated = subforum_manager.edit_subforum(username, title, description)
     except (NoTitleFoundError, UnchangedDescriptionError, RolePermissionError) as e:
-        return make_error(str(e), CODE_BAD_REQUEST)
+        return make_error(str(e), CODE_BAD_REQUEST, e)
     if not updated:
         return make_error("Could not update subforum", CODE_BAD_REQUEST)
 

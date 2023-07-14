@@ -1,10 +1,10 @@
-from typing import Optional, Type
 import re
-from bcrypt import checkpw, hashpw, gensalt
-from hashlib import sha256
-from base64 import b64encode
-from backend.data.models.AbstractModelFactory import AbstractModelFactory
+from datetime import datetime
+from typing import Optional, Type
+
 from backend.data.managers.DataManager import DataManager
+from backend.data.models.AbstractModelFactory import AbstractModelFactory
+from backend.data.models.SubForumModel import SubForum
 from backend.utils import RolePermissionError
 
 TITLE_MIN = 3
@@ -38,15 +38,14 @@ class SubForumManager(DataManager):
 
     def __raise_or_return(self, subforum):
         if subforum is None:
-            raise NoTitleFoundError(
-                "A subforum with that title does not exist")
+            raise NoTitleFoundError("A subforum with that title does not exist")
 
         return subforum
 
     def __valid_title(self, title):
         if not (TITLE_MIN <= len(title) <= TITLE_MAX):
             return False
-        if re.match('^[a-zA-Z0-9]+(_*[a-zA-Z0-9]+)*$', title) is None:
+        if re.match("^[a-zA-Z0-9]+(_*[a-zA-Z0-9]+)*$", title) is None:
             return False
 
         return True
@@ -58,6 +57,15 @@ class SubForumManager(DataManager):
             return False
 
         return True
+
+    def get_subforum(self, title: str) -> SubForum:
+        """Return a subforum with a given title
+
+        :raises NoTitleFoundError:
+        """
+        subforum_model = self.model_factory.create_subforum_model()
+
+        return self.__raise_or_return(subforum_model.get_subforum_by_title(title))
 
     def create_subforum(self, creator: str, title: str, description: str) -> bool:
         """Create a subforum inside the database if the title doesn't already exist
@@ -72,14 +80,22 @@ class SubForumManager(DataManager):
         if not self.__valid_description(description):
             raise InvalidDescriptionError("Description cannot be empty")
 
-        if subforum_model.get_by_title(title) is not None:
+        if subforum_model.get_subforum_by_title(title) is not None:
             raise TitleExistsError("A subforum with that title already exists")
 
         if not self.__valid_title(title):
             raise InvalidTitleError(
-                "Title may contain letters, numbers, and underscores. Underscores cannot be leading or trailing")
+                "Title may contain letters, numbers, and underscores. Underscores cannot be leading or trailing"
+            )
 
-        return subforum_model.create_subforum(creator, title, description)
+        return subforum_model.create_subforum(
+            dict(
+                creator=creator,
+                title=title,
+                description=description,
+                creation_date=datetime.now(),
+            )
+        )
 
     def delete_subforum(self, username: str, title: str) -> bool:
         """Delete a subforum on behalf of a user as permitted
@@ -89,10 +105,10 @@ class SubForumManager(DataManager):
         :raises NoTitleFoundError:
         """
         subforum_model = self.model_factory.create_subforum_model()
-        subforum = self.__raise_or_return(subforum_model.get_by_title(title))
+        subforum = self.__raise_or_return(subforum_model.get_subforum_by_title(title))
 
         if subforum["creator"] != username:
-            # TODO: Allow moderators to bypass
+            # TODO: Allow admins to bypass
             raise RolePermissionError()
 
         return subforum_model.delete_subforum(title)
@@ -106,7 +122,7 @@ class SubForumManager(DataManager):
         :raises InvalidDescriptionError:
         """
         subforum_model = self.model_factory.create_subforum_model()
-        subforum = self.__raise_or_return(subforum_model.get_by_title(title))
+        subforum = self.get_subforum(title)
 
         if not self.__valid_description(description):
             raise InvalidDescriptionError("Description cannot be empty")

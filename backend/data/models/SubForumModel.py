@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
-from typing import Optional, TypedDict
 from datetime import date
+from typing import Optional, TypedDict
+
 from backend.data.models.Model import Model
 
 
@@ -13,7 +14,7 @@ class SubForum(TypedDict):
 
 class SubForumModel(ABC, Model):
     @abstractmethod
-    def create_subforum(self, creator: str, title: str, description: str) -> bool:
+    def create_subforum(self, data: SubForum) -> bool:
         raise NotImplementedError()
 
     @abstractmethod
@@ -25,5 +26,5 @@ class SubForumModel(ABC, Model):
         raise NotImplementedError()
 
     @abstractmethod
-    def get_by_title(self, title: str) -> Optional[SubForum]:
+    def get_subforum_by_title(self, title: str) -> Optional[SubForum]:
         raise NotImplementedError()

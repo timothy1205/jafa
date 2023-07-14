@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
-from typing import Optional, TypedDict
 from datetime import date
+from typing import Optional, TypedDict
+
 from backend.data.models.Model import Model
 
 
@@ -12,7 +13,7 @@ class User(TypedDict):
 
 class UserModel(ABC, Model):
     @abstractmethod
-    def create_user(self, username: str, password: str) -> bool:
+    def create_user(self, data: User) -> bool:
         raise NotImplementedError()
 
     @abstractmethod

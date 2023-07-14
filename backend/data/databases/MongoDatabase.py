@@ -1,5 +1,7 @@
 from typing import Optional
+
 from pymongo import MongoClient
+
 from backend.data.databases.AbstractDatabase import AbstractDatabase
 
 
@@ -13,7 +15,8 @@ class MongoDatabase(AbstractDatabase):
             self.__client = MongoClient(f"mongodb://{hostname}:{port}")
         else:
             self.__client = MongoClient(
-                f"mongodb://{username}:{password}@{hostname}:{port}")
+                f"mongodb://{username}:{password}@{hostname}:{port}"
+            )
 
         self.__db = self.__client.jafa
 

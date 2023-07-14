@@ -1,10 +1,13 @@
-from glob import glob
 import os.path
+from glob import glob
 from importlib import import_module
-from backend.JafaConfig import JafaConfig
+
 from backend.data.models.AbstractModelFactory import AbstractModelFactory
-from backend.data.models.UserModel import UserModel
+from backend.data.models.PostModel import PostModel
 from backend.data.models.SubForumModel import SubForumModel
+from backend.data.models.UserModel import UserModel
+from backend.data.models.VoteModel import VoteModel
+from backend.JafaConfig import JafaConfig
 
 
 class ModelFactory(AbstractModelFactory):
@@ -12,8 +15,7 @@ class ModelFactory(AbstractModelFactory):
 
     @staticmethod
     def __setup_associations():
-        FILE_BLACKLIST = ["__init__",
-                          "AbstractModelFactory", "ModelFactory", "Model"]
+        FILE_BLACKLIST = ["__init__", "AbstractModelFactory", "ModelFactory", "Model"]
         ModelFactory._associations = {}
         python_files = glob(os.path.join(os.path.dirname(__file__), "**/*.py"))
 
@@ -30,7 +32,7 @@ class ModelFactory(AbstractModelFactory):
             ModelFactory.__setup_associations()
 
         database = JafaConfig().database_type
-        path = ModelFactory._associations[database+model_type+"model"]
+        path = ModelFactory._associations[database + model_type + "model"]
         module = import_module(f"backend.data.models.{database}.{path}")
         return getattr(module, path)
 
@@ -42,4 +44,14 @@ class ModelFactory(AbstractModelFactory):
     @staticmethod
     def create_subforum_model() -> SubForumModel:
         model = ModelFactory.__import_model("subforum")
+        return model()
+
+    @staticmethod
+    def create_vote_model() -> VoteModel:
+        model = ModelFactory.__import_model("vote")
+        return model()
+
+    @staticmethod
+    def create_post_model() -> PostModel:
+        model = ModelFactory.__import_model("post")
         return model()
