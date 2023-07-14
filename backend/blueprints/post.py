@@ -147,7 +147,7 @@ def unlock():
 @require_logged_in
 def vote():
     post_id = request.form.get("post_id")
-    is_like = request.form.get("is_like")
+    is_like = request.form.get("is_like", type=lambda s: s.lower() == "true")
     username = session[USER_NAME]["username"]
 
     vote_manager = VoteManager()
