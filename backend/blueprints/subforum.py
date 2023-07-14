@@ -33,7 +33,7 @@ def create():
     try:
         created = subforum_manager.create_subforum(creator, title, description)
     except (InvalidDescriptionError, InvalidTitleError, TitleExistsError) as e:
-        return make_error(str(e), CODE_BAD_REQUEST)
+        return make_error(str(e), CODE_BAD_REQUEST, e)
     if not created:
         return make_error("Could not create", CODE_BAD_REQUEST)
     return make_success("Subforum created")
@@ -50,7 +50,7 @@ def delete():
     try:
         deleted = subforum_manager.delete_subforum(username, title)
     except (NoTitleFoundError, RolePermissionError) as e:
-        return make_error(str(e), CODE_BAD_REQUEST)
+        return make_error(str(e), CODE_BAD_REQUEST, e)
     if not deleted:
         return make_error("Could not delete", CODE_BAD_REQUEST)
 
@@ -69,7 +69,7 @@ def edit():
     try:
         updated = subforum_manager.edit_subforum(username, title, description)
     except (NoTitleFoundError, UnchangedDescriptionError, RolePermissionError) as e:
-        return make_error(str(e), CODE_BAD_REQUEST)
+        return make_error(str(e), CODE_BAD_REQUEST, e)
     if not updated:
         return make_error("Could not update subforum", CODE_BAD_REQUEST)
 

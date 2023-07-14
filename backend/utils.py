@@ -10,8 +10,18 @@ class RolePermissionError(Exception):
         self.message = message
 
 
-def make_error(msg: str, code: int):
-    response = make_response(jsonify({"error": msg}), code)
+class BadRequest(Exception):
+    pass
+
+
+class MissingKeysError(Exception):
+    pass
+
+
+def make_error(msg: str, code: int, e: Exception = BadRequest()):
+    response = make_response(
+        jsonify({"type": e.__class__.__name__, "error": msg}), code
+    )
     response.headers["Content-Type"] = "application/json"
 
     return response
@@ -34,7 +44,11 @@ def require_form_keys(keys: list[str]):
                     copy.remove(key)
 
             if len(copy) > 0:
-                return make_error(f"Missing: {str(sorted(copy))}", CODE_BAD_REQUEST)
+                return make_error(
+                    f"Missing: {str(sorted(copy))}",
+                    CODE_BAD_REQUEST,
+                    MissingKeysError(),
+                )
 
             return f(*args, **kwargs)
 
