@@ -186,6 +186,8 @@ class PostManager(DataManager):
                 media=media,
                 tags=tags,
                 modified_date=datetime.now(),
+                likes=post["likes"],
+                dislikes=post["dislikes"],
             ),
         )
 
@@ -256,6 +258,36 @@ class PostManager(DataManager):
             raise RolePermissionError()
 
         return post_model.unlock_post(post_id)
+
+    def add_likes(self, post_id: str, is_like: bool, amount: int) -> bool:
+        """Add amount to a post's like/dislike count. Use negatives for subtracting
+
+        :raises NoPostFoundError:
+        """
+        post_model = self.model_factory.create_post_model()
+        post = self.get_post(post_id)
+
+        likes = post["likes"]
+        dislikes = post["dislikes"]
+
+        if is_like:
+            likes += amount
+        else:
+            dislikes += amount
+
+        return post_model.edit_post(
+            post_id,
+            dict(
+                op=post["op"],
+                title=post["title"],
+                body=post["body"],
+                media=post["media"],
+                tags=post["tags"],
+                modified_date=post["modified_date"],
+                likes=likes,
+                dislikes=dislikes,
+            ),
+        )
 
     def post_exists(self, post_id: str) -> bool:
         post_model = self.model_factory.create_post_model()
