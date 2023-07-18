@@ -12,23 +12,19 @@ TITLE_MAX = 40
 DESCRIPTION_MAX = 650
 
 
-class TitleExistsError(Exception):
+class SubForumTitleExistsError(Exception):
     pass
 
 
-class NoTitleFoundError(Exception):
+class NoSubForumFoundError(Exception):
     pass
 
 
-class InvalidTitleError(Exception):
+class InvalidSubForumTitle(Exception):
     pass
 
 
-class InvalidDescriptionError(Exception):
-    pass
-
-
-class UnchangedDescriptionError(Exception):
+class InvalidSubForumDescription(Exception):
     pass
 
 
@@ -38,7 +34,7 @@ class SubForumManager(DataManager):
 
     def __raise_or_return(self, subforum):
         if subforum is None:
-            raise NoTitleFoundError("A subforum with that title does not exist")
+            raise NoSubForumFoundError("A subforum with that title does not exist")
 
         return subforum
 
@@ -61,7 +57,7 @@ class SubForumManager(DataManager):
     def get_subforum(self, title: str) -> SubForum:
         """Return a subforum with a given title
 
-        :raises NoTitleFoundError:
+        :raises NoSubForumFoundError:
         """
         subforum_model = self.model_factory.create_subforum_model()
 
@@ -71,20 +67,20 @@ class SubForumManager(DataManager):
         """Create a subforum inside the database if the title doesn't already exist
 
         :returns: True if successful, false otherwise.
-        :raises TitleExistsError:
-        :raises InvalidTitleError:
-        :raises InvalidDescriptionError:
+        :raises SubForumTitleExistsError:
+        :raises InvalidSubForumTitle:
+        :raises InvalidSubForumDescription:
         """
         subforum_model = self.model_factory.create_subforum_model()
 
         if not self.__valid_description(description):
-            raise InvalidDescriptionError("Description cannot be empty")
+            raise InvalidSubForumDescription("Description cannot be empty")
 
         if subforum_model.get_subforum_by_title(title) is not None:
-            raise TitleExistsError("A subforum with that title already exists")
+            raise SubForumTitleExistsError("A subforum with that title already exists")
 
         if not self.__valid_title(title):
-            raise InvalidTitleError(
+            raise InvalidSubForumTitle(
                 "Title may contain letters, numbers, and underscores. Underscores cannot be leading or trailing"
             )
 
@@ -102,7 +98,7 @@ class SubForumManager(DataManager):
 
         :returns: True if successful, false otherwise.
         :raises RolePermissionError:
-        :raises NoTitleFoundError:
+        :raises NoSubForumFoundError:
         """
         subforum_model = self.model_factory.create_subforum_model()
         subforum = self.__raise_or_return(subforum_model.get_subforum_by_title(title))
@@ -118,20 +114,17 @@ class SubForumManager(DataManager):
 
         :returns: True if successful, false otherwise.
         :raises RolePermissionError:
-        :raises NoTitleFoundError:
-        :raises InvalidDescriptionError:
+        :raises NoSubForumFoundError:
+        :raises InvalidSubForumDescription:
         """
         subforum_model = self.model_factory.create_subforum_model()
         subforum = self.get_subforum(title)
 
         if not self.__valid_description(description):
-            raise InvalidDescriptionError("Description cannot be empty")
+            raise InvalidSubForumDescription("Description cannot be empty")
 
         if subforum["creator"] != username:
             # TODO: Allow moderators to bypass
             raise RolePermissionError()
-
-        if subforum["description"] == description:
-            raise UnchangedDescriptionError("There is nothing to update")
 
         return subforum_model.edit_subforum(title, description)

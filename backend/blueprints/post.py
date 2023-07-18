@@ -12,7 +12,7 @@ from backend.data.managers.PostMananger import (
     RolePermissionError,
     TagLimitExceeded,
 )
-from backend.data.managers.SubForumManager import NoTitleFoundError
+from backend.data.managers.SubForumManager import NoSubForumFoundError
 from backend.data.managers.VoteManager import (
     ContentType,
     InvalidContent,
@@ -50,7 +50,7 @@ def create():
         InvalidPostBody,
         InvalidPostTag,
         TagLimitExceeded,
-        NoTitleFoundError,
+        NoSubForumFoundError,
     ) as e:
         return make_error(str(e), CODE_BAD_REQUEST, e)
     if not created:
