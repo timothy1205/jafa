@@ -18,7 +18,9 @@ class UserManagerTestCase(unittest.TestCase):
     def test_check_password(self):
         password = b64encode(sha256("Password1".encode("utf-8")).digest())
         hashed = hashpw(password, gensalt())
-        self.user_model.create_user("Test", hashed)
+        self.user_model.create_user(
+            dict(username="Test", password=hashed, registration_date=0)
+        )
 
         result = self.user_manager.check_password("Test", "Password1")
         self.assertTrue(result[0], "Returns True on success")

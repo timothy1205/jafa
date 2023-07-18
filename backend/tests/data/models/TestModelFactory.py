@@ -12,7 +12,7 @@ class TestUserModel(UserModel):
     def create_user(self, data: User) -> bool:
         self.db[data["username"]] = dict(
             username=data["username"],
-            password=["password"],
+            password=data["password"],
             registration_date=data["registration_date"],
         )
         return True
