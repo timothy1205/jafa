@@ -10,15 +10,15 @@ class RolePermissionError(Exception):
         self.message = message
 
 
-class BadRequest(Exception):
-    pass
-
-
 class MissingKeysError(Exception):
     pass
 
 
-def make_error(msg: str, code: int, e: Exception = BadRequest()):
+class ActionFailed(Exception):
+    pass
+
+
+def make_error(msg: str, code: int, e: Exception = ActionFailed()):
     response = make_response(
         jsonify({"type": e.__class__.__name__, "error": msg}), code
     )
