@@ -2,8 +2,8 @@ from datetime import datetime
 from typing import Optional, Type
 
 from backend.data.managers.DataManager import DataManager
-from backend.data.managers.VoteManager import VoteManager
 from backend.data.managers.SubForumManager import SubForumManager
+from backend.data.managers.VoteManager import VoteManager
 from backend.data.models.AbstractModelFactory import AbstractModelFactory
 from backend.data.models.PostModel import Post
 from backend.utils import RolePermissionError
@@ -117,12 +117,12 @@ class PostManager(DataManager):
         :raises InvalidPostBody:
         :raises InvalidPostTag:
         :raises TagLimitExceeded:
-        :raises NoTitleFoundError:
+        :raises NoSubForumFoundError:
         """
         post_model = self.model_factory.create_post_model()
         subforum_manager = SubForumManager()
 
-        # Throw NoTitleFoundError if invalid subforum
+        # Throw NoSubForumFoundError if invalid subforum
         subforum_manager.get_subforum(subforum)
 
         title = self.__process_title(title)

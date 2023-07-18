@@ -16,14 +16,14 @@ class SubForumManagerTestCase(unittest.TestCase):
 
         # Title
 
-        with self.assertRaises(sfm.InvalidTitleError, msg="Empty title"):
+        with self.assertRaises(sfm.InvalidSubForumTitle, msg="Empty title"):
             self.subforum_manager.create_subforum("test", "", test_description)
 
             # Underscores
-        with self.assertRaises(sfm.InvalidTitleError, msg="BOUNDARY: Start with _"):
+        with self.assertRaises(sfm.InvalidSubForumTitle, msg="BOUNDARY: Start with _"):
             self.subforum_manager.create_subforum("test", "_Test", test_description)
 
-        with self.assertRaises(sfm.InvalidTitleError, msg="BOUNDARY: End with _"):
+        with self.assertRaises(sfm.InvalidSubForumTitle, msg="BOUNDARY: End with _"):
             self.subforum_manager.create_subforum("test", "Test_", test_description)
 
         self.assertTrue(
@@ -51,15 +51,17 @@ class SubForumManagerTestCase(unittest.TestCase):
         self.subforum_model.delete_subforum("Test_Sub_forum")
 
         # Special characters
-        with self.assertRaises(sfm.InvalidTitleError, msg="BOUNDARY: Symbol at start"):
+        with self.assertRaises(
+            sfm.InvalidSubForumTitle, msg="BOUNDARY: Symbol at start"
+        ):
             self.subforum_manager.create_subforum("test", "@Test", test_description)
 
-        with self.assertRaises(sfm.InvalidTitleError, msg="BOUNDARY: Symbol at end"):
+        with self.assertRaises(sfm.InvalidSubForumTitle, msg="BOUNDARY: Symbol at end"):
             self.subforum_manager.create_subforum("test", "Test@", test_description)
 
         for char in string.punctuation.replace("_", ""):  # Remove underscore
             with self.assertRaises(
-                sfm.InvalidTitleError, msg=f"Special character: '{char}'"
+                sfm.InvalidSubForumTitle, msg=f"Special character: '{char}'"
             ):
                 title = "TestSubforum"
                 # Insert special character in middle
@@ -69,7 +71,7 @@ class SubForumManagerTestCase(unittest.TestCase):
 
             # Length
         with self.assertRaises(
-            sfm.InvalidTitleError, msg="BOUNDARY: Title = TITLE_MIN - 1"
+            sfm.InvalidSubForumTitle, msg="BOUNDARY: Title = TITLE_MIN - 1"
         ):
             self.subforum_manager.create_subforum(
                 "test", "T" * (sfm.TITLE_MIN - 1), test_description
@@ -108,7 +110,7 @@ class SubForumManagerTestCase(unittest.TestCase):
         self.subforum_model.delete_subforum("T" * (sfm.TITLE_MAX))
 
         with self.assertRaises(
-            sfm.InvalidTitleError, msg="BOUNDARY: Title = TITLE_MAX + 1"
+            sfm.InvalidSubForumTitle, msg="BOUNDARY: Title = TITLE_MAX + 1"
         ):
             self.subforum_manager.create_subforum(
                 "test", "T" * (sfm.TITLE_MAX + 1), test_description
@@ -122,7 +124,7 @@ class SubForumManagerTestCase(unittest.TestCase):
             "VALID",
         )
         with self.assertRaises(
-            sfm.TitleExistsError, msg="BOUNDARY: Title = TITLE_MAX + 1"
+            sfm.SubForumTitleExistsError, msg="BOUNDARY: Title = TITLE_MAX + 1"
         ):
             self.subforum_manager.create_subforum(
                 "test", "Test_SubForum", test_description
@@ -131,7 +133,7 @@ class SubForumManagerTestCase(unittest.TestCase):
 
         # Description
         # Empty
-        with self.assertRaises(sfm.InvalidDescriptionError, msg="Empty description"):
+        with self.assertRaises(sfm.InvalidSubForumDescription, msg="Empty description"):
             self.subforum_manager.create_subforum("test", "Test", "")
 
             # Length
@@ -152,7 +154,7 @@ class SubForumManagerTestCase(unittest.TestCase):
         self.subforum_model.delete_subforum("Test_SubForum")
 
         with self.assertRaises(
-            sfm.InvalidDescriptionError,
+            sfm.InvalidSubForumDescription,
             msg="BOUNDARY: Description = DESCRIPTION_MAX + 1",
         ):
             self.subforum_manager.create_subforum(
@@ -160,7 +162,7 @@ class SubForumManagerTestCase(unittest.TestCase):
             )
 
     def test_delete_subforum(self):
-        with self.assertRaises(sfm.NoTitleFoundError, msg="Nonexistant subforum"):
+        with self.assertRaises(sfm.NoSubForumFoundError, msg="Nonexistant subforum"):
             self.subforum_manager.delete_subforum("test", "Test_SubForum")
 
         # Permissions
