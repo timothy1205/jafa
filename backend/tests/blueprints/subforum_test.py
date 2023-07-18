@@ -45,9 +45,7 @@ class SubForumEndpointTestCase(unittest.TestCase):
 
         res = self.client.post(CREATE_ENDPOINT)
         self.assertIn(
-            f'{{"error":"Missing: {sorted(["title", "description"])}"}}'.encode(
-                "utf-8"
-            ),
+            b'"type":"MissingKeysError"',
             res.data,
             "Erroneous response",
         )
@@ -63,7 +61,7 @@ class SubForumEndpointTestCase(unittest.TestCase):
 
         res = self.client.delete(DELETE_ENDPOINT)
         self.assertIn(
-            f'{{"error":"Missing: {["title"]}"}}'.encode("utf-8"),
+            b'"type":"MissingKeysError"',
             res.data,
             "Erroneous response",
         )
@@ -79,9 +77,7 @@ class SubForumEndpointTestCase(unittest.TestCase):
 
         res = self.client.post(EDIT_ENDPOINT)
         self.assertIn(
-            f'{{"error":"Missing: {sorted(["title", "description"])}"}}'.encode(
-                "utf-8"
-            ),
+            b'"type":"MissingKeysError"',
             res.data,
             "Erroneous response",
         )
