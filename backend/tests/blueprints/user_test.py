@@ -46,7 +46,7 @@ class UserEndpointTestCase(unittest.TestCase):
         """
         res = self.client.post(REGISTER_ENDPOINT)
         self.assertIn(
-            b'{"error":"Missing username and/or password"}',
+            b'"type":"MissingKeysError"',
             res.data,
             "Erroneous response",
         )
@@ -58,7 +58,7 @@ class UserEndpointTestCase(unittest.TestCase):
         register(self.client, "red", "Password1")
         res = self.client.post(LOGIN_ENDPOINT)
         self.assertIn(
-            b'{"error":"Missing username and/or password"}',
+            b'"type":"MissingKeysError"',
             res.data,
             "Erroneous response",
         )
