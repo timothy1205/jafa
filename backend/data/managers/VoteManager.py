@@ -73,11 +73,12 @@ class VoteManager(DataManager):
         """Create a user vote for some content (or update if exists)
 
         :returns: True if successful, false otherwise.
+        :raises InvalidContent:
         :raises InvalidContentType:
         """
         from backend.data.managers.PostMananger import PostManager
 
-        post_manager = PostManager()
+        post_manager = PostManager(self.model_factory)
 
         if content_type == ContentType.POST:
             if not post_manager.post_exists(content_id):
@@ -87,6 +88,7 @@ class VoteManager(DataManager):
             # TODO: Check if comment exists
             pass
         else:
+            # Should be unreachable
             raise InvalidContentType("Unknown content type: " + str(content_type))
 
         vote_model = self.model_factory.create_vote_model()
@@ -96,7 +98,7 @@ class VoteManager(DataManager):
         except NoVoteFoundError:
             if content_type == ContentType.POST:
                 # Update post likes
-                post_manager.add_likes(content_id, is_like, 1)
+                post_manager.add_like(content_id, is_like)
             elif content_type == ContentType.COMMENT:
                 # TODO: Update comment likes
                 pass
@@ -121,8 +123,8 @@ class VoteManager(DataManager):
 
             if content_type == ContentType.POST:
                 # Update post likes
-                post_manager.add_likes(content_id, is_like, 1)
-                post_manager.add_likes(content_id, vote["is_like"], -1)
+                post_manager.add_like(content_id, is_like)
+                post_manager.add_like(content_id, vote["is_like"], False)
             elif content_type == ContentType.COMMENT:
                 # TODO: Update comment likes
                 pass
@@ -152,12 +154,12 @@ class VoteManager(DataManager):
         if content_type == ContentType.POST:
             from backend.data.managers.PostMananger import PostManager
 
-            post_manager = PostManager()
+            post_manager = PostManager(self.model_factory)
             if not post_manager.post_exists(content_id):
                 raise InvalidContent("Invalid post given")
 
             # Update post like/dislike counts
-            post_manager.add_likes(content_id, vote["is_like"], -1)
+            post_manager.add_like(content_id, vote["is_like"], False)
         elif content_type == ContentType.COMMENT:
             # TODO: Check if comment exists
             pass

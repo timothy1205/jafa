@@ -78,7 +78,9 @@ class PostManager(DataManager):
         if tags is None:
             return
 
-        if len(tags) > TAGS_LIMIT:
+        if len(tags) == 0:
+            return None
+        elif len(tags) > TAGS_LIMIT:
             raise TagLimitExceeded(f"Exceeded tag limit of {TAGS_LIMIT}")
 
         def __check_tag(tag: str):
@@ -120,7 +122,7 @@ class PostManager(DataManager):
         :raises NoSubForumFoundError:
         """
         post_model = self.model_factory.create_post_model()
-        subforum_manager = SubForumManager()
+        subforum_manager = SubForumManager(self.model_factory)
 
         # Throw NoSubForumFoundError if invalid subforum
         subforum_manager.get_subforum(subforum)
@@ -259,8 +261,8 @@ class PostManager(DataManager):
 
         return post_model.unlock_post(post_id)
 
-    def add_likes(self, post_id: str, is_like: bool, amount: int) -> bool:
-        """Add amount to a post's like/dislike count. Use negatives for subtracting
+    def add_like(self, post_id: str, is_like: bool, positive: bool = True) -> bool:
+        """Add to a post's like/dislike count. positive indicates whether it should be 1 or -1
 
         :raises NoPostFoundError:
         """
@@ -270,10 +272,13 @@ class PostManager(DataManager):
         likes = post["likes"]
         dislikes = post["dislikes"]
 
+        amount = 1 if positive else -1
+
+        # Add amount, ensure values never go below 0
         if is_like:
-            likes += amount
+            likes = max(likes + amount, 0)
         else:
-            dislikes += amount
+            dislikes = max(dislikes + amount, 0)
 
         return post_model.edit_post(
             post_id,

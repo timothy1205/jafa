@@ -1,4 +1,5 @@
 from typing import Optional
+import json
 
 from backend.data.models.AbstractModelFactory import AbstractModelFactory
 from backend.data.models.SubForumModel import SubForum, SubForumModel
@@ -91,17 +92,20 @@ class TestVoteModel(VoteModel):
     def __init__(self):
         self.db = {}
 
+    def __hash(self, data):
+        return hash(json.dumps(data, sort_keys=True))
+
     def add_vote(self, data: Vote) -> bool:
         base = dict(
             username=data["username"],
             content_id=data["content_id"],
             content_type=data["content_type"],
         )
-        self.db[hash(base)] = data
+        self.db[self.__hash(base)] = data
         return True
 
     def get_vote(self, data: BaseVote) -> Vote:
-        return self.db.get(hash(data))
+        return self.db.get(self.__hash(data))
 
     def update_vote(self, data: Vote) -> bool:
         return self.add_vote(data)
@@ -112,7 +116,7 @@ class TestVoteModel(VoteModel):
             content_id=data["content_id"],
             content_type=data["content_type"],
         )
-        del self.db[hash(base)]
+        del self.db[self.__hash(base)]
         return True
 
     def clear_votes_by_username(self, username: str) -> bool:

@@ -124,7 +124,7 @@ class SubForumManagerTestCase(unittest.TestCase):
             "VALID",
         )
         with self.assertRaises(
-            sfm.SubForumTitleExistsError, msg="BOUNDARY: Title = TITLE_MAX + 1"
+            sfm.SubForumTitleExistsError, msg="Duplicate subforum detected"
         ):
             self.subforum_manager.create_subforum(
                 "test", "Test_SubForum", test_description
