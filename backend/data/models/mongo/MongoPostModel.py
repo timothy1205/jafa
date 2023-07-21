@@ -16,21 +16,17 @@ class MongoPostModel(MongoMixin, PostModel):
     def __posts_collection(self):
         return self._get_collection(POSTS_COLLECTION)
 
+    def __filter_post_result(self, post):
+        data = dict(post)
+
+        # Format _id
+        del data["_id"]
+        data["post_id"] = str(post["_id"])
+
+        return data
+
     def create_post(self, data: CreatePost) -> bool:
-        result = self.__posts_collection().insert_one(
-            dict(
-                op=data["op"],
-                title=data["title"],
-                body=data["body"],
-                media=data["media"],
-                tags=data["tags"],
-                creation_date=data["creation_date"],
-                locked=data["locked"],
-                modified_date=data["modified_date"],
-                likes=data["likes"],
-                dislikes=data["dislikes"],
-            )
-        )
+        result = self.__posts_collection().insert_one(dict(data))
 
         return result.acknowledged
 
@@ -43,19 +39,7 @@ class MongoPostModel(MongoMixin, PostModel):
         if post is None:
             return None
 
-        return dict(
-            op=post["op"],
-            title=post["title"],
-            body=post["body"],
-            media=post["media"],
-            tags=post["tags"],
-            creation_data=post["creation_date"],
-            locked=post["locked"],
-            post_id=str(post["_id"]),
-            modified_date=post["modified_date"],
-            likes=post["likes"],
-            dislikes=post["dislikes"],
-        )
+        return self.__filter_post_result(post)
 
     def delete_by_post_id(self, post_id: str) -> bool:
         try:
@@ -111,3 +95,12 @@ class MongoPostModel(MongoMixin, PostModel):
             return False
 
         return result.modified_count != 0
+
+    def get_post_list_by_time(self, subforum: str) -> list[Post]:
+        results = (
+            self.__posts_collection().find({"subforum": subforum}).sort("creation_date")
+        )
+
+        filtered = map(self.__filter_post_result, results)
+
+        return list(filtered)

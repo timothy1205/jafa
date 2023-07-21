@@ -298,3 +298,11 @@ class PostManager(DataManager):
         post_model = self.model_factory.create_post_model()
 
         return post_model.get_by_post_id(post_id) is not None
+
+    def get_post_list(self, subforum: str) -> list[Post]:
+        """Returns a list of posts"""
+        post_model = self.model_factory.create_post_model()
+
+        # TODO: Add more options
+        # Should also add options for limiting results and skipping past others
+        return post_model.get_post_list_by_time(subforum)

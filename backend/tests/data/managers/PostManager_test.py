@@ -342,3 +342,7 @@ class PostManagerTestCase(unittest.TestCase):
 
         self.assertFalse(self.post_manager.post_exists("test"))
         self.assertTrue(self.post_manager.post_exists("0"))
+
+    def test_get_post_list(self):
+        # No logic to test
+        pass

@@ -62,6 +62,18 @@ def create():
     return make_success("Post created")
 
 
+@blueprint.route("/list", methods=["GET"])
+@require_keys(["subforum"])
+@require_logged_in
+def list():
+    subforum = request.args.get("subforum")
+
+    post_manager = PostManager()
+    posts = post_manager.get_post_list(subforum)
+
+    return make_success(posts)
+
+
 @blueprint.route("/delete", methods=["DELETE"])
 @require_keys(["post_id"])
 @require_logged_in
