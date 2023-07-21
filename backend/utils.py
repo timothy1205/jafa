@@ -34,13 +34,13 @@ def make_success(msg: str, code=200):
     return response
 
 
-def require_form_keys(keys: list[str]):
+def require_keys(keys: list[str]):
     def decorator(f):
         @wraps(f)
         def wrapper(*args, **kwargs):
             copy = list(keys)
             for key in keys:
-                if key in request.form:
+                if key in request.values:
                     copy.remove(key)
 
             if len(copy) > 0:

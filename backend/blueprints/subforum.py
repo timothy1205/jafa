@@ -11,7 +11,7 @@ from backend.data.managers.SubForumManager import (
     SubForumManager,
     SubForumTitleExistsError,
 )
-from backend.utils import make_error, make_success, require_form_keys
+from backend.utils import make_error, make_success, require_keys
 
 SUBFORUM_NAME = "subforum"
 SUBFORUM_PATH = f"/{SUBFORUM_NAME}"
@@ -21,7 +21,7 @@ blueprint = Blueprint(SUBFORUM_NAME, __name__, url_prefix=SUBFORUM_PATH)
 
 
 @blueprint.route("/create", methods=["POST"])
-@require_form_keys(["title", "description"])
+@require_keys(["title", "description"])
 @require_logged_in
 def create():
     title = request.form.get("title")
@@ -43,7 +43,7 @@ def create():
 
 
 @blueprint.route("/delete", methods=["DELETE"])
-@require_form_keys(["title"])
+@require_keys(["title"])
 @require_logged_in
 def delete():
     title = request.form.get("title")
@@ -61,7 +61,7 @@ def delete():
 
 
 @blueprint.route("/edit", methods=["POST"])
-@require_form_keys(["title", "description"])
+@require_keys(["title", "description"])
 @require_logged_in
 def edit():
     title = request.form.get("title")

@@ -8,7 +8,7 @@ from backend.data.managers.UserManager import (
     UserManager,
     UsernameExistsError,
 )
-from backend.utils import CODE_BAD_REQUEST, make_error, make_success, require_form_keys
+from backend.utils import CODE_BAD_REQUEST, make_error, make_success, require_keys
 
 
 class NotLoggedIn(Exception):
@@ -39,7 +39,7 @@ def require_logged_in(f):
 
 
 @blueprint.route("/login", methods=["POST"])
-@require_form_keys(["username", "password"])
+@require_keys(["username", "password"])
 def login():
     if USER_NAME in session:
         return make_error(
@@ -61,7 +61,7 @@ def login():
 
 
 @blueprint.route("/register", methods=["POST"])
-@require_form_keys(["username", "password"])
+@require_keys(["username", "password"])
 def register():
     username = request.form.get("username")
     password = request.form.get("password")
