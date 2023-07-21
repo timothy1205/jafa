@@ -64,7 +64,6 @@ def create():
 
 @blueprint.route("/list", methods=["GET"])
 @require_keys(["subforum"])
-@require_logged_in
 def list():
     subforum = request.args.get("subforum")
 
