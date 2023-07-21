@@ -87,6 +87,9 @@ class TestPostModel(PostModel):
         self.db[post_id]["locked"] = False
         return True
 
+    def get_post_list_by_time(self, limit: int = 0) -> list[Post]:
+        return list(self.db.values())
+
 
 class TestVoteModel(VoteModel):
     def __init__(self):

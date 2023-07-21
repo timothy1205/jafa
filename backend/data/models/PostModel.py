@@ -17,6 +17,7 @@ class BasePost(TypedDict):
 
 
 class CreatePost(BasePost):
+    subforum: str
     creation_date: date
     locked: bool
 
@@ -51,4 +52,7 @@ class PostModel(ABC, Model):
         raise NotImplementedError()
 
     def unlock_post(self, post_id: str) -> bool:
+        raise NotImplementedError()
+
+    def get_post_list_by_time(self, subforum: str) -> list[Post]:
         raise NotImplementedError()

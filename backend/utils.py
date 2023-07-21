@@ -3,6 +3,7 @@ from functools import wraps
 from flask import g, jsonify, make_response, request
 
 CODE_BAD_REQUEST = 400
+CODE_SUCCESS = 200
 
 
 class RolePermissionError(Exception):
@@ -27,8 +28,9 @@ def make_error(msg: str, code: int, e: Exception = ActionFailed()):
     return response
 
 
-def make_success(msg: str, code=200):
-    response = make_response(jsonify({"msg": msg}), code)
+def make_success(data: str | dict):
+    response_data = {"msg": data} if type(data) is str else data
+    response = make_response(jsonify(response_data), CODE_SUCCESS)
     response.headers["Content-Type"] = "application/json"
 
     return response
