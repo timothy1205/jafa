@@ -20,7 +20,11 @@ from backend.data.managers.VoteManager import (
     NoVoteFoundError,
     VoteManager,
 )
-from backend.utils import make_error, make_success, require_form_keys
+from backend.utils import (
+    make_error,
+    make_success,
+    require_keys,
+)
 
 POST_NAME = "post"
 POST_PATH = f"/{POST_NAME}"
@@ -30,7 +34,7 @@ CODE_BAD_REQUEST = 400
 
 
 @blueprint.route("/create", methods=["POST"])
-@require_form_keys(["subforum", "title", "body"])
+@require_keys(["subforum", "title", "body"])
 @require_logged_in
 def create():
     subforum = request.form.get("subforum")
@@ -59,7 +63,7 @@ def create():
 
 
 @blueprint.route("/delete", methods=["DELETE"])
-@require_form_keys(["post_id"])
+@require_keys(["post_id"])
 @require_logged_in
 def delete():
     post_id = request.form.get("post_id")
@@ -77,7 +81,7 @@ def delete():
 
 
 @blueprint.route("/edit", methods=["POST"])
-@require_form_keys(["post_id", "title", "body"])
+@require_keys(["post_id", "title", "body"])
 @require_logged_in
 def edit():
     post_id = request.form.get("post_id")
@@ -106,7 +110,7 @@ def edit():
 
 
 @blueprint.route("/lock", methods=["POST"])
-@require_form_keys(["post_id"])
+@require_keys(["post_id"])
 @require_logged_in
 def lock():
     post_id = request.form.get("post_id")
@@ -125,7 +129,7 @@ def lock():
 
 
 @blueprint.route("/unlock", methods=["POST"])
-@require_form_keys(["post_id"])
+@require_keys(["post_id"])
 @require_logged_in
 def unlock():
     post_id = request.form.get("post_id")
@@ -144,7 +148,7 @@ def unlock():
 
 
 @blueprint.route("/vote", methods=["POST"])
-@require_form_keys(["post_id", "is_like"])
+@require_keys(["post_id", "is_like"])
 @require_logged_in
 def vote():
     post_id = request.form.get("post_id")
@@ -164,7 +168,7 @@ def vote():
 
 
 @blueprint.route("/unvote", methods=["POST"])
-@require_form_keys(["post_id"])
+@require_keys(["post_id"])
 @require_logged_in
 def unvote():
     post_id = request.form.get("post_id")
