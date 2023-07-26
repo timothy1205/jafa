@@ -1,16 +1,26 @@
 version: "3.4"
 
 services:
-  jafa:
-    container_name: jafa
-    image: jafa
+  jafa-backend:
+    container_name: jafa-backend
+    env_file:
+      - .env
+    build:
+      context: ./backend
+      dockerfile: ./Dockerfile
     depends_on:
       - mongo
+
+  jafa-frontend:
+    container_name: jafa-frontend
     build:
-      context: .
+      target: prod
+      context: ./frontend
       dockerfile: ./Dockerfile
     ports:
-      - 8080:8080
+      - 3000:3000
+    depends_on:
+      - jafa-backend
   mongo:
     image: mongo:7
     restart: unless-stopped

@@ -1,4 +1,8 @@
 # Backend
 *.pyc
-.venv
+.venv/
 .env
+
+# Frontend
+node_modules/
+*.log
