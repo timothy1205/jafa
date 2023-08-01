@@ -87,7 +87,10 @@ class TestPostModel(PostModel):
         self.db[post_id]["locked"] = False
         return True
 
-    def get_post_list_by_time(self, limit: int = 0) -> list[Post]:
+    def get_post_list_by_time(self, subforum: str) -> list[Post]:
+        return list(filter(lambda post: post["subforum"] == subforum), self.db.values())
+
+    def get_all_posts(self) -> list[Post]:
         return list(self.db.values())
 
 

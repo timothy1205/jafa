@@ -104,3 +104,10 @@ class MongoPostModel(MongoMixin, PostModel):
         filtered = map(self.__filter_post_result, results)
 
         return list(filtered)
+
+    def get_all_posts(self) -> list[Post]:
+        results = self.__posts_collection().find().sort("creation_date")
+
+        filtered = map(self.__filter_post_result, results)
+
+        return list(filtered)
