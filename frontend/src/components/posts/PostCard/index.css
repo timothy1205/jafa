@@ -1,0 +1,80 @@
+.postcard {
+    display: flex;
+    background-color: var(--background-secondary);
+    margin-bottom: 5px;
+}
+
+.postcard-content:hover > h3 {
+    color: var(--primary);
+    border-bottom: 1px solid var(--primary);
+}
+
+.postcard-vote {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+
+
+
+.postcard-vote > button {
+    height: 100%;
+    background-color: var(--primary);
+    border-radius: 0;
+}
+
+.postcard-vote > button:hover {
+    background-color: var(--primary-darker);
+}
+
+.postcard-vote > button > svg {
+    width: 35px;
+    height: auto;
+}
+
+.postcard-upvote {
+    color: var(--green)
+}
+
+.postcard-downvote {
+    color: var(--red)
+}
+
+.postcard-content {
+    padding: 10px;
+    color: white;
+    width: 100%;
+    text-decoration: none;
+    
+}
+
+.postcard-info {
+    display: flex;
+    font-size: 0.75em;
+    font-style: italic;
+
+}
+
+.postcard-subforum {
+    margin-right: 35px;
+    color: white;
+    text-decoration: none;
+    text-align: center;
+    line-height: 350%;
+    transition: all 1s cubic-bezier(0.075, 0.82, 0.165, 1);
+}
+
+.postcard-subforum:hover {
+    color: var(--primary);
+}
+
+
+.postcard-creation {
+    border-bottom: 1px solid #fff;
+}
+
+.postcard-title {
+    border-bottom: 1px solid white;
+    transition: all 1s cubic-bezier(0.075, 0.82, 0.165, 1);
+}
