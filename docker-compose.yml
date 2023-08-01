@@ -13,6 +13,8 @@ services:
 
   jafa-frontend:
     container_name: jafa-frontend
+    env_file:
+      - .env
     build:
       target: prod
       context: ./frontend
