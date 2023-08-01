@@ -16,6 +16,8 @@ services:
         "--reload",
       ]
   jafa-frontend:
+    volumes:
+      - "./frontend:/app"
     build:
       target: build
   mongo:
