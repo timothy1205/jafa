@@ -51,8 +51,14 @@ class PostModel(ABC, Model):
     def lock_post(self, post_id: str) -> bool:
         raise NotImplementedError()
 
+    @abstractmethod
     def unlock_post(self, post_id: str) -> bool:
         raise NotImplementedError()
 
+    @abstractmethod
     def get_post_list_by_time(self, subforum: str) -> list[Post]:
+        raise NotImplementedError()
+
+    @abstractmethod
+    def get_all_posts(self) -> list[Post]:
         raise NotImplementedError()
