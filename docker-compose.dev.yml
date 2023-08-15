@@ -4,8 +4,6 @@ services:
   jafa-backend:
     volumes:
       - "./backend:/opt/jafa/backend:ro"
-    ports:
-      - 8080:8080
     command:
       [
         "gunicorn",
@@ -19,7 +17,7 @@ services:
     volumes:
       - "./frontend:/app"
     build:
-      target: build
+      target: dev
   mongo:
     ports:
       - 27017:27017
