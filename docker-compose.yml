@@ -8,6 +8,8 @@ services:
     build:
       context: ./backend
       dockerfile: ./Dockerfile
+    ports:
+      - 8080:8080
     depends_on:
       - mongo
 
@@ -17,8 +19,7 @@ services:
       - .env
     build:
       target: prod
-      context: ./frontend
-      dockerfile: ./Dockerfile
+      dockerfile: ./frontend/Dockerfile
     ports:
       - 3000:3000
     depends_on:
