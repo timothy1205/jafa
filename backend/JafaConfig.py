@@ -19,4 +19,5 @@ class JafaConfig:
         self.database_port = os.getenv("DATABASE_PORT")
         self.database_username = os.getenv("DATABASE_USERNAME")
         self.database_password = os.getenv("DATABASE_PASSWORD")
+        self.cors_origins = os.getenv("WHITELISTED_ORIGINS", "").split(",")
         self.loaded = True
