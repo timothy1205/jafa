@@ -76,3 +76,15 @@ def register():
         return make_error("Could not create!", CODE_UNAUTHORIZED)
 
     return make_success("User created")
+
+
+@blueprint.route("/get")
+def get():
+    if USER_NAME not in session:
+        return make_success({})
+
+    user = session[USER_NAME]
+
+    return make_success(
+        dict(registration_date=user["registration_date"], username=user["username"])
+    )
