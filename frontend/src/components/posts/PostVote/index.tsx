@@ -14,7 +14,7 @@ export default function PostVote({ post_id }: PostVoteProps) {
     try {
       await api.vote(post_id, is_like);
     } catch (e) {
-      console.error(e);
+      api.handleError(e);
     }
   }
 

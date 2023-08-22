@@ -15,7 +15,7 @@ export default function PostList({ subforum }: PostListProps) {
         const res = await api.postList(subforum);
         setPosts(res.data);
       } catch (e) {
-        console.error(e);
+        api.handleError(e);
       }
     };
 
