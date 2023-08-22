@@ -21,4 +21,9 @@ code {
   --primary-darker: #4300a8;
   --green: #00ff88ef;
   --red: #c50000;
+
+  --toastify-color-dark: var(--background);
+  --toastify-toast-width: auto;
+
+  --toastify-color-error: var(--red);
 }
