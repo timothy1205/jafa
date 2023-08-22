@@ -1,5 +1,7 @@
 #header {
     border-bottom: 2px white solid;
+    display: flex;
+    justify-content: space-between;
 }
 
 #header-title {
