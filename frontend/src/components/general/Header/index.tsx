@@ -1,5 +1,6 @@
 import React from "react";
 import "./index.css";
+import UsernameLogin from "../UsernameLogin";
 
 export default function Header() {
   return (
@@ -7,6 +8,7 @@ export default function Header() {
       <a href="/" id="header-title">
         Jafa
       </a>
+      <UsernameLogin />
     </div>
   );
 }
