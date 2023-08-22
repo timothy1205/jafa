@@ -1,6 +1,7 @@
 from secrets import token_hex
 
 from flask import Flask
+from flask_cors import CORS
 
 from backend.data.databases.DatabaseFactory import DatabaseFactory
 from backend.JafaConfig import JafaConfig
@@ -11,6 +12,8 @@ def create_app():
     app.secret_key = token_hex(16)
 
     config = JafaConfig()
+
+    CORS(app, origins=config.cors_origins, supports_credentials=True)
 
     # Register blueprint endpoints
     from backend.blueprints import api
