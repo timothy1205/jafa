@@ -24,7 +24,7 @@ interface PostCardProps {
 export default function PostCard({ data }: PostCardProps) {
   return (
     <div className="postcard">
-      <PostVote />
+      <PostVote post_id={data.post_id} />
       <a href={`/post/${data.post_id}`} className="postcard-content">
         <div className="postcard-info">
           <a href={`/subforum/${data.subforum}`} className="postcard-subforum">
