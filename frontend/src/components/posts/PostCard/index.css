@@ -9,38 +9,6 @@
     border-bottom: 1px solid var(--primary);
 }
 
-.postcard-vote {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
-
-
-
-
-.postcard-vote > button {
-    height: 100%;
-    background-color: var(--primary);
-    border-radius: 0;
-}
-
-.postcard-vote > button:hover {
-    background-color: var(--primary-darker);
-}
-
-.postcard-vote > button > svg {
-    width: 35px;
-    height: auto;
-}
-
-.postcard-upvote {
-    color: var(--green)
-}
-
-.postcard-downvote {
-    color: var(--red)
-}
-
 .postcard-content {
     padding: 10px;
     color: white;

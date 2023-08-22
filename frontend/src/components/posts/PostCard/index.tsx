@@ -1,8 +1,6 @@
 import React from "react";
-import Button from "@mui/material/Button";
-import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
-import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import "./index.css";
+import PostVote from "../PostVote";
 
 export interface PostData {
   body: string;
@@ -26,14 +24,7 @@ interface PostCardProps {
 export default function PostCard({ data }: PostCardProps) {
   return (
     <div className="postcard">
-      <div className="postcard-vote">
-        <Button>
-          <ArrowUpwardIcon className="postcard-upvote"></ArrowUpwardIcon>
-        </Button>
-        <Button>
-          <ArrowDownwardIcon className="postcard-downvote"></ArrowDownwardIcon>
-        </Button>
-      </div>
+      <PostVote />
       <a href={`/post/${data.post_id}`} className="postcard-content">
         <div className="postcard-info">
           <a href={`/subforum/${data.subforum}`} className="postcard-subforum">
