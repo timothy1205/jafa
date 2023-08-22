@@ -9,30 +9,28 @@ interface APIError {
 
 const apiUrl = `${config.backendUrl}/api`;
 
-const api = {
-  postList: (subforum?: string) =>
-    axios.get(`${apiUrl}/post/list`, { params: { subforum: subforum } }),
-  vote: (post_id: string, is_like: boolean) => {
-    const formData = new FormData();
-    formData.append("post_id", post_id);
-    formData.append("is_like", is_like.toString());
-    return axios.post(`${apiUrl}/post/vote`, formData);
-  },
+export function postList(subforum?: string) {
+  return axios.get(`${apiUrl}/post/list`, { params: { subforum: subforum } });
+}
 
-  handleError: (err: unknown) => {
-    if (!axios.isAxiosError(err)) {
-      console.error(err);
-      return;
-    }
+export function vote(post_id: string, is_like: boolean) {
+  const formData = new FormData();
+  formData.append("post_id", post_id);
+  formData.append("is_like", is_like.toString());
+  return axios.post(`${apiUrl}/post/vote`, formData);
+}
 
-    const responseData = err.response?.data;
-    if (responseData) {
-      const apiError = responseData as APIError;
-      const errMessage = `[${apiError.type}]: ${apiError.error}`;
-      console.error(errMessage);
-      generateToast(errMessage, "error");
-    }
-  },
-};
+export function handleError(err: unknown) {
+  if (!axios.isAxiosError(err)) {
+    console.error(err);
+    return;
+  }
 
-export default api;
+  const responseData = err.response?.data;
+  if (responseData) {
+    const apiError = responseData as APIError;
+    const errMessage = `[${apiError.type}]: ${apiError.error}`;
+    console.error(errMessage);
+    generateToast(errMessage, "error");
+  }
+}

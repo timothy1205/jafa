@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import api from "../../../services/api";
+import { postList, handleError } from "../../../services/api";
 import PostCard, { PostData } from "../PostCard";
 
 interface PostListProps {
@@ -12,10 +12,10 @@ export default function PostList({ subforum }: PostListProps) {
   useEffect(() => {
     const getPostList = async () => {
       try {
-        const res = await api.postList(subforum);
+        const res = await postList(subforum);
         setPosts(res.data);
       } catch (e) {
-        api.handleError(e);
+        handleError(e);
       }
     };
 
