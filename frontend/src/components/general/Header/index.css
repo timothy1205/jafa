@@ -1,0 +1,10 @@
+#header {
+    border-bottom: 2px white solid;
+}
+
+#header-title {
+    color: white;
+    font-size: 35px;
+    text-decoration: none;
+    margin-left: 20px;
+}
