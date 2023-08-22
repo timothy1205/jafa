@@ -1,0 +1,28 @@
+.postvote {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.postvote > button {
+    height: 100%;
+    background-color: var(--primary);
+    border-radius: 0;
+}
+
+.postvote > button:hover {
+    background-color: var(--primary-darker);
+}
+
+.postvote > button > svg {
+    width: 35px;
+    height: auto;
+}
+
+.postvote-upvote {
+    color: var(--green)
+}
+
+.postvote-downvote {
+    color: var(--red)
+}
