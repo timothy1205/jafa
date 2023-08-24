@@ -4,11 +4,6 @@
     margin-bottom: 5px;
 }
 
-.postcard-content:hover > h3 {
-    color: var(--primary);
-    border-bottom: 1px solid var(--primary);
-}
-
 .postcard-content {
     padding: 10px;
     color: white;
@@ -43,6 +38,13 @@
 }
 
 .postcard-title {
+    color: white;
+    text-decoration: none;
     border-bottom: 1px solid white;
     transition: all 1s cubic-bezier(0.075, 0.82, 0.165, 1);
+}
+
+.postcard-title:hover {
+    color: var(--primary);
+    border-bottom: 1px solid var(--primary);
 }
