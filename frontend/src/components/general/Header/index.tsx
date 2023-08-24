@@ -1,13 +1,14 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import "./index.css";
 import UsernameLogin from "../UsernameLogin";
 
 export default function Header() {
   return (
     <div id="header">
-      <a href="/" id="header-title">
+      <Link to="/" id="header-title">
         Jafa
-      </a>
+      </Link>
       <UsernameLogin />
     </div>
   );

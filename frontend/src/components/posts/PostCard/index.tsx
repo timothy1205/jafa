@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import "./index.css";
 import PostVote from "../PostVote";
 
@@ -25,16 +26,18 @@ export default function PostCard({ data }: PostCardProps) {
   return (
     <div className="postcard">
       <PostVote post_id={data.post_id} />
-      <a href={`/post/${data.post_id}`} className="postcard-content">
+      <div className="postcard-content">
         <div className="postcard-info">
-          <a href={`/subforum/${data.subforum}`} className="postcard-subforum">
+          <Link to={`/subforum/${data.subforum}`} className="postcard-subforum">
             {data.subforum}
-          </a>
+          </Link>
           <p className="postcard-creation">{data.creation_date}</p>
         </div>
-        <h3 className="postcard-title">{data.title}</h3>
+        <Link to={`/post/${data.post_id}`} className="postcard-title">
+          {data.title}
+        </Link>
         <p className="postcard-body">{data.body}</p>
-      </a>
+      </div>
     </div>
   );
 }
