@@ -33,6 +33,10 @@ export function login(username: string, password: string) {
   });
 }
 
+export function logout() {
+  return axios.get(`${apiUrl}/user/logout`, { withCredentials: true });
+}
+
 export function register(username: string, password: string) {
   const formData = new FormData();
   formData.append("username", username);

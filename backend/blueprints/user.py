@@ -60,6 +60,13 @@ def login():
     return make_success("Logged in")
 
 
+@blueprint.route("/logout")
+@require_logged_in
+def logout():
+    session.clear()
+    return make_success("Logged out")
+
+
 @blueprint.route("/register", methods=["POST"])
 @require_keys(["username", "password"])
 def register():
