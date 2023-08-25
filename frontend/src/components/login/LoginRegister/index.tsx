@@ -60,7 +60,7 @@ function LoginRegister() {
       const res = await submit(target.username.value, target.password.value);
       const data = res.data as APIResponse;
 
-      if (data.msg === "Logged in") {
+      if (data.msg === "Logged in" || data.msg === "User created") {
         const userRes = await getCurrentUser();
         const userData = userRes.data as UserData;
         setUser(userData);

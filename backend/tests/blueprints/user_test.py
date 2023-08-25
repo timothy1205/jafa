@@ -8,6 +8,7 @@ from backend.tests.data.models.TestModelFactory import TestModelFactory
 
 REGISTER_ENDPOINT = "/api/user/register"
 LOGIN_ENDPOINT = "/api/user/login"
+LOGOUT_ENDPOINT = "/api/user/logout"
 
 
 def register(client, username, password):
@@ -20,6 +21,10 @@ def login(client, username, password):
     return client.post(
         LOGIN_ENDPOINT, data={"username": username, "password": password}
     )
+
+
+def logout(client):
+    return client.get(LOGOUT_ENDPOINT)
 
 
 class UserEndpointTestCase(unittest.TestCase):
@@ -63,5 +68,6 @@ class UserEndpointTestCase(unittest.TestCase):
             "Erroneous response",
         )
 
+        logout(self.client)
         res = login(self.client, "red", "Password1")
         self.assertIn(b'{"msg":"Logged in"}', res.data, "Successful response")
