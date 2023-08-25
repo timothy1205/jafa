@@ -9,6 +9,7 @@ import Base from "./routes/Base";
 import Root from "./routes/Root";
 import Subforum, { subforumLoader } from "./routes/Subforum";
 import reportWebVitals from "./reportWebVitals";
+import Login from "./routes/Login";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -27,6 +28,10 @@ const router = createBrowserRouter([
         path: "subforum/:subforum?",
         element: <Subforum />,
         loader: subforumLoader,
+      },
+      {
+        path: "login",
+        element: <Login />,
       },
     ],
   },

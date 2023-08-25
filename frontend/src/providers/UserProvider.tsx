@@ -5,7 +5,7 @@ interface User {
   registration_date: string;
 }
 
-type UserData = User | null;
+export type UserData = User | null;
 
 interface UserContextData {
   user: UserData;
