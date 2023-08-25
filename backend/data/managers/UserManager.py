@@ -6,6 +6,7 @@ from typing import Optional, Type
 
 from bcrypt import checkpw, gensalt, hashpw
 
+from backend.data.models.UserModel import User
 from backend.data.managers.DataManager import DataManager
 from backend.data.models.AbstractModelFactory import AbstractModelFactory
 
@@ -79,7 +80,7 @@ class UserManager(DataManager):
 
         return True, user
 
-    def create_user(self, username: str, password: str) -> bool:
+    def create_user(self, username: str, password: str) -> User | None:
         """Create a user inside the database if the username doesn't already exist
 
         :returns: True if successfull, false otherwise.
@@ -104,10 +105,10 @@ class UserManager(DataManager):
 
         hashed_password = hashpw(self.__pre_hash_password(password), gensalt())
 
-        return user_model.create_user(
-            dict(
-                username=username,
-                password=hashed_password,
-                registration_date=datetime.now(),
-            )
+        user: User = dict(
+            username=username,
+            password=hashed_password,
+            registration_date=datetime.now(),
         )
+
+        return user if user_model.create_user(user) else None

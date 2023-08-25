@@ -76,12 +76,14 @@ def register():
     user_manager = UserManager()
 
     try:
-        created = user_manager.create_user(username, password)
+        user = user_manager.create_user(username, password)
     except (UsernameExistsError, InvalidUsernameError, InvalidPasswordError) as e:
         return make_error(str(e), CODE_UNAUTHORIZED, e)
-    if not created:
+    if user is None:
         return make_error("Could not create!", CODE_UNAUTHORIZED)
 
+    # Treat new user as logged in
+    session[USER_NAME] = user
     return make_success("User created")
 
 
