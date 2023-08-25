@@ -3,7 +3,8 @@ import Button from "@mui/material/Button";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import "./index.css";
-import { vote, handleError } from "../../../services/api";
+import { vote, handleError, APIResponse } from "../../../services/api";
+import { generateToast } from "../../../services/utils";
 
 interface PostVoteProps {
   post_id: string;
@@ -12,7 +13,12 @@ interface PostVoteProps {
 export default function PostVote({ post_id }: PostVoteProps) {
   async function voteAction(is_like: boolean) {
     try {
-      await vote(post_id, is_like);
+      const res = await vote(post_id, is_like);
+      const data = res.data as APIResponse;
+      if (data.msg === "Post vote ackowledged") {
+        const like = is_like ? "Like" : "Dislike";
+        generateToast(`${like} received`, "success");
+      }
     } catch (e) {
       handleError(e);
     }
