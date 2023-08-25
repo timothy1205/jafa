@@ -26,4 +26,9 @@ code {
   --toastify-toast-width: auto;
 
   --toastify-color-error: var(--red);
+
+  --mui-palette-primary-main: var(--primary) !important;
+  --mui-palette-action-active: white !important;
+  --mui-palette-text-secondary: white !important;
+  --mui-palette-primary-mainChannel: white !important;
 }
