@@ -1,0 +1,34 @@
+#loginsignup-content {
+    width: 500px;
+}
+
+.loginsignup-tab {
+    color: white;
+}
+
+.loginsignup-form {
+    padding: 50px;
+    display: flex;
+    flex-direction: column;
+}
+
+.loginsignup-form-textfield > label, 
+.loginsignup-form-textfield > div > input {
+    color: white;
+}
+
+.loginsignup-form-textfield > div > fieldset {
+    border-color: white;
+}
+
+.loginsignup-form-child {
+    margin: 5px 80px !important;
+}
+
+.loginsignup-form-submit {
+    border: 1px solid white !important;
+}
+
+.loginsignup-form-submit:hover {
+    border: 1px solid var(--primary) !important;
+}
