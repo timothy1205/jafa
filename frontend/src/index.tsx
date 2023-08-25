@@ -3,6 +3,7 @@ import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { Experimental_CssVarsProvider as CssVarsProvider } from "@mui/material/styles";
 import "./index.css";
 import Base from "./routes/Base";
 import Root from "./routes/Root";
@@ -33,8 +34,10 @@ const router = createBrowserRouter([
 
 root.render(
   <React.StrictMode>
-    <RouterProvider router={router} />
-    <ToastContainer limit={5} theme="dark" />
+    <CssVarsProvider>
+      <RouterProvider router={router} />
+      <ToastContainer limit={5} theme="dark" />
+    </CssVarsProvider>
   </React.StrictMode>
 );
 
