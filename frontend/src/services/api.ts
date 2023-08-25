@@ -21,7 +21,7 @@ export function vote(post_id: string, is_like: boolean) {
   const formData = new FormData();
   formData.append("post_id", post_id);
   formData.append("is_like", is_like.toString());
-  return axios.post(`${apiUrl}/post/vote`, formData);
+  return axios.post(`${apiUrl}/post/vote`, formData, { withCredentials: true });
 }
 
 export function login(username: string, password: string) {
