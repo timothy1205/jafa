@@ -26,10 +26,10 @@ export default function PostVote({ post_id }: PostVoteProps) {
 
   return (
     <div className="postvote">
-      <Button onClick={() => voteAction(true)}>
+      <Button aria-label="upvote" onClick={() => voteAction(true)}>
         <ArrowUpwardIcon className="postvote-upvote"></ArrowUpwardIcon>
       </Button>
-      <Button onClick={() => voteAction(false)}>
+      <Button aria-label="downvote" onClick={() => voteAction(false)}>
         <ArrowDownwardIcon className="postvote-downvote"></ArrowDownwardIcon>
       </Button>
     </div>
