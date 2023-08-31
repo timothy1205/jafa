@@ -2,7 +2,7 @@ import React, { useState, MouseEvent, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
-import SwipeableViews from "react-swipeable-views";
+import useEmblaCarousel from "embla-carousel-react";
 import TextField from "@mui/material/TextField";
 import IconButton from "@mui/material/IconButton";
 import Visibility from "@mui/icons-material/Visibility";
@@ -30,8 +30,13 @@ function LoginRegister() {
   const { setUser } = useContext(UserContext);
   const navigate = useNavigate();
 
+  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: false });
+
   const tabChange = (event: React.SyntheticEvent, newIndex: number) => {
     setTabIndex(newIndex);
+    if (emblaApi) {
+      emblaApi.scrollTo(newIndex);
+    }
   };
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
@@ -85,60 +90,62 @@ function LoginRegister() {
           ></Tab>
         ))}
       </Tabs>
-      <SwipeableViews index={tabIndex}>
-        {Array.from(forms).map(([id]) => (
-          <form
-            data-type={id}
-            key={`loginsignup-${id}`}
-            className="loginsignup-form"
-            onSubmit={handleSubmit}
-          >
-            <TextField
-              name="username"
-              className="loginsignup-form-textfield loginsignup-form-child"
-              label="Username"
-              variant="outlined"
-              required
-            />
-
-            <FormControl
-              className="loginsignup-form-textfield loginsignup-form-child"
-              variant="outlined"
+      <div className="embla" ref={emblaRef}>
+        <div className="embla__container">
+          {Array.from(forms).map(([id]) => (
+            <form
+              data-type={id}
+              key={`loginsignup-${id}`}
+              className="embla__slide loginsignup-form"
+              onSubmit={handleSubmit}
             >
-              <InputLabel
-                htmlFor={`loginsignup-${id}-password-outlinedinput`}
+              <TextField
+                name="username"
+                className="loginsignup-form-textfield loginsignup-form-child"
+                label="Username"
+                variant="outlined"
                 required
-              >
-                Password
-              </InputLabel>
-              <OutlinedInput
-                name="password"
-                type={showPassword ? "text" : "password"}
-                endAdornment={
-                  <InputAdornment position="end">
-                    <IconButton
-                      className="loginsignup-form-show-pass"
-                      onClick={handleClickShowPassword}
-                      onMouseDown={handleMouseDownPassword}
-                      edge="end"
-                    >
-                      {showPassword ? <VisibilityOff /> : <Visibility />}
-                    </IconButton>
-                  </InputAdornment>
-                }
-                label="Password"
               />
-            </FormControl>
-            <Button
-              type="submit"
-              variant="outlined"
-              className="loginsignup-form-child loginsignup-form-submit"
-            >
-              Submit
-            </Button>
-          </form>
-        ))}
-      </SwipeableViews>
+
+              <FormControl
+                className="loginsignup-form-textfield loginsignup-form-child"
+                variant="outlined"
+              >
+                <InputLabel
+                  htmlFor={`loginsignup-${id}-password-outlinedinput`}
+                  required
+                >
+                  Password
+                </InputLabel>
+                <OutlinedInput
+                  name="password"
+                  type={showPassword ? "text" : "password"}
+                  endAdornment={
+                    <InputAdornment position="end">
+                      <IconButton
+                        className="loginsignup-form-show-pass"
+                        onClick={handleClickShowPassword}
+                        onMouseDown={handleMouseDownPassword}
+                        edge="end"
+                      >
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  }
+                  label="Password"
+                />
+              </FormControl>
+              <Button
+                type="submit"
+                variant="outlined"
+                className="loginsignup-form-child loginsignup-form-submit"
+              >
+                Submit
+              </Button>
+            </form>
+          ))}
+        </div>
+      </div>
     </FormContainer>
   );
 }

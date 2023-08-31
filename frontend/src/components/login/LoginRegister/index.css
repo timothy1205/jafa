@@ -32,3 +32,17 @@
 .loginsignup-form-submit:hover {
     border: 1px solid var(--primary) !important;
 }
+
+.embla {
+    overflow: hidden;
+}
+
+.embla__container {
+    display: flex;
+}
+
+.embla__slide {
+    flex: 0 0 100%;
+    min-width: 0;
+}
+  
