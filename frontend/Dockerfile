@@ -9,7 +9,7 @@ FROM build AS frontend-build
 COPY .env .env
 RUN yarn build
 
-FROM nginx:stable-alpine AS prod
+FROM nginx:stable-alpine-slim AS prod
 COPY --from=frontend-build /app/build /usr/share/nginx
 COPY frontend/nginx.conf /etc/nginx/conf.d/default.conf
 
