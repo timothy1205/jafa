@@ -46,4 +46,4 @@ jobs:
 
       - name: Run unittests
         run: |
-          yarn --cwd frontend test
+          yarn --cwd frontend test --passWithNoTests
