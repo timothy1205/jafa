@@ -2,13 +2,15 @@ import React, { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { UserContext } from "../../../providers/UserProvider";
 import { Button } from "@mui/material";
-import { generateToast } from "../../../services/utils";
+import { generateToast, useUserUpdater } from "../../../services/utils";
 import { handleError, logout } from "../../../services/api";
 import "./index.css";
 
 export default function UsernameLogin() {
   const { user, setUser } = useContext(UserContext);
   const navigate = useNavigate();
+
+  useUserUpdater();
 
   const handleLogout = async () => {
     try {

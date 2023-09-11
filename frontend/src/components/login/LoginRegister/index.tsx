@@ -1,4 +1,4 @@
-import React, { useState, MouseEvent, useContext } from "react";
+import React, { useState, MouseEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
@@ -18,16 +18,14 @@ import {
   register,
   handleError,
   APIResponse,
-  getCurrentUser,
 } from "../../../services/api";
-import { UserContext, UserData } from "../../../providers/UserProvider";
-import { generateToast } from "../../../services/utils";
+import { generateToast, useExposedUserUpdater } from "../../../services/utils";
 import "./index.css";
 
 function LoginRegister() {
   const [tabIndex, setTabIndex] = useState(0);
   const [showPassword, setShowPassword] = useState(false);
-  const { setUser } = useContext(UserContext);
+  const updateUser = useExposedUserUpdater();
   const navigate = useNavigate();
 
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: false });
@@ -66,12 +64,8 @@ function LoginRegister() {
       const data = res.data as APIResponse;
 
       if (data.msg === "Logged in" || data.msg === "User created") {
-        const userRes = await getCurrentUser();
-        const userData = userRes.data as UserData;
-        setUser(userData);
-
+        updateUser();
         navigate("/");
-
         generateToast(data.msg, "success");
       }
     } catch (e) {
