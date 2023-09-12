@@ -4,9 +4,9 @@ import LoginRegister from "../components/login/LoginRegister";
 import { UserContext } from "../providers/UserProvider";
 
 function Login() {
-  const { user } = useContext(UserContext);
+  const { userState } = useContext(UserContext);
 
-  if (user !== null) return <Navigate to="/" replace={true} />;
+  if (userState.user !== null) return <Navigate to="/" replace={true} />;
 
   return <LoginRegister />;
 }

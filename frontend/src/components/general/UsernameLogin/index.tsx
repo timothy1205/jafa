@@ -7,7 +7,7 @@ import { handleError, logout } from "../../../services/api";
 import "./index.css";
 
 export default function UsernameLogin() {
-  const { user, setUser } = useContext(UserContext);
+  const { userState, setUser } = useContext(UserContext);
   const navigate = useNavigate();
 
   useUserUpdater();
@@ -19,13 +19,13 @@ export default function UsernameLogin() {
       handleError(e);
     }
 
-    setUser(null);
+    setUser({ loaded: true, user: null });
     navigate("/");
     generateToast("Logged out", "success");
   };
 
   let toRender;
-  if (user === null) {
+  if (!userState.loaded || userState.user === null) {
     toRender = (
       <Link className="usernamelogin-link" to="/login">
         Login
@@ -34,7 +34,7 @@ export default function UsernameLogin() {
   } else {
     toRender = (
       <>
-        <p className="usernamelogin-username">{user.username}</p>
+        <p className="usernamelogin-username">{userState.user.username}</p>
         <Button onClick={handleLogout}>Logout</Button>
       </>
     );

@@ -64,7 +64,7 @@ function LoginRegister() {
       const data = res.data as APIResponse;
 
       if (data.msg === "Logged in" || data.msg === "User created") {
-        updateUser();
+        await updateUser();
         navigate("/");
         generateToast(data.msg, "success");
       }

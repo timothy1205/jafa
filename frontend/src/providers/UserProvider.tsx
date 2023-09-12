@@ -1,26 +1,36 @@
 import { PropsWithChildren, createContext, useMemo, useState } from "react";
 
-interface User {
+interface Loaded {
+  loaded: boolean;
+}
+
+export interface User {
   username: string;
   registration_date: string;
 }
 
-export type UserData = User | null;
+interface UserState {
+  loaded: boolean;
+  user: User | null;
+}
 
 interface UserContextData {
-  user: UserData;
-  setUser: React.Dispatch<React.SetStateAction<UserData>>;
+  userState: UserState;
+  setUser: React.Dispatch<React.SetStateAction<UserState>>;
 }
 
 // Should never be null when used, force TS to ignore it
 export const UserContext = createContext<UserContextData>(null!);
 
 export default function UserProvider({ children }: PropsWithChildren) {
-  const [user, setUser] = useState<UserData>(null);
+  const [userState, setUser] = useState<UserState>({
+    user: null,
+    loaded: false,
+  });
 
   const cachedContextData = useMemo<UserContextData>(
-    () => ({ user, setUser }),
-    [user, setUser]
+    () => ({ userState, setUser }),
+    [userState, setUser]
   );
   return (
     <UserContext.Provider value={cachedContextData}>
