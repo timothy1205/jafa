@@ -19,6 +19,8 @@ export function useExposedUserUpdater() {
 
     const userRes = await getCurrentUser();
     const userData = userRes.data as UserData;
+    if (!userData || Object.keys(userData).length === 0) return;
+
     setUser(userData);
   };
 
