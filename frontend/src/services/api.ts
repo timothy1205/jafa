@@ -52,6 +52,7 @@ export function getCurrentUser() {
 
 export function handleError(err: unknown) {
   if (!axios.isAxiosError(err)) {
+    if (err instanceof Error) generateToast(err.message, "error");
     console.error(err);
     return;
   }
