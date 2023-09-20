@@ -50,6 +50,15 @@ export function getCurrentUser() {
   return axios.get(`${apiUrl}/user/get`, { withCredentials: true });
 }
 
+export function createSubforum(title: string, description: string) {
+  const formData = new FormData();
+  formData.append("title", title);
+  formData.append("description", description);
+  return axios.post(`${apiUrl}/subforum/create`, formData, {
+    withCredentials: true,
+  });
+}
+
 export function handleError(err: unknown) {
   if (!axios.isAxiosError(err)) {
     if (err instanceof Error) generateToast(err.message, "error");
