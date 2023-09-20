@@ -1,0 +1,40 @@
+.jafa-form {
+    padding: 50px;
+    display: flex;
+    flex-direction: column;
+}
+
+.jafa-formcontainer {
+    display: flex;
+    justify-content: center;
+    margin-top: 100px;
+}
+
+.formcontainer-content {
+    background-color: var(--background-secondary);
+    border-radius: 60px;
+    box-shadow: 0px 4px black;
+}
+
+.jafa-formtextfield > label, 
+.jafa-formtextfield > div > input,
+.jafa-formtextfield > div > textarea {
+    color: white;
+}
+
+.jafa-formtextfield > div > fieldset {
+    border-color: white;
+}
+
+.jafa-formbutton {
+    border: 1px solid white !important;
+}
+
+.jafa-formbutton:hover {
+    border: 1px solid var(--primary) !important;
+}
+
+.jafa-formheader {
+    color: white;
+    align-self: center;
+}

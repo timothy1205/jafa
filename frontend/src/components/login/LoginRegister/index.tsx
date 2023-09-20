@@ -3,16 +3,12 @@ import { useNavigate } from "react-router-dom";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import useEmblaCarousel from "embla-carousel-react";
-import TextField from "@mui/material/TextField";
 import IconButton from "@mui/material/IconButton";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import InputLabel from "@mui/material/InputLabel";
 import InputAdornment from "@mui/material/InputAdornment";
-import FormControl from "@mui/material/FormControl";
-import Button from "@mui/material/Button";
-import FormContainer from "../../general/FormContainer";
 import {
   login,
   register,
@@ -21,6 +17,12 @@ import {
 } from "../../../services/api";
 import { generateToast, useExposedUserUpdater } from "../../../services/utils";
 import "./index.css";
+import JafaForm, {
+  JafaButton,
+  JafaFormContainer,
+  JafaFormControl,
+  JafaTextField,
+} from "../../general/JafaForm";
 
 function LoginRegister() {
   const [tabIndex, setTabIndex] = useState(0);
@@ -74,7 +76,7 @@ function LoginRegister() {
   };
 
   return (
-    <FormContainer contentId="loginsignup-content">
+    <JafaFormContainer contentId="loginsignup-content">
       <Tabs value={tabIndex} onChange={tabChange} centered>
         {Array.from(forms).map(([id, label]) => (
           <Tab
@@ -87,24 +89,20 @@ function LoginRegister() {
       <div className="embla" ref={emblaRef}>
         <div className="embla__container">
           {Array.from(forms).map(([id]) => (
-            <form
+            <JafaForm
               data-type={id}
               key={`loginsignup-${id}`}
-              className="embla__slide loginsignup-form"
+              className="embla__slide"
               onSubmit={handleSubmit}
             >
-              <TextField
+              <JafaTextField
                 name="username"
-                className="loginsignup-form-textfield loginsignup-form-child"
+                className="loginsignup-form-child"
                 label="Username"
-                variant="outlined"
                 required
               />
 
-              <FormControl
-                className="loginsignup-form-textfield loginsignup-form-child"
-                variant="outlined"
-              >
+              <JafaFormControl className="loginsignup-form-child">
                 <InputLabel
                   htmlFor={`loginsignup-${id}-password-outlinedinput`}
                   required
@@ -128,19 +126,15 @@ function LoginRegister() {
                   }
                   label="Password"
                 />
-              </FormControl>
-              <Button
-                type="submit"
-                variant="outlined"
-                className="loginsignup-form-child loginsignup-form-submit"
-              >
+              </JafaFormControl>
+              <JafaButton type="submit" className="loginsignup-form-child">
                 Submit
-              </Button>
-            </form>
+              </JafaButton>
+            </JafaForm>
           ))}
         </div>
       </div>
-    </FormContainer>
+    </JafaFormContainer>
   );
 }
 
