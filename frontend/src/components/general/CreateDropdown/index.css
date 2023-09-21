@@ -1,0 +1,38 @@
+.createdropdown {
+    margin-right: 20px;
+}
+
+.createdropdown> svg {
+    transition: color 1s cubic-bezier(0.075, 0.82, 0.165, 1);
+}
+
+.createdropdown > .MuiSelect-iconOpen  {
+    color: var(--primary) !important;
+}
+
+.createdropdown-paper {
+    background-color: var(--background-secondary);
+    color: white;
+}
+
+.createdropdown-paper {
+    background-color: var(--background-secondary);
+    color: white;
+}
+
+.createdropdown-paper > ul > li:hover {
+    color: var(--primary);
+    transition: color 1s cubic-bezier(0.075, 0.82, 0.165, 1);
+}
+
+.createdropdown:hover > svg {
+    color: var(--primary);
+}
+
+.createdropdown::before {
+    border: none !important;
+}
+
+.createdropdown::after {
+    border: none !important;
+}
