@@ -141,6 +141,12 @@ class SubForumManager(DataManager):
     def get_subforum_info(
         self, title: str | None = None
     ) -> SubForumInfoGeneric | SubForumInfoSpecific:
+        """Returns a dict of info for a valid subforum or generic info if None
+
+        :returns: SubForumInfoGeneric | SubForumInfoSpecific
+        :raises NoSubForumFoundError:
+        """
+
         from backend.data.managers.PostMananger import PAGE_LIMIT
 
         post_model = self.model_factory.create_post_model()
