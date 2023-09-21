@@ -1,7 +1,12 @@
 import SubforumCreateForm from "../../components/submit/SubforumCreateForm";
+import ProtectedRoute from "../ProtectedRoute";
 
 function SubmitSubforum() {
-  return <SubforumCreateForm />;
+  return (
+    <ProtectedRoute>
+      <SubforumCreateForm />
+    </ProtectedRoute>
+  );
 }
 
 export default SubmitSubforum;
