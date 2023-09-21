@@ -11,13 +11,8 @@
 }
 
 .createdropdown-paper {
-    background-color: var(--background-secondary);
-    color: white;
-}
-
-.createdropdown-paper {
-    background-color: var(--background-secondary);
-    color: white;
+    background-color: var(--background-secondary) !important;
+    color: white !important;
 }
 
 .createdropdown-paper > ul > li:hover {
