@@ -90,7 +90,7 @@ class TestPostModel(PostModel):
     def get_post_list_by_time(self, subforum: str) -> list[Post]:
         return list(filter(lambda post: post["subforum"] == subforum), self.db.values())
 
-    def get_all_posts(self) -> list[Post]:
+    def get_posts(self) -> list[Post]:
         return list(self.db.values())
 
 

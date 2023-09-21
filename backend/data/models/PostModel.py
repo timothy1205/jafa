@@ -56,9 +56,11 @@ class PostModel(ABC, Model):
         raise NotImplementedError()
 
     @abstractmethod
-    def get_post_list_by_time(self, subforum: str) -> list[Post]:
+    def get_posts(
+        self, limit: int, skip: int, subforum: str | None = None
+    ) -> list[Post]:
         raise NotImplementedError()
 
     @abstractmethod
-    def get_all_posts(self) -> list[Post]:
+    def get_count(self, subforum: str | None = None) -> int:
         raise NotImplementedError()
