@@ -59,6 +59,16 @@ export function createSubforum(title: string, description: string) {
   });
 }
 
+export function createPost(subforum: string, title: string, body: string) {
+  const formData = new FormData();
+  formData.append("subforum", subforum);
+  formData.append("title", title);
+  formData.append("body", body);
+  return axios.post(`${apiUrl}/post/create`, formData, {
+    withCredentials: true,
+  });
+}
+
 export function handleError(err: unknown) {
   if (!axios.isAxiosError(err)) {
     if (err instanceof Error) generateToast(err.message, "error");
