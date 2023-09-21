@@ -11,6 +11,7 @@ import Subforum, { subforumLoader } from "./routes/Subforum";
 import reportWebVitals from "./reportWebVitals";
 import Login from "./routes/Login";
 import SubmitSubforum from "./routes/Submit/SubmitSubforum";
+import SubmitPost from "./routes/Submit/SubmitPost";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -37,6 +38,10 @@ const router = createBrowserRouter([
       {
         path: "submit/subforum",
         element: <SubmitSubforum />,
+      },
+      {
+        path: "submit/post",
+        element: <SubmitPost />,
       },
     ],
   },
