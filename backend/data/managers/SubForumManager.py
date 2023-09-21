@@ -1,11 +1,11 @@
 import re
 from datetime import datetime
-from typing import Optional, Type
+from typing import Optional, Type, TypedDict
 
 from backend.data.managers.DataManager import DataManager
 from backend.data.models.AbstractModelFactory import AbstractModelFactory
 from backend.data.models.SubForumModel import SubForum
-from backend.utils import RolePermissionError
+from backend.utils import RolePermissionError, ceil_division
 
 TITLE_MIN = 3
 TITLE_MAX = 40
@@ -25,6 +25,15 @@ class InvalidSubForumTitle(Exception):
 
 
 class InvalidSubForumDescription(Exception):
+    pass
+
+
+class SubForumInfoGeneric(TypedDict):
+    post_count: int
+    page_count: int
+
+
+class SubForumInfoSpecific(SubForumInfoGeneric, SubForum):
     pass
 
 
@@ -128,3 +137,20 @@ class SubForumManager(DataManager):
             raise RolePermissionError()
 
         return subforum_model.edit_subforum(title, description)
+
+    def get_subforum_info(
+        self, title: str | None = None
+    ) -> SubForumInfoGeneric | SubForumInfoSpecific:
+        from backend.data.managers.PostMananger import PAGE_LIMIT
+
+        post_model = self.model_factory.create_post_model()
+        post_count = post_model.get_count(title)
+        page_count = ceil_division(post_count, PAGE_LIMIT)
+        subforum_info = dict(post_count=post_count, page_count=page_count)
+
+        if title is None:
+            return subforum_info
+
+        subforum = self.get_subforum(title)
+
+        return subforum | subforum_info

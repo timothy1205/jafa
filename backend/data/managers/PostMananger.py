@@ -15,6 +15,7 @@ BODY_MAX = 40000
 TAG_MAX = 15
 TAGS_LIMIT = 10
 MEDIA_LIMIT = 10
+PAGE_LIMIT = 20
 
 
 class InvalidPostTitle(Exception):
@@ -299,13 +300,8 @@ class PostManager(DataManager):
 
         return post_model.get_by_post_id(post_id) is not None
 
-    def get_post_list(self, subforum: str | None) -> list[Post]:
+    def get_post_list(self, subforum: str | None = None, page: int = 0) -> list[Post]:
         """Returns a list of posts"""
         post_model = self.model_factory.create_post_model()
 
-        # TODO: Add more options
-        # Should also add options for limiting results and skipping past others
-        if subforum is None:
-            return post_model.get_all_posts()
-        else:
-            return post_model.get_post_list_by_time(subforum)
+        return post_model.get_posts(PAGE_LIMIT, PAGE_LIMIT * page, subforum)

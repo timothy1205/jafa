@@ -57,3 +57,7 @@ def require_keys(keys: list[str]):
         return wrapper
 
     return decorator
+
+
+def ceil_division(a: int, b: int):
+    return -(a // -b)

@@ -2,6 +2,7 @@ from typing import Optional
 
 from bson.errors import InvalidId
 from bson.objectid import ObjectId
+from pymongo import DESCENDING
 
 from backend.data.models.mongo.MongoMixin import MongoMixin
 from backend.data.models.PostModel import BasePost, CreatePost, Post, PostModel
@@ -96,18 +97,20 @@ class MongoPostModel(MongoMixin, PostModel):
 
         return result.modified_count != 0
 
-    def get_post_list_by_time(self, subforum: str) -> list[Post]:
+    def get_posts(self, limit: int, skip: int, subforum: str | None = None):
         results = (
-            self.__posts_collection().find({"subforum": subforum}).sort("creation_date")
+            self.__posts_collection()
+            .find({"subforum": subforum} if subforum else {})
+            .sort("creation_date", DESCENDING)
+            .limit(limit)
+            .skip(skip)
         )
 
         filtered = map(self.__filter_post_result, results)
 
         return list(filtered)
 
-    def get_all_posts(self) -> list[Post]:
-        results = self.__posts_collection().find().sort("creation_date")
-
-        filtered = map(self.__filter_post_result, results)
-
-        return list(filtered)
+    def get_count(self, subforum: str | None = None) -> int:
+        return self.__posts_collection().count_documents(
+            {"subforum": subforum} if subforum else {}
+        )
