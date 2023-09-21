@@ -31,6 +31,7 @@ class InvalidSubForumDescription(Exception):
 class SubForumInfoGeneric(TypedDict):
     post_count: int
     page_count: int
+    current_page: int
 
 
 class SubForumInfoSpecific(SubForumInfoGeneric, SubForum):
@@ -139,7 +140,7 @@ class SubForumManager(DataManager):
         return subforum_model.edit_subforum(title, description)
 
     def get_subforum_info(
-        self, title: str | None = None
+        self, title: str | None = None, current_page: int = 0
     ) -> SubForumInfoGeneric | SubForumInfoSpecific:
         """Returns a dict of info for a valid subforum or generic info if None
 
@@ -152,7 +153,9 @@ class SubForumManager(DataManager):
         post_model = self.model_factory.create_post_model()
         post_count = post_model.get_count(title)
         page_count = ceil_division(post_count, PAGE_LIMIT)
-        subforum_info = dict(post_count=post_count, page_count=page_count)
+        subforum_info = dict(
+            post_count=post_count, page_count=page_count, current_page=current_page
+        )
 
         if title is None:
             return subforum_info

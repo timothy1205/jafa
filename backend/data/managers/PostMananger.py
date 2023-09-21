@@ -46,6 +46,10 @@ class PostNotLockedError(Exception):
     pass
 
 
+class InvalidPageError(Exception):
+    pass
+
+
 class PostManager(DataManager):
     def __init__(self, model_factory: Optional[Type[AbstractModelFactory]] = None):
         super().__init__(model_factory)
@@ -301,7 +305,14 @@ class PostManager(DataManager):
         return post_model.get_by_post_id(post_id) is not None
 
     def get_post_list(self, subforum: str | None = None, page: int = 0) -> list[Post]:
-        """Returns a list of posts"""
+        """Returns a list of posts
+
+        :raises InvalidPageError"
+        """
         post_model = self.model_factory.create_post_model()
 
-        return post_model.get_posts(PAGE_LIMIT, PAGE_LIMIT * page, subforum)
+        try:
+            return post_model.get_posts(PAGE_LIMIT, PAGE_LIMIT * page, subforum)
+        except OverflowError:
+            # Reraise OverflowErrors into something neater
+            raise InvalidPageError("Invalid page number")
