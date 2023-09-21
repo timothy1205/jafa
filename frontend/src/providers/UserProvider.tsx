@@ -1,9 +1,5 @@
 import { PropsWithChildren, createContext, useMemo, useState } from "react";
 
-interface Loaded {
-  loaded: boolean;
-}
-
 export interface User {
   username: string;
   registration_date: string;
