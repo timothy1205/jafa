@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import "./index.css";
-import UsernameLogin from "../UsernameLogin";
+import UserArea from "../UserArea";
 
 export default function Header() {
   return (
@@ -9,7 +9,7 @@ export default function Header() {
       <Link to="/" id="header-title">
         Jafa
       </Link>
-      <UsernameLogin />
+      <UserArea />
     </div>
   );
 }

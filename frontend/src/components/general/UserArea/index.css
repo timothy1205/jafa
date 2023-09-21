@@ -1,0 +1,12 @@
+.userarea {
+    display: flex;
+    align-items: center;
+    color: white;
+    margin-right: 10px;
+
+}
+
+.userarea-username {
+    color: inherit;
+    margin-right: 10px;
+}

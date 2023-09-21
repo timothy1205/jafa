@@ -1,12 +1,4 @@
-.usernamelogin {
-    display: flex;
-    align-items: center;
-    color: white;
-    margin-right: 10px;
-
-}
-
-.usernamelogin-link {
+.loginbutton {
     text-decoration: none;
     color: inherit;
     background-color: var(--primary);
@@ -16,10 +8,6 @@
     transition: all 1s cubic-bezier(0.075, 0.82, 0.165, 1);
 }
 
-.usernamelogin-link:hover {
+.lognbutton:hover {
     border: white solid 1px;
-}
-.usernamelogin-username {
-    color: inherit;
-    margin-right: 10px;
 }
