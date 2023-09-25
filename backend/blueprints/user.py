@@ -2,7 +2,7 @@ from functools import wraps
 
 from flask import request, session
 
-from backend.constants import HTTP
+from backend.constants import DATA, HTTP
 from backend.data.managers.UserManager import (
     InvalidPasswordError,
     InvalidUsernameError,
@@ -20,15 +20,13 @@ class AlreadyLoggedIn(Exception):
     pass
 
 
-USER = "user"
-
 blueprint = make_blueprint("user", __name__)
 
 
 def require_logged_in(f):
     @wraps(f)
     def wrapper(*args, **kwargs):
-        if USER not in session:
+        if DATA.USER not in session:
             return make_error("You must be logged in", HTTP.UNAUTHORIZED, NotLoggedIn())
 
         return f(*args, **kwargs)
@@ -39,7 +37,7 @@ def require_logged_in(f):
 @blueprint.route("/login", methods=["POST"])
 @require_keys(["username", "password"])
 def login():
-    if USER in session:
+    if DATA.DATA.USER in session:
         return make_error("Already logged in", HTTP.UNAUTHORIZED)
 
     username = request.form.get("username")
@@ -51,7 +49,7 @@ def login():
     if not valid_password:
         return make_error("Invalid credentials", HTTP.UNAUTHORIZED, AlreadyLoggedIn())
 
-    session[USER] = user
+    session[DATA.USER] = user
     return make_success("Logged in")
 
 
@@ -78,16 +76,16 @@ def register():
         return make_error("Could not create!", HTTP.UNAUTHORIZED)
 
     # Treat new user as logged in
-    session[USER] = user
+    session[DATA.USER] = user
     return make_success("User created")
 
 
 @blueprint.route("/get")
 def get():
-    if USER not in session:
+    if DATA.USER not in session:
         return make_success({})
 
-    user = session[USER]
+    user = session[DATA.USER]
 
     return make_success(
         dict(registration_date=user["registration_date"], username=user["username"])

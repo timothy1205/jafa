@@ -1,8 +1,7 @@
-from functools import wraps
-
 from flask import request, session
 
-from backend.blueprints.user import USER, require_logged_in
+from backend.blueprints.user import require_logged_in
+from backend.constants import DATA
 from backend.data.managers.SubForumManager import (
     InvalidSubForumDescription,
     InvalidSubForumTitle,
@@ -23,7 +22,7 @@ blueprint = make_blueprint("subforum", __name__)
 def create():
     title = request.form.get("title")
     description = request.form.get("description")
-    creator = session[USER]["username"]
+    creator = session[DATA.USER]["username"]
 
     subforum_manager = SubForumManager()
     try:
@@ -44,7 +43,7 @@ def create():
 @require_logged_in
 def delete():
     title = request.form.get("title")
-    username = session[USER]["username"]
+    username = session[DATA.USER]["username"]
 
     subforum_manager = SubForumManager()
     try:
@@ -63,7 +62,7 @@ def delete():
 def edit():
     title = request.form.get("title")
     description = request.form.get("description")
-    username = session[USER]["username"]
+    username = session[DATA.USER]["username"]
 
     subforum_manager = SubForumManager()
     try:
