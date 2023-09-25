@@ -1,8 +1,8 @@
 from functools import wraps
 
-from flask import Blueprint, g, request, session
+from flask import request, session
 
-from backend.blueprints.user import USER_NAME, require_logged_in
+from backend.blueprints.user import USER, require_logged_in
 from backend.data.managers.SubForumManager import (
     InvalidSubForumDescription,
     InvalidSubForumTitle,
@@ -11,13 +11,11 @@ from backend.data.managers.SubForumManager import (
     SubForumManager,
     SubForumTitleExistsError,
 )
-from backend.utils import make_error, make_success, require_keys
+from backend.utils import make_blueprint, make_error, make_success, require_keys
 
-SUBFORUM_NAME = "subforum"
-SUBFORUM_PATH = f"/{SUBFORUM_NAME}"
 CODE_BAD_REQUEST = 400
 
-blueprint = Blueprint(SUBFORUM_NAME, __name__, url_prefix=SUBFORUM_PATH)
+blueprint = make_blueprint("subforum", __name__)
 
 
 @blueprint.route("/create", methods=["POST"])
@@ -26,7 +24,7 @@ blueprint = Blueprint(SUBFORUM_NAME, __name__, url_prefix=SUBFORUM_PATH)
 def create():
     title = request.form.get("title")
     description = request.form.get("description")
-    creator = session[USER_NAME]["username"]
+    creator = session[USER]["username"]
 
     subforum_manager = SubForumManager()
     try:
@@ -47,7 +45,7 @@ def create():
 @require_logged_in
 def delete():
     title = request.form.get("title")
-    username = session[USER_NAME]["username"]
+    username = session[USER]["username"]
 
     subforum_manager = SubForumManager()
     try:
@@ -66,7 +64,7 @@ def delete():
 def edit():
     title = request.form.get("title")
     description = request.form.get("description")
-    username = session[USER_NAME]["username"]
+    username = session[USER]["username"]
 
     subforum_manager = SubForumManager()
     try:

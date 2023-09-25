@@ -1,6 +1,6 @@
 from functools import wraps
 
-from flask import g, jsonify, make_response, request
+from flask import Blueprint, g, jsonify, make_response, request
 
 CODE_BAD_REQUEST = 400
 CODE_SUCCESS = 200
@@ -61,3 +61,14 @@ def require_keys(keys: list[str]):
 
 def ceil_division(a: int, b: int):
     return -(a // -b)
+
+
+def make_blueprint(name: str, import_name: str, url_prefix: str | None = None):
+    """Return a blueprint with a given name.
+
+    Url prefix defaults to "/<name>" if missing/empty.
+    """
+    if url_prefix is None:
+        url_prefix = f"/{name}"
+
+    return Blueprint(name, import_name, url_prefix=url_prefix)

@@ -1,6 +1,6 @@
 from functools import wraps
 
-from flask import Blueprint, g, request, session
+from flask import request, session
 
 from backend.data.managers.UserManager import (
     InvalidPasswordError,
@@ -8,7 +8,13 @@ from backend.data.managers.UserManager import (
     UserManager,
     UsernameExistsError,
 )
-from backend.utils import CODE_BAD_REQUEST, make_error, make_success, require_keys
+from backend.utils import (
+    CODE_BAD_REQUEST,
+    make_blueprint,
+    make_error,
+    make_success,
+    require_keys,
+)
 
 
 class NotLoggedIn(Exception):
@@ -19,18 +25,17 @@ class AlreadyLoggedIn(Exception):
     pass
 
 
-USER_NAME = "user"
-USER_PATH = f"/{USER_NAME}"
+USER = "user"
 CODE_UNAUTHORIZED = 401
 CODE_CONFLICT = 409
 
-blueprint = Blueprint(USER_NAME, __name__, url_prefix=USER_PATH)
+blueprint = make_blueprint("user", __name__)
 
 
 def require_logged_in(f):
     @wraps(f)
     def wrapper(*args, **kwargs):
-        if USER_NAME not in session:
+        if USER not in session:
             return make_error("You must be logged in", CODE_UNAUTHORIZED, NotLoggedIn())
 
         return f(*args, **kwargs)
@@ -41,7 +46,7 @@ def require_logged_in(f):
 @blueprint.route("/login", methods=["POST"])
 @require_keys(["username", "password"])
 def login():
-    if USER_NAME in session:
+    if USER in session:
         return make_error(
             "Already logged in",
             CODE_CONFLICT,
@@ -56,7 +61,7 @@ def login():
     if not valid_password:
         return make_error("Invalid credentials", CODE_UNAUTHORIZED, AlreadyLoggedIn())
 
-    session[USER_NAME] = user
+    session[USER] = user
     return make_success("Logged in")
 
 
@@ -83,16 +88,16 @@ def register():
         return make_error("Could not create!", CODE_UNAUTHORIZED)
 
     # Treat new user as logged in
-    session[USER_NAME] = user
+    session[USER] = user
     return make_success("User created")
 
 
 @blueprint.route("/get")
 def get():
-    if USER_NAME not in session:
+    if USER not in session:
         return make_success({})
 
-    user = session[USER_NAME]
+    user = session[USER]
 
     return make_success(
         dict(registration_date=user["registration_date"], username=user["username"])

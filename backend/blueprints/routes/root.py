@@ -1,13 +1,8 @@
-from flask import Blueprint, session
-from backend.blueprints.user import USER_NAME
-
 from backend.data.managers.PostMananger import InvalidPageError, PostManager
 from backend.data.managers.SubForumManager import SubForumManager
-from backend.utils import make_error, make_success
+from backend.utils import make_blueprint, make_error, make_success
 
-ROOT_NAME = "/"
-
-blueprint = Blueprint(ROOT_NAME, __name__, url_prefix=ROOT_NAME)
+blueprint = make_blueprint("root", __name__, "/")
 CODE_BAD_REQUST = 400
 
 
