@@ -28,7 +28,6 @@ from backend.utils import (
 )
 
 blueprint = make_blueprint("post", __name__)
-CODE_BAD_REQUEST = 400
 
 
 @blueprint.route("/create", methods=["POST"])
@@ -54,9 +53,9 @@ def create():
         TagLimitExceeded,
         NoSubForumFoundError,
     ) as e:
-        return make_error(str(e), CODE_BAD_REQUEST, e)
+        return make_error(str(e), e=e)
     if not created:
-        return make_error("Could not create", CODE_BAD_REQUEST)
+        return make_error("Could not create")
     return make_success("Post created")
 
 
@@ -71,9 +70,9 @@ def delete():
     try:
         deleted = post_manager.delete_post(username, post_id)
     except (RolePermissionError, NoPostFoundError) as e:
-        return make_error(str(e), CODE_BAD_REQUEST, e)
+        return make_error(str(e), e=e)
     if not deleted:
-        return make_error("Could not delete", CODE_BAD_REQUEST)
+        return make_error("Could not delete")
 
     return make_success("Post deleted")
 
@@ -100,9 +99,9 @@ def edit():
         NoPostFoundError,
         RolePermissionError,
     ) as e:
-        return make_error(str(e), CODE_BAD_REQUEST, e)
+        return make_error(str(e), e=e)
     if not updated:
-        return make_error("Could not update post", CODE_BAD_REQUEST)
+        return make_error("Could not update post")
 
     return make_success("Post updated")
 
@@ -119,9 +118,9 @@ def lock():
     try:
         locked = post_manager.lock_post(username, post_id)
     except (NoPostFoundError, PostAlreadyLockedError, RolePermissionError) as e:
-        return make_error(str(e), CODE_BAD_REQUEST, e)
+        return make_error(str(e), e=e)
     if not locked:
-        return make_error("Could not lock post", CODE_BAD_REQUEST)
+        return make_error("Could not lock post")
 
     return make_success("Post locked")
 
@@ -138,9 +137,9 @@ def unlock():
     try:
         locked = post_manager.unlock_post(username, post_id)
     except (NoPostFoundError, PostNotLockedError, RolePermissionError) as e:
-        return make_error(str(e), CODE_BAD_REQUEST, e)
+        return make_error(str(e), e=e)
     if not locked:
-        return make_error("Could not unlock post", CODE_BAD_REQUEST)
+        return make_error("Could not unlock post")
 
     return make_success("Post unlocked")
 
@@ -158,9 +157,9 @@ def vote():
     try:
         added = vote_manager.add_vote(username, post_id, ContentType.POST, is_like)
     except (InvalidContentType, InvalidContent) as e:
-        return make_error(str(e), CODE_BAD_REQUEST, e)
+        return make_error(str(e), e=e)
     if not added:
-        return make_error("Could not add post vote", CODE_BAD_REQUEST)
+        return make_error("Could not add post vote")
 
     return make_success("Post vote ackowledged")
 
@@ -177,8 +176,8 @@ def unvote():
     try:
         removed = vote_manager.remove_vote(username, post_id, ContentType.POST)
     except (InvalidContentType, InvalidContent, NoVoteFoundError) as e:
-        return make_error(str(e), CODE_BAD_REQUEST, e)
+        return make_error(str(e), e=e)
     if not removed:
-        return make_error("Could not remove post vote", CODE_BAD_REQUEST)
+        return make_error("Could not remove post vote")
 
     return make_success("Post vote removed")

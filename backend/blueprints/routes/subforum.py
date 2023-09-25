@@ -3,7 +3,6 @@ from backend.data.managers.SubForumManager import NoSubForumFoundError, SubForum
 from backend.utils import make_blueprint, make_error, make_success
 
 blueprint = make_blueprint("subforum", __name__)
-CODE_BAD_REQUST = 400
 
 
 @blueprint.route("/<title>/")
@@ -16,6 +15,6 @@ def subforum(title: str | None = None, page: int = 0):
         info = subforum_manager.get_subforum_info(title, page)
         posts = post_manager.get_post_list(title, page)
     except (NoSubForumFoundError, InvalidPageError) as e:
-        return make_error(str(e), CODE_BAD_REQUST, e)
+        return make_error(str(e), e=e)
 
     return make_success(dict(posts=posts, info=info))

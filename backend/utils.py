@@ -1,9 +1,8 @@
 from functools import wraps
 
-from flask import Blueprint, g, jsonify, make_response, request
+from flask import Blueprint, jsonify, make_response, request
 
-CODE_BAD_REQUEST = 400
-CODE_SUCCESS = 200
+from .constants import HTTP
 
 
 class RolePermissionError(Exception):
@@ -19,7 +18,7 @@ class ActionFailed(Exception):
     pass
 
 
-def make_error(msg: str, code: int, e: Exception = ActionFailed()):
+def make_error(msg: str, code: int = HTTP.BAD_REQUEST, e: Exception = ActionFailed()):
     response = make_response(
         jsonify({"type": e.__class__.__name__, "error": msg}), code
     )
@@ -30,7 +29,7 @@ def make_error(msg: str, code: int, e: Exception = ActionFailed()):
 
 def make_success(data: str | dict):
     response_data = {"msg": data} if type(data) is str else data
-    response = make_response(jsonify(response_data), CODE_SUCCESS)
+    response = make_response(jsonify(response_data), HTTP.SUCCESS)
     response.headers["Content-Type"] = "application/json"
 
     return response
@@ -48,7 +47,7 @@ def require_keys(keys: list[str]):
             if len(copy) > 0:
                 return make_error(
                     f"Missing: {str(sorted(copy))}",
-                    CODE_BAD_REQUEST,
+                    HTTP.BAD_REQUEST,
                     MissingKeysError(),
                 )
 

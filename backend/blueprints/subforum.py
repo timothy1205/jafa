@@ -13,7 +13,6 @@ from backend.data.managers.SubForumManager import (
 )
 from backend.utils import make_blueprint, make_error, make_success, require_keys
 
-CODE_BAD_REQUEST = 400
 
 blueprint = make_blueprint("subforum", __name__)
 
@@ -34,9 +33,9 @@ def create():
         InvalidSubForumTitle,
         SubForumTitleExistsError,
     ) as e:
-        return make_error(str(e), CODE_BAD_REQUEST, e)
+        return make_error(str(e), e=e)
     if not created:
-        return make_error("Could not create", CODE_BAD_REQUEST)
+        return make_error("Could not create")
     return make_success("Subforum created")
 
 
@@ -51,9 +50,9 @@ def delete():
     try:
         deleted = subforum_manager.delete_subforum(username, title)
     except (NoSubForumFoundError, RolePermissionError) as e:
-        return make_error(str(e), CODE_BAD_REQUEST, e)
+        return make_error(str(e), e=e)
     if not deleted:
-        return make_error("Could not delete", CODE_BAD_REQUEST)
+        return make_error("Could not delete")
 
     return make_success("Subforum deleted")
 
@@ -70,8 +69,8 @@ def edit():
     try:
         updated = subforum_manager.edit_subforum(username, title, description)
     except (NoSubForumFoundError, RolePermissionError) as e:
-        return make_error(str(e), CODE_BAD_REQUEST, e)
+        return make_error(str(e), e=e)
     if not updated:
-        return make_error("Could not update subforum", CODE_BAD_REQUEST)
+        return make_error("Could not update subforum")
 
     return make_success("Subforum updated")
