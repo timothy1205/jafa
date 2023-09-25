@@ -2,12 +2,9 @@ import os.path
 from glob import glob
 from importlib import import_module
 
-from flask import Blueprint, g, request, session
+from backend.utils import make_blueprint
 
-ROUTE_NAME = "route"
-ROUTE_PATH = f"/{ROUTE_NAME}"
-
-blueprint = Blueprint(ROUTE_NAME, __name__, url_prefix=ROUTE_PATH)
+blueprint = make_blueprint("route", __name__)
 
 FILE_BLACKLIST = set(["__init__"])
 

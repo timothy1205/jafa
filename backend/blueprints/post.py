@@ -1,6 +1,6 @@
-from flask import Blueprint, g, request, session
+from flask import request, session
 
-from backend.blueprints.user import USER_NAME, require_logged_in
+from backend.blueprints.user import USER, require_logged_in
 from backend.data.managers.PostMananger import (
     InvalidPostBody,
     InvalidPostTag,
@@ -21,15 +21,13 @@ from backend.data.managers.VoteManager import (
     VoteManager,
 )
 from backend.utils import (
+    make_blueprint,
     make_error,
     make_success,
     require_keys,
 )
 
-POST_NAME = "post"
-POST_PATH = f"/{POST_NAME}"
-
-blueprint = Blueprint(POST_NAME, __name__, url_prefix=POST_PATH)
+blueprint = make_blueprint("post", __name__)
 CODE_BAD_REQUEST = 400
 
 
@@ -40,7 +38,7 @@ def create():
     subforum = request.form.get("subforum")
     title = request.form.get("title")
     body = request.form.get("body")
-    op = session[USER_NAME]["username"]
+    op = session[USER]["username"]
 
     # Optional
     media = request.form.get("media")
@@ -67,7 +65,7 @@ def create():
 @require_logged_in
 def delete():
     post_id = request.form.get("post_id")
-    username = session[USER_NAME]["username"]
+    username = session[USER]["username"]
 
     post_manager = PostManager()
     try:
@@ -89,7 +87,7 @@ def edit():
     body = request.form.get("body")
     media = request.form.get("media")
     tags = request.form.get("tags")
-    username = session[USER_NAME]["username"]
+    username = session[USER]["username"]
 
     post_manager = PostManager()
     try:
@@ -114,7 +112,7 @@ def edit():
 @require_logged_in
 def lock():
     post_id = request.form.get("post_id")
-    username = session[USER_NAME]["username"]
+    username = session[USER]["username"]
 
     post_manager = PostManager()
 
@@ -133,7 +131,7 @@ def lock():
 @require_logged_in
 def unlock():
     post_id = request.form.get("post_id")
-    username = session[USER_NAME]["username"]
+    username = session[USER]["username"]
 
     post_manager = PostManager()
 
@@ -153,7 +151,7 @@ def unlock():
 def vote():
     post_id = request.form.get("post_id")
     is_like = request.form.get("is_like", type=lambda s: s.lower() == "true")
-    username = session[USER_NAME]["username"]
+    username = session[USER]["username"]
 
     vote_manager = VoteManager()
 
@@ -172,7 +170,7 @@ def vote():
 @require_logged_in
 def unvote():
     post_id = request.form.get("post_id")
-    username = session[USER_NAME]["username"]
+    username = session[USER]["username"]
 
     vote_manager = VoteManager()
 

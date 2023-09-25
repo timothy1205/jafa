@@ -2,13 +2,11 @@ import os.path
 from glob import glob
 from importlib import import_module
 
-from flask import Blueprint
+from backend.utils import make_blueprint
 
-API_NAME = "api"
-API_PATH = f"/{API_NAME}"
 FILE_BLACKLIST = set(["__init__", "api"])
 
-blueprint = Blueprint(API_NAME, __name__, url_prefix=API_PATH)
+blueprint = make_blueprint("api", __name__)
 
 # Derive blueprints from python files
 python_files = map(
