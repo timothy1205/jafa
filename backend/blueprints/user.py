@@ -2,19 +2,14 @@ from functools import wraps
 
 from flask import request, session
 
+from backend.constants import HTTP
 from backend.data.managers.UserManager import (
     InvalidPasswordError,
     InvalidUsernameError,
     UserManager,
     UsernameExistsError,
 )
-from backend.utils import (
-    CODE_BAD_REQUEST,
-    make_blueprint,
-    make_error,
-    make_success,
-    require_keys,
-)
+from backend.utils import make_blueprint, make_error, make_success, require_keys
 
 
 class NotLoggedIn(Exception):
@@ -26,8 +21,6 @@ class AlreadyLoggedIn(Exception):
 
 
 USER = "user"
-CODE_UNAUTHORIZED = 401
-CODE_CONFLICT = 409
 
 blueprint = make_blueprint("user", __name__)
 
@@ -36,7 +29,7 @@ def require_logged_in(f):
     @wraps(f)
     def wrapper(*args, **kwargs):
         if USER not in session:
-            return make_error("You must be logged in", CODE_UNAUTHORIZED, NotLoggedIn())
+            return make_error("You must be logged in", HTTP.UNAUTHORIZED, NotLoggedIn())
 
         return f(*args, **kwargs)
 
@@ -47,10 +40,7 @@ def require_logged_in(f):
 @require_keys(["username", "password"])
 def login():
     if USER in session:
-        return make_error(
-            "Already logged in",
-            CODE_CONFLICT,
-        )
+        return make_error("Already logged in", HTTP.UNAUTHORIZED)
 
     username = request.form.get("username")
     password = request.form.get("password")
@@ -59,7 +49,7 @@ def login():
     valid_password, user = user_manager.check_password(username, password)
 
     if not valid_password:
-        return make_error("Invalid credentials", CODE_UNAUTHORIZED, AlreadyLoggedIn())
+        return make_error("Invalid credentials", HTTP.UNAUTHORIZED, AlreadyLoggedIn())
 
     session[USER] = user
     return make_success("Logged in")
@@ -83,9 +73,9 @@ def register():
     try:
         user = user_manager.create_user(username, password)
     except (UsernameExistsError, InvalidUsernameError, InvalidPasswordError) as e:
-        return make_error(str(e), CODE_UNAUTHORIZED, e)
+        return make_error(str(e), HTTP.UNAUTHORIZED, e)
     if user is None:
-        return make_error("Could not create!", CODE_UNAUTHORIZED)
+        return make_error("Could not create!", HTTP.UNAUTHORIZED)
 
     # Treat new user as logged in
     session[USER] = user

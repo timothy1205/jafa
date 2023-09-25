@@ -3,7 +3,6 @@ from backend.data.managers.SubForumManager import SubForumManager
 from backend.utils import make_blueprint, make_error, make_success
 
 blueprint = make_blueprint("root", __name__, "/")
-CODE_BAD_REQUST = 400
 
 
 @blueprint.route("/<int:page>")
@@ -16,7 +15,7 @@ def root(page: int = 0):
         posts = post_manager.get_post_list(page)
         # TODO: Indicate if a user liked/disliked a post
     except InvalidPageError as e:
-        return make_error(str(e), CODE_BAD_REQUST, e)
+        return make_error(str(e), e=e)
 
     info = subforum_manager.get_subforum_info(current_page=page)
 
