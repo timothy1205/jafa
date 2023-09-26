@@ -16,9 +16,16 @@ def create_app():
     CORS(app, origins=config.cors_origins, supports_credentials=True)
 
     # Register blueprint endpoints
-    from backend.blueprints import api
+    from backend.blueprints.route_manager import route_manager
+    from backend.blueprints.api_manager import api_manager
 
-    app.register_blueprint(api.blueprint)
+    app.register_blueprint(route_manager.get_blueprint())
+    app.register_blueprint(api_manager.get_blueprint())
+
+    # Register index
+    @app.route("/")
+    def index():
+        return "Jafa is running!"
 
     # Connect to database if we are not testing
     if config.database_type != "testing":
