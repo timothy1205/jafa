@@ -1,6 +1,6 @@
 from flask import request, session
 
-from backend.blueprints.user import require_logged_in
+from backend.blueprints.api.user import require_logged_in
 from backend.constants import DATA
 from backend.data.managers.PostMananger import (
     InvalidPostBody,
