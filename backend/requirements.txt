@@ -1,7 +1,7 @@
 bcrypt==4.0.1
 blinker==1.6.2
 click==8.1.7
-Flask==2.3.3
+Flask==3.0.0
 gevent==23.9.1
 greenlet==3.0.0
 gunicorn==21.2.0
