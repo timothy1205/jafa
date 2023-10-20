@@ -1,4 +1,4 @@
-FROM node:20-alpine AS build
+FROM node:21-alpine AS build
 WORKDIR /app
 COPY frontend/tsconfig.json frontend/package.json frontend/yarn.lock ./
 COPY ./frontend/src ./src
