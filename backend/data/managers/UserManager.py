@@ -7,7 +7,7 @@ from typing import Optional, Type
 from bcrypt import checkpw, gensalt, hashpw
 
 from backend.data.models.UserModel import User
-from backend.data.managers.DataManager import DataManager
+from backend.data.managers.AbstractDataManager import AbstractDataManager
 from backend.data.models.AbstractModelFactory import AbstractModelFactory
 
 PASSWORD_MIN = 8
@@ -28,7 +28,7 @@ class InvalidPasswordError(Exception):
     pass
 
 
-class UserManager(DataManager):
+class UserManager(AbstractDataManager):
     def __init__(self, model_factory: Optional[Type[AbstractModelFactory]] = None):
         super().__init__(model_factory)
 

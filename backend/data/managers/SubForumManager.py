@@ -2,7 +2,7 @@ import re
 from datetime import datetime
 from typing import Optional, Type, TypedDict
 
-from backend.data.managers.DataManager import DataManager
+from backend.data.managers.AbstractDataManager import AbstractDataManager
 from backend.data.models.AbstractModelFactory import AbstractModelFactory
 from backend.data.models.SubForumModel import SubForum
 from backend.utils import RolePermissionError, ceil_division
@@ -38,7 +38,7 @@ class SubForumInfoSpecific(SubForumInfoGeneric, SubForum):
     pass
 
 
-class SubForumManager(DataManager):
+class SubForumManager(AbstractDataManager):
     def __init__(self, model_factory: Optional[Type[AbstractModelFactory]] = None):
         super().__init__(model_factory)
 
@@ -140,7 +140,10 @@ class SubForumManager(DataManager):
         return subforum_model.edit_subforum(title, description)
 
     def get_subforum_info(
-        self, title: str | None = None, current_page: int = 0
+        self,
+        title: str | None = None,
+        current_page: int = 0,
+        page_limit: int | None = None,
     ) -> SubForumInfoGeneric | SubForumInfoSpecific:
         """Returns a dict of info for a valid subforum or generic info if None
 
@@ -148,11 +151,14 @@ class SubForumManager(DataManager):
         :raises NoSubForumFoundError:
         """
 
-        from backend.data.managers.PostMananger import PAGE_LIMIT
+        if page_limit is None:
+            from backend.data.managers.PostMananger import PAGE_LIMIT
+
+            page_limit = PAGE_LIMIT
 
         post_model = self.model_factory.create_post_model()
         post_count = post_model.get_count(title)
-        page_count = ceil_division(post_count, PAGE_LIMIT)
+        page_count = ceil_division(post_count, page_limit)
         subforum_info = dict(
             post_count=post_count, page_count=page_count, current_page=current_page
         )

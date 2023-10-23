@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Optional, Type
 
-from backend.data.managers.DataManager import DataManager
+from backend.data.managers.AbstractDataManager import AbstractDataManager
 from backend.data.models.AbstractModelFactory import AbstractModelFactory
 from backend.data.models.VoteModel import ContentType, Vote
 
@@ -21,7 +21,7 @@ class InvalidContent(Exception):
 CONTENT_TYPES = ["post", "comment"]
 
 
-class VoteManager(DataManager):
+class VoteManager(AbstractDataManager):
     def __init__(self, model_factory: Optional[Type[AbstractModelFactory]] = None):
         super().__init__(model_factory)
 
@@ -52,6 +52,7 @@ class VoteManager(DataManager):
         if vote is not None:
             # Parse content_type
             found = False
+
             for current_type in ContentType:
                 if vote["content_type"] == str(current_type):
                     vote["content_type"] = current_type
@@ -59,7 +60,9 @@ class VoteManager(DataManager):
                     break
 
             if not found:
-                raise InvalidContentType("Cound not parse: " + vote["content_type"])
+                raise InvalidContentType(
+                    f"Cound not parse: {str(vote['content_type'])} {type(vote['content_type'])}"
+                )
 
         return self.__raise_or_return(vote)
 
@@ -148,6 +151,7 @@ class VoteManager(DataManager):
         :returns: True if successful, false otherwise.
         :raises NoVoteFoundError:
         :raises InvalidContentType:
+        :raises InvalidContent:
         """
         vote = self.get_vote(username, content_id, content_type)
 
@@ -164,6 +168,7 @@ class VoteManager(DataManager):
             # TODO: Check if comment exists
             pass
         else:
+            # This should be unreachable due to checks in get_vote
             raise InvalidContentType("Unknown content type: " + str(content_type))
 
         vote_model = self.model_factory.create_vote_model()

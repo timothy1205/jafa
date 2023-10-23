@@ -53,6 +53,6 @@ class BlueprintManager:
                 # TODO: Log warning
                 pass
 
-    def get_blueprint(self):
+    def get_blueprint(self) -> Blueprint:
         """Return inner blueprint object"""
         return self.__blueprint

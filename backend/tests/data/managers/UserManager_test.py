@@ -6,166 +6,217 @@ from hashlib import sha256
 from bcrypt import gensalt, hashpw
 
 import backend.data.managers.UserManager as um
-from backend.tests.data.models.TestModelFactory import TestModelFactory
+from backend.data.models.UserModel import User, UserModel
+from backend.tests import assertTimeInRange
+from backend.tests.data.managers import TestModelFactory
+from backend.utils import set_data_wrapper
+
+
+class TestUserModel(UserModel):
+    def create_user(self, data: User) -> bool:
+        pass
+
+    def get_by_username(self, username: str) -> User | None:
+        pass
+
+    def delete_user(self, username: str) -> bool:
+        pass
 
 
 class UserManagerTestCase(unittest.TestCase):
     def setUp(self):
-        TestModelFactory.reset()
-        self.user_model = TestModelFactory.create_user_model()
-        self.user_manager = um.UserManager(TestModelFactory)
+        self.user_model = TestUserModel()
+
+        test_model_factory = TestModelFactory()
+        test_model_factory.create_user_model = lambda: self.user_model
+        self.user_manager = um.UserManager(test_model_factory)
+        self.data = {}
+
+    def test_user_exists(self):
+        with self.subTest("No user"):
+            self.user_model.get_by_username = lambda username: None
+            self.assertFalse(self.user_manager.user_exists(""))
+
+        with self.subTest("Valid user"):
+            self.user_model.get_by_username = lambda username: {}
+            self.assertTrue(self.user_manager.user_exists(""))
 
     def test_check_password(self):
-        password = b64encode(sha256("Password1".encode("utf-8")).digest())
-        hashed = hashpw(password, gensalt())
-        self.user_model.create_user(
-            dict(username="Test", password=hashed, registration_date=0)
+        self.user_model.get_by_username = lambda username: None
+        self.assertEqual(
+            self.user_manager.check_password("", ""),
+            (False, None),
+            "Invalid user",
         )
 
-        result = self.user_manager.check_password("Test", "Password1")
-        self.assertTrue(result[0], "Returns True on success")
-        self.assertEqual(result[1], result[1] | dict(username="Test", password=hashed))
+        password_clear = "TestPassword"
+        password_encoded = b64encode(sha256(password_clear.encode("utf-8")).digest())
+        password_hashed = hashpw(password_encoded, gensalt())
+        test_data = dict(password=password_hashed)
+        self.user_model.get_by_username = lambda username: test_data
+
+        with self.subTest("Hashes match"):
+            result, user = self.user_manager.check_password("", password_clear)
+            self.assertTrue(result)
+            self.assertEqual(user, user | test_data)
 
         self.assertEqual(
-            self.user_manager.check_password("Test", "Password2"),
+            self.user_manager.check_password("", password_clear + "T"),
             (False, None),
             "Wrong character at end of password",
         )
+
         self.assertEqual(
-            self.user_manager.check_password("Test", "password1"),
+            self.user_manager.check_password("", "T" + password_clear),
             (False, None),
             "Wrong character at start of password",
         )
 
+        self.assertEqual(
+            self.user_manager.check_password(
+                "", password_clear[:4] + "T" + password_clear[4:]
+            ),
+            (False, None),
+            "Wrong character in middle of password",
+        )
+
     def test_create_user(self):
-        # Username length
-        with self.assertRaises(
-            um.InvalidUsernameError, msg="BOUNDARY: Username = USERNAME_MIN - 1"
-        ):
-            self.user_manager.create_user("r" * (um.USERNAME_MIN - 1), "Password1")
+        self.user_model.create_user = set_data_wrapper(self.data)
+        self.user_model.get_by_username = lambda username: None
 
-        self.assertTrue(
-            self.user_manager.create_user("r" * (um.USERNAME_MIN), "Password1"),
-            "BOUNDARY: Username = USERNAME_MIN",
-        )
-        self.user_model.delete_user("r" * (um.USERNAME_MIN))
+        test_data = dict(username="Test", password="Password1")
 
-        self.assertTrue(
-            self.user_manager.create_user("r" * (um.USERNAME_MIN + 1), "Password1"),
-            "BOUNDARY: Username = USERNAME_MIN + 1",
-        )
-        self.user_model.delete_user("r" * (um.USERNAME_MIN + 1))
+        def test_user_creation(msg=None):
+            with self.subTest(msg=msg):
+                self.user_manager.create_user(
+                    test_data["username"], test_data["password"]
+                )
+                user = self.data["args"][0]
+                assertTimeInRange(self, user["registration_date"])
 
-        self.assertTrue(
-            self.user_manager.create_user("r" * (um.USERNAME_MAX - 1), "Password1"),
-            "BOUNDARY: Username = USERNAME_MAX - 1",
-        )
-        self.user_model.delete_user("r" * (um.USERNAME_MAX - 1))
+                self.assertEqual(user["username"], test_data["username"])
+                # Password should always be hashed
+                self.assertNotEqual(user["password"], test_data["password"])
 
-        self.assertTrue(
-            self.user_manager.create_user("r" * (um.USERNAME_MAX), "Password1"),
-            "BOUNDARY: Username = USERNAME_MAX",
-        )
-        self.user_model.delete_user("r" * (um.USERNAME_MAX))
-
-        with self.assertRaises(
-            um.InvalidUsernameError, msg="BOUNDARY: Username = USERNAME_MAX + 1"
-        ):
-            self.user_manager.create_user("r" * (um.USERNAME_MAX + 1), "Password1")
-
-        # Username consists only of alphanum characters
-        with self.assertRaises(
-            um.InvalidUsernameError, msg="BOUNDARY: Symbol at start"
-        ):
-            self.user_manager.create_user(
-                "@" + "r" * (um.USERNAME_MIN - 1), "Password1"
-            )
-
-        with self.assertRaises(um.InvalidUsernameError, msg="BOUNDARY: Symbol at end"):
-            self.user_manager.create_user(
-                "@" + "r" * (um.USERNAME_MIN - 1), "Password1"
-            )
-
-        for char in string.punctuation:
+        with self.subTest("Username"):
+            # Username length
             with self.assertRaises(
-                um.InvalidUsernameError, msg=f"Special character: '{char}'"
+                um.InvalidUsernameError, msg="BOUNDARY: Username = USERNAME_MIN - 1"
             ):
-                username = "r" * (um.USERNAME_MIN * 2)
-                # Insert special character in middle
-                middle = len(username) // 2
-                username = username[:middle] + char + username[middle:]
-                self.user_manager.create_user(username, "Password1")
+                test_data["username"] = "r" * (um.USERNAME_MIN - 1)
+                self.user_manager.create_user(
+                    test_data["username"], test_data["password"]
+                )
 
-        # Duplicate username
-        self.assertTrue(self.user_manager.create_user("red", "Password1"), "Valid user")
+            test_data["username"] = "r" * (um.USERNAME_MIN)
+            test_user_creation("BOUNDARY: Username = USERNAME_MIN")
 
-        with self.assertRaises(um.UsernameExistsError, msg="Duplicate username"):
-            self.user_manager.create_user("red", "Password1")
-        self.user_model.delete_user("red")
+            test_data["username"] = "r" * (um.USERNAME_MIN + 1)
+            test_user_creation("BOUNDARY: Username = USERNAME_MIN + 1")
 
-        # Password Length
-        with self.assertRaises(
-            um.InvalidPasswordError, msg="BOUNDARY: Password = PASSWORD_MIN - 1"
-        ):
-            self.user_manager.create_user(
-                "r" * (um.USERNAME_MIN), "p" * (um.PASSWORD_MIN - 1)
-            )
+            test_data["username"] = "r" * (um.USERNAME_MAX - 1)
+            test_user_creation("BOUNDARY: Username = USERNAME_MAX - 1")
 
-        self.assertTrue(
-            self.user_manager.create_user(
-                "r" * (um.USERNAME_MIN), "P1" + "p" * (um.PASSWORD_MIN - 2)
-            ),
-            "BOUNDARY: Password = PASSWORD_MIN",
-        )
-        self.user_model.delete_user("r" * (um.USERNAME_MIN))
+            test_data["username"] = "r" * (um.USERNAME_MAX)
+            test_user_creation("BOUNDARY: Username = USERNAME_MAX")
 
-        self.assertTrue(
-            self.user_manager.create_user(
-                "r" * (um.USERNAME_MIN), "P1" + "p" * (um.PASSWORD_MIN - 1)
-            ),
-            "BOUNDARY: Password = PASSWORD_MIN + 1",
-        )
-        self.user_model.delete_user("r" * (um.USERNAME_MIN))
+            with self.assertRaises(
+                um.InvalidUsernameError, msg="BOUNDARY: Username = USERNAME_MAX + 1"
+            ):
+                test_data["username"] = "r" * (um.USERNAME_MAX + 1)
+                self.user_manager.create_user(
+                    test_data["username"], test_data["password"]
+                )
 
-        self.assertTrue(
-            self.user_manager.create_user(
-                "r" * (um.USERNAME_MIN), "P1" + "p" * (um.PASSWORD_MAX - 3)
-            ),
-            "BOUNDARY: Password = PASSWORD_MAX - 1",
-        )
-        self.user_model.delete_user("r" * (um.USERNAME_MIN))
+            # Username consists only of alphanum characters
+            with self.assertRaises(
+                um.InvalidUsernameError, msg="BOUNDARY: Symbol at start"
+            ):
+                test_data["username"] = "@" + "r" * (um.USERNAME_MIN - 1)
+                self.user_manager.create_user(
+                    test_data["username"], test_data["password"]
+                )
 
-        self.assertTrue(
-            self.user_manager.create_user(
-                "r" * (um.USERNAME_MIN), "P1" + "p" * (um.PASSWORD_MAX - 2)
-            ),
-            "BOUNDARY: Password = PASSWORD_MAX",
-        )
-        self.user_model.delete_user("r" * (um.USERNAME_MIN))
+            with self.assertRaises(
+                um.InvalidUsernameError, msg="BOUNDARY: Symbol at end"
+            ):
+                test_data["username"] = "r" * (um.USERNAME_MIN - 1) + "@"
+                self.user_manager.create_user(
+                    test_data["username"], test_data["password"]
+                )
 
-        with self.assertRaises(
-            um.InvalidPasswordError, msg="BOUNDARY: Password = PASSWORD_MAX + 1"
-        ):
-            self.user_manager.create_user(
-                "r" * (um.USERNAME_MIN), "p" * (um.PASSWORD_MAX - 1)
-            )
+            for char in string.punctuation:
+                with self.assertRaises(
+                    um.InvalidUsernameError, msg=f"Special character: '{char}'"
+                ):
+                    username = "r" * (um.USERNAME_MIN * 2)
+                    # Insert special character in middle
+                    middle = len(username) // 2
+                    test_data["username"] = username[:middle] + char + username[middle:]
 
-        # Password character types
-        with self.assertRaises(um.InvalidPasswordError, msg="Password missing number"):
-            self.user_manager.create_user(
-                "r" * (um.USERNAME_MIN), "P" + "p" * (um.PASSWORD_MIN)
-            )
+                    self.user_manager.create_user(
+                        test_data["username"], test_data["password"]
+                    )
 
-        with self.assertRaises(
-            um.InvalidPasswordError, msg="Password missing uppercase"
-        ):
-            self.user_manager.create_user(
-                "r" * (um.USERNAME_MIN), "1" + "p" * (um.PASSWORD_MIN)
-            )
+        with self.subTest("Password"):
+            test_data["username"] = "test"
 
-        with self.assertRaises(
-            um.InvalidPasswordError, msg="Password missing lowercase"
-        ):
-            self.user_manager.create_user(
-                "r" * (um.USERNAME_MIN), "1" + "P" * (um.PASSWORD_MIN)
-            )
+            # Password Length
+            with self.assertRaises(
+                um.InvalidPasswordError, msg="BOUNDARY: Password = PASSWORD_MIN - 1"
+            ):
+                test_data["password"] = "P1" + "p" * (um.PASSWORD_MIN - 3)
+                self.user_manager.create_user(
+                    test_data["username"], test_data["password"]
+                )
+
+            test_data["password"] = "P1" + "p" * (um.PASSWORD_MIN - 2)
+            test_user_creation("BOUNDARY: Password = PASSWORD_MIN")
+
+            test_data["password"] = "P1" + "p" * (um.PASSWORD_MIN - 1)
+            test_user_creation("BOUNDARY: Password = PASSWORD_MIN + 1")
+
+            test_data["password"] = "P1" + "p" * (um.PASSWORD_MAX - 3)
+            test_user_creation("BOUNDARY: Password = PASSWORD_MAX - 1")
+
+            test_data["password"] = "P1" + "p" * (um.PASSWORD_MAX - 2)
+            test_user_creation("BOUNDARY: Password = PASSWORD_MAX")
+
+            with self.assertRaises(
+                um.InvalidPasswordError, msg="BOUNDARY: Password = PASSWORD_MAX + 1"
+            ):
+                test_data["password"] = "P1" + "p" * (um.PASSWORD_MAX - 1)
+                self.user_manager.create_user(
+                    test_data["username"], test_data["password"]
+                )
+
+            # Password character types
+            with self.assertRaises(
+                um.InvalidPasswordError, msg="Password missing number"
+            ):
+                test_data["password"] = "P" + "p" * (um.PASSWORD_MIN)
+                self.user_manager.create_user(
+                    test_data["username"], test_data["password"]
+                )
+
+            with self.assertRaises(
+                um.InvalidPasswordError, msg="Password missing uppsercase"
+            ):
+                test_data["password"] = "1" + "p" * (um.PASSWORD_MIN)
+                self.user_manager.create_user(
+                    test_data["username"], test_data["password"]
+                )
+
+            with self.assertRaises(
+                um.InvalidPasswordError, msg="Password missing lowercase"
+            ):
+                test_data["password"] = "1" + "P" * (um.PASSWORD_MIN)
+                self.user_manager.create_user(
+                    test_data["username"], test_data["password"]
+                )
+
+        with self.assertRaises(um.UsernameExistsError, msg="Duplicate user"):
+            self.user_model.get_by_username = lambda username: {}
+
+            test_data["username"] = "test"
+            self.user_manager.create_user(test_data["username"], test_data["password"])

@@ -13,10 +13,14 @@ from backend.utils import make_blueprint, make_error, make_success, require_keys
 
 
 class NotLoggedIn(Exception):
+    """Indicate a user isn't logged in."""
+
     pass
 
 
 class AlreadyLoggedIn(Exception):
+    """Indicate a user is already logged in."""
+
     pass
 
 
@@ -24,6 +28,8 @@ blueprint = make_blueprint("user", __name__)
 
 
 def require_logged_in(f):
+    """Decorator: Ensure endpoint caller is logged in."""
+
     @wraps(f)
     def wrapper(*args, **kwargs):
         if DATA.USER not in session:

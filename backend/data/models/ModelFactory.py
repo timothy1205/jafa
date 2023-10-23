@@ -15,6 +15,11 @@ class ModelFactory(AbstractModelFactory):
 
     @staticmethod
     def __setup_associations():
+        """Organize filenames of models into a dictionary.
+
+        Key: File basename converted to lowercase.
+        Value: Original file basename.
+        """
         FILE_BLACKLIST = ["__init__", "AbstractModelFactory", "ModelFactory", "Model"]
         ModelFactory._associations = {}
         python_files = glob(os.path.join(os.path.dirname(__file__), "**/*.py"))
@@ -28,6 +33,7 @@ class ModelFactory(AbstractModelFactory):
 
     @staticmethod
     def __import_model(model_type):
+        """Dynamically import a model based on the database type and model type."""
         if ModelFactory._associations is None:
             ModelFactory.__setup_associations()
 

@@ -7,12 +7,17 @@ from backend.data.databases.DatabaseFactory import DatabaseFactory
 from backend.JafaConfig import JafaConfig
 
 
-def create_app():
+def create_app() -> Flask:
+    """Create Flask app for Jafa.
+
+    :return: A customized instance of Flask"""
     app = Flask(__name__)
     app.secret_key = token_hex(16)
 
+    # Load config
     config = JafaConfig()
 
+    # Initialize CORS
     CORS(app, origins=config.cors_origins, supports_credentials=True)
 
     # Register blueprint endpoints
@@ -22,7 +27,7 @@ def create_app():
     app.register_blueprint(route_manager.get_blueprint())
     app.register_blueprint(api_manager.get_blueprint())
 
-    # Register index
+    # Register index endpoint
     @app.route("/")
     def index():
         return "Jafa is running!"

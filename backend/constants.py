@@ -7,3 +7,4 @@ class HTTP:
 
 class DATA:
     USER = "user"
+    """Key assigned to flask session for storing user data"""
