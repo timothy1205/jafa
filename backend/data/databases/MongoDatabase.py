@@ -11,6 +11,10 @@ class MongoDatabase(AbstractDatabase):
         self.__db = None
 
     def connect(self, hostname: str, port=27017, username=None, password=None):
+        """Connect via Mongo URI
+
+        If username or password is None, its excluded from the URI.
+        """
         if username is None or password is None:
             self.__client = MongoClient(f"mongodb://{hostname}:{port}")
         else:

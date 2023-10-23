@@ -1,5 +1,4 @@
 from abc import ABC, abstractmethod
-from typing import Optional
 
 
 class AbstractDatabase(ABC):
@@ -9,6 +8,7 @@ class AbstractDatabase(ABC):
 
     @abstractmethod
     def connect(self, hostname: str, port=None, username=None, password=None):
+        """Run database connect logic."""
         raise NotImplementedError
 
     @abstractmethod
@@ -21,8 +21,10 @@ class AbstractDatabase(ABC):
 
     @abstractmethod
     def disconnect(self):
+        """Run database disconnect logic."""
         raise NotImplementedError
 
     @abstractmethod
     def get_client(self):
+        """Run database disconnect logic."""
         raise NotImplementedError

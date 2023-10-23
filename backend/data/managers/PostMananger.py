@@ -1,7 +1,7 @@
 from datetime import datetime
-from typing import Optional, Type
+from typing import Type
 
-from backend.data.managers.DataManager import DataManager
+from backend.data.managers.AbstractDataManager import AbstractDataManager
 from backend.data.managers.SubForumManager import SubForumManager
 from backend.data.managers.VoteManager import VoteManager
 from backend.data.models.AbstractModelFactory import AbstractModelFactory
@@ -9,13 +9,21 @@ from backend.data.models.PostModel import Post
 from backend.utils import RolePermissionError
 
 TITLE_MIN = 3
+"""Minimum title character limit."""
 TITLE_MAX = 40
+"""Maximum title character limit."""
 BODY_MIN = 5
+"""Minimum body character limit."""
 BODY_MAX = 40000
+"""Maximum body character limit."""
 TAG_MAX = 15
+"""Maximum tag character limit."""
 TAGS_LIMIT = 10
+"""Maximum tag count."""
 MEDIA_LIMIT = 10
+"""Maximum media count."""
 PAGE_LIMIT = 20
+"""Maximum page count."""
 
 
 class InvalidPostTitle(Exception):
@@ -50,8 +58,10 @@ class InvalidPageError(Exception):
     pass
 
 
-class PostManager(DataManager):
-    def __init__(self, model_factory: Optional[Type[AbstractModelFactory]] = None):
+class PostManager(AbstractDataManager):
+    """Handle post related functionality."""
+
+    def __init__(self, model_factory: Type[AbstractModelFactory] | None = None):
         super().__init__(model_factory)
 
     def __raise_or_return(self, post):
@@ -61,6 +71,10 @@ class PostManager(DataManager):
         return post
 
     def __process_title(self, title: str):
+        """Strip title and verify character limits.
+
+        :raises InvalidPostTitle:
+        """
         title = title.strip()
 
         if not (TITLE_MIN <= len(title) <= TITLE_MAX):
@@ -71,6 +85,10 @@ class PostManager(DataManager):
         return title
 
     def __process_body(self, body: str):
+        """Strip body and verify character limits.
+
+        :raises InvalidPostBody:
+        """
         body = body.strip()
         if not (BODY_MIN <= len(body) <= BODY_MAX):
             raise InvalidPostBody(
@@ -79,7 +97,12 @@ class PostManager(DataManager):
 
         return body
 
-    def __process_tags(self, tags: Optional[list[str]]):
+    def __process_tags(self, tags: list[str] | None):
+        """Strip tags and verify character limits.
+
+        :raises TagLimitExceeded:
+        :raises InvalidPostTag:
+        """
         if tags is None:
             return
 
@@ -114,12 +137,12 @@ class PostManager(DataManager):
         subforum: str,
         title: str,
         body: str,
-        media: Optional[list[str]] = None,
-        tags: Optional[list[str]] = None,
-    ):
+        media: list[str] | None = None,
+        tags: list[str] | None = None,
+    ) -> bool:
         """Create a post on behalf of a user to specified subforum
 
-        :returns: True if successful, false otherwise.
+        :return: True if successful, false otherwise.
         :raises InvalidPostTitle:
         :raises InvalidPostBody:
         :raises InvalidPostTag:
@@ -159,12 +182,13 @@ class PostManager(DataManager):
         post_id: str,
         title: str,
         body: str,
-        media: Optional[list[str]] = None,
-        tags: Optional[list[str]] = None,
+        media: list[str] | None = None,
+        tags: list[str] | None = None,
     ):
         """Edit a post on behalf of a user
 
-        :returns: True if successful, false otherwise.
+        :return: True if successful, false otherwise.
+        :raises NoPostFoundError:
         :raises InvalidPostTitle:
         :raises InvalidPostBody:
         :raises InvalidPostTag:
@@ -201,7 +225,7 @@ class PostManager(DataManager):
     def delete_post(self, username: str, post_id: str) -> bool:
         """Delete a post of a given ID on behalf of a user as permitted
 
-        :returns: True if successfull, false otherwise.
+        :return: True if successfull, false otherwise.
         :raises RolePermissionError:
         :raises NoPostFoundError:
         """
@@ -223,7 +247,7 @@ class PostManager(DataManager):
     def lock_post(self, username: str, post_id: str) -> bool:
         """Mark a post as locked on behalf of a user as permitted
 
-        :returns: True if successfull, false otherwise.
+        :return: True if successfull, false otherwise.
         :raises NoPostFoundError:
         :raises PostAlreadyLockedError:
         :raises RolePermissionError:
@@ -246,7 +270,7 @@ class PostManager(DataManager):
     def unlock_post(self, username: str, post_id: str) -> bool:
         """Mark a post as unlocked on behalf of a user as permitted
 
-        :returns: True if successfull, false otherwise.
+        :return: True if successfull, false otherwise.
         :raises NoPostFoundError:
         :raises PostNotLockedError:
         :raises RolePermissionError:
@@ -300,19 +324,27 @@ class PostManager(DataManager):
         )
 
     def post_exists(self, post_id: str) -> bool:
+        """Ensure a posts exists
+
+        :return: True if given post exists, false otherwise.
+        """
         post_model = self.model_factory.create_post_model()
 
         return post_model.get_by_post_id(post_id) is not None
 
-    def get_post_list(self, subforum: str | None = None, page: int = 0) -> list[Post]:
+    def get_post_list(
+        self, subforum: str | None = None, page: int = 0, page_limit=None
+    ) -> list[Post]:
         """Returns a list of posts
 
         :raises InvalidPageError"
         """
         post_model = self.model_factory.create_post_model()
 
+        if page_limit is None:
+            page_limit = PAGE_LIMIT
         try:
-            return post_model.get_posts(PAGE_LIMIT, PAGE_LIMIT * page, subforum)
+            return post_model.get_posts(page_limit, page_limit * page, subforum)
         except OverflowError:
             # Reraise OverflowErrors into something neater
             raise InvalidPageError("Invalid page number")

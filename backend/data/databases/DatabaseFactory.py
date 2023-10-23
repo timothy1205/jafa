@@ -8,6 +8,10 @@ class DatabaseFactory:
 
     @staticmethod
     def create_database(database_type: str) -> AbstractDatabase:
+        """Return the database associated with the provided type.
+
+        Raises NotImplementedError if it doesn't exist.
+        """
         if database_type in DatabaseFactory._databases:
             if database_type in DatabaseFactory._cache:
                 return DatabaseFactory._cache[database_type]
@@ -20,7 +24,9 @@ class DatabaseFactory:
 
     @staticmethod
     def register_database(database_type, database_class):
+        """Register a database string association."""
         DatabaseFactory._databases[database_type] = database_class
 
 
 DatabaseFactory.register_database("mongo", MongoDatabase)
+"""MongoDB"""

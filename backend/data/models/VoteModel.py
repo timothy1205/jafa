@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from datetime import date
 from enum import Enum
-from typing import Optional, TypedDict
+from typing import TypedDict
 
 from backend.data.models.Model import Model
 
@@ -27,7 +27,7 @@ class VoteModel(ABC, Model):
     def add_vote(self, data: Vote) -> bool:
         raise NotImplementedError()
 
-    def get_vote(self, data: BaseVote) -> Optional[Vote]:
+    def get_vote(self, data: BaseVote) -> Vote | None:
         raise NotImplementedError()
 
     @abstractmethod

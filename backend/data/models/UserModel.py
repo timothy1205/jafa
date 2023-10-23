@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from datetime import date
-from typing import Optional, TypedDict
+from typing import TypedDict
 
 from backend.data.models.Model import Model
 
@@ -17,7 +17,7 @@ class UserModel(ABC, Model):
         raise NotImplementedError()
 
     @abstractmethod
-    def get_by_username(self, username: str) -> Optional[User]:
+    def get_by_username(self, username: str) -> User | None:
         raise NotImplementedError()
 
     @abstractmethod

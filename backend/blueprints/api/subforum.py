@@ -20,6 +20,20 @@ blueprint = make_blueprint("subforum", __name__)
 @require_keys(["title", "description"])
 @require_logged_in
 def create():
+    """
+    ###**POST /api/subforum/create**
+
+    Create a subforum.
+
+    > title: Subforum title
+    >
+    > description: Subforum description
+
+    ###Error Types:
+       * InvalidSubForumDescription
+       * InvalidSubForumTitle
+       * SubForumTitleExistsError
+    """
     title = request.form.get("title")
     description = request.form.get("description")
     creator = session[DATA.USER]["username"]
@@ -42,6 +56,18 @@ def create():
 @require_keys(["title"])
 @require_logged_in
 def delete():
+    """
+    ###**POST /api/subforum/delete**
+
+    Delete a subforum.
+
+    > title: Subforum title
+
+    ###Error Types:
+       * NoSubForumFoundError
+       * RolePermissionError
+    """
+
     title = request.form.get("title")
     username = session[DATA.USER]["username"]
 
@@ -60,6 +86,20 @@ def delete():
 @require_keys(["title", "description"])
 @require_logged_in
 def edit():
+    """
+    ###**POST /api/subforum/edit**
+
+    Edit a subforum.
+
+    > title: Subforum title
+    >
+    > description: Subforum description
+
+    ###Error Types:
+       * NoSubForumFoundError
+       * RolePermissionError
+    """
+
     title = request.form.get("title")
     description = request.form.get("description")
     username = session[DATA.USER]["username"]
