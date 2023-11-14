@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Optional, Type
+from typing import Type
 
 from backend.data.managers.AbstractDataManager import AbstractDataManager
 from backend.data.models.AbstractModelFactory import AbstractModelFactory
@@ -22,7 +22,7 @@ CONTENT_TYPES = ["post", "comment"]
 
 
 class VoteManager(AbstractDataManager):
-    def __init__(self, model_factory: Optional[Type[AbstractModelFactory]] = None):
+    def __init__(self, model_factory: Type[AbstractModelFactory] | None = None):
         super().__init__(model_factory)
 
     def __raise_or_return(self, vote):
