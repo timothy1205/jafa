@@ -64,7 +64,7 @@ class UserManager(AbstractDataManager):
         user_model = self.model_factory.create_user_model()
         return user_model.get_by_username(username) is not None
 
-    def check_password(self, username: str, password: str) -> tuple[bool, dict]:
+    def check_password(self, username: str, password: str) -> tuple[bool, User]:
         """Check if a given password corresponds to the saved hash
 
         :returns: Tuple[bool: password_is_valid, dict: user]

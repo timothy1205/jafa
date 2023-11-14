@@ -3,6 +3,8 @@ from secrets import token_hex
 from flask import Flask
 from flask_cors import CORS
 
+from backend.blueprints.APIBlueprintManager import APIBlueprintManager
+from backend.blueprints.APIRouteManager import RouteBlueprintManager
 from backend.data.databases.DatabaseFactory import DatabaseFactory
 from backend.JafaConfig import JafaConfig
 
@@ -21,11 +23,8 @@ def create_app() -> Flask:
     CORS(app, origins=config.cors_origins, supports_credentials=True)
 
     # Register blueprint endpoints
-    from backend.blueprints.route_manager import route_manager
-    from backend.blueprints.api_manager import api_manager
-
-    app.register_blueprint(route_manager.get_blueprint())
-    app.register_blueprint(api_manager.get_blueprint())
+    app.register_blueprint(APIBlueprintManager().get_blueprint())
+    app.register_blueprint(RouteBlueprintManager().get_blueprint())
 
     # Register index endpoint
     @app.route("/")
