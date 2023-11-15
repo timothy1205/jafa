@@ -39,7 +39,7 @@ class SubForumInfoSpecific(SubForumInfoGeneric, SubForum):
 
 
 class SubForumManager(AbstractDataManager):
-    def __init__(self, model_factory: Optional[Type[AbstractModelFactory]] = None):
+    def __init__(self, model_factory: Type[AbstractModelFactory] | None = None):
         super().__init__(model_factory)
 
     def __raise_or_return(self, subforum):

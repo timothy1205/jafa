@@ -50,7 +50,7 @@ class UserAPI(AbstractBlueprintWrapper):
     @require_keys(["username", "password"])
     def login(self):
         if DATA.USER in session:
-            return make_error("Already logged in", HTTP.UNAUTHORIZED)
+            return make_error("Already logged in", HTTP.UNAUTHORIZED, AlreadyLoggedIn())
 
         username = request.form.get("username")
         password = request.form.get("password")
@@ -59,9 +59,7 @@ class UserAPI(AbstractBlueprintWrapper):
         valid_password, user = user_manager.check_password(username, password)
 
         if not valid_password:
-            return make_error(
-                "Invalid credentials", HTTP.UNAUTHORIZED, AlreadyLoggedIn()
-            )
+            return make_error("Invalid credentials", HTTP.UNAUTHORIZED)
 
         session[DATA.USER] = user
         return make_success("Logged in")
@@ -83,7 +81,7 @@ class UserAPI(AbstractBlueprintWrapper):
         except (UsernameExistsError, InvalidUsernameError, InvalidPasswordError) as e:
             return make_error(str(e), HTTP.UNAUTHORIZED, e)
         if user is None:
-            return make_error("Could not create!", HTTP.UNAUTHORIZED)
+            return make_error("Could not create", HTTP.UNAUTHORIZED)
 
         # Treat new user as logged in
         session[DATA.USER] = user

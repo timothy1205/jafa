@@ -78,7 +78,7 @@ def require_keys(keys: list[str]):
         def wrapper(*args, **kwargs):
             copy = list(keys)
             for key in keys:
-                if key in request.values:
+                if key in request.form:
                     copy.remove(key)
 
             if len(copy) > 0:
