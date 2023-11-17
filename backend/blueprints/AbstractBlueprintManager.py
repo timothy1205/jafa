@@ -1,6 +1,3 @@
-import os.path
-from glob import glob
-
 from flask import Blueprint
 from backend.utils import make_blueprint
 

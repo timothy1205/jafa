@@ -1,6 +1,6 @@
 from backend.blueprints.AbstractBlueprintWrapper import AbstractBlueprintWrapper
 from backend.data.managers.AbstractManagerFactory import AbstractManagerFactory
-from backend.data.managers.PostMananger import NoPostFoundError, PostManager
+from backend.data.managers.PostMananger import NoPostFoundError
 from backend.utils import make_error, make_success
 
 
