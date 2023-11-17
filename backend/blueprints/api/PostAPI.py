@@ -20,7 +20,6 @@ from backend.data.managers.VoteManager import (
     InvalidContent,
     InvalidContentType,
     NoVoteFoundError,
-    VoteManager,
 )
 from backend.utils import make_error, make_success, require_keys
 
