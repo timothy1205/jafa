@@ -8,7 +8,7 @@ from backend.data.models.PostModel import BasePost, CreatePost, Post, PostModel
 from backend.tests import assertTimeInRange
 from backend.tests.data.managers import TestModelFactory
 from backend.tests.data.managers.VoteManager_test import TestVoteModel
-from backend.utils import set_data_wrapper
+from backend.tests import set_data_wrapper
 
 
 class TestPostModel(PostModel):

@@ -9,7 +9,7 @@ import backend.data.managers.UserManager as um
 from backend.data.models.UserModel import User, UserModel
 from backend.tests import assertTimeInRange
 from backend.tests.data.managers import TestModelFactory
-from backend.utils import set_data_wrapper
+from backend.tests import set_data_wrapper
 
 
 class TestUserModel(UserModel):
