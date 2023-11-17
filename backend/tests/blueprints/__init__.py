@@ -1,6 +1,7 @@
 from typing import Callable
 import unittest
 from flask import Flask, session
+from backend.tests import setup_test_context
 from backend.constants import DATA
 from backend.data.managers.AbstractManagerFactory import AbstractManagerFactory
 from backend.data.managers.PostMananger import PostManager
@@ -25,12 +26,6 @@ class TestManagerFactory(AbstractManagerFactory):
     @staticmethod
     def create_vote_manager() -> VoteManager:  # NOSONAR
         pass
-
-
-def setup_test_context(app: Flask, f: Callable, data: dict | None = None):
-    """Wrapper function for test_request_context"""
-    with app.test_request_context(data=data):
-        f()
 
 
 def blueprint_test_success(
