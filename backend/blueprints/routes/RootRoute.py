@@ -15,7 +15,7 @@ class RootRoute(AbstractBlueprintWrapper):
         self.route("/", self.root)
 
     def root(self, page: int = 0):
-        post_manager = PostManager()
+        post_manager = self.manager_factory.create_post_manager()
         subforum_manager = self.manager_factory.create_subforum_manager()
 
         try:

@@ -13,7 +13,7 @@ class SubforumRoute(AbstractBlueprintWrapper):
         self.route("/<title>/<int:page>", self.subforum)
 
     def subforum(self, title: str | None = None, page: int = 0):
-        post_manager = PostManager()
+        post_manager = self.manager_factory.create_post_manager()
         subforum_manager = self.manager_factory.create_subforum_manager()
 
         try:

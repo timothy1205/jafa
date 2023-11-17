@@ -11,7 +11,7 @@ class PostRoute(AbstractBlueprintWrapper):
         self.route("/<post_id>/", self.post)
 
     def post(self, post_id: str):
-        post_manager = PostManager()
+        post_manager = self.manager_factory.create_post_manager()
 
         try:
             post = post_manager.get_post(post_id)
