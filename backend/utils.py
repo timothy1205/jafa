@@ -111,16 +111,3 @@ def make_blueprint(name: str, import_name: str, url_prefix: str | None = None):
     return Blueprint(name, import_name, url_prefix=url_prefix)
 
 
-def set_data_wrapper(data: dict):
-    """Return a set_data function with that updates the given data dict.
-
-    Used in testing.
-    """
-    data["args"] = None
-    data["kwargs"] = None
-
-    def set_data(*args, **kwargs):
-        data["args"] = args
-        data["kwargs"] = kwargs
-
-    return set_data

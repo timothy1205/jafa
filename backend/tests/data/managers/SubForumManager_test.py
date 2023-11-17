@@ -7,7 +7,7 @@ from backend.data.models.SubForumModel import SubForum, SubForumModel
 from backend.tests import assertTimeInRange
 from backend.tests.data.managers import TestModelFactory
 from backend.tests.data.managers.PostManager_test import TestPostModel
-from backend.utils import set_data_wrapper
+from backend.tests import set_data_wrapper
 
 
 class TestSubForumModel(SubForumModel):
