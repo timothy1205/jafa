@@ -1,12 +1,8 @@
-import unittest
-
-from backend.app import create_app
-from backend.blueprints.routes.RootRoute import RootRoute
 from backend.blueprints.routes.SubforumRoute import SubforumRoute
 from backend.data.managers.PostMananger import InvalidPageError
 from backend.data.managers.SubForumManager import NoSubForumFoundError
 from backend.tests.blueprints import (
-    TestManagerFactory,
+    BlueprintTestCase,
     blueprint_test_raise,
     setup_test_context,
 )
@@ -14,12 +10,9 @@ from backend.tests.blueprints.api.PostAPI_test import TestPostManager
 from backend.tests.blueprints.api.SubforumAPI_test import TestSubForumManager
 
 
-class SubForumRouteTestCase(unittest.TestCase):
+class SubForumRouteTestCase(BlueprintTestCase):
     def setUp(self):
-        self.app = create_app()
-        self.test_client = self.app.test_client()
-
-        self.test_manager_factory = TestManagerFactory()
+        super().setUp()
 
         self.post_manger = TestPostManager()
         self.test_manager_factory.create_post_manager = lambda: self.post_manger

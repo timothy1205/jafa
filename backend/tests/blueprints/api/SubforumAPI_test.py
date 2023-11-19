@@ -1,6 +1,3 @@
-import unittest
-
-from backend.app import create_app
 from backend.blueprints.api.SubforumAPI import SubforumAPI
 from backend.data.managers.SubForumManager import (
     InvalidSubForumDescription,
@@ -13,7 +10,7 @@ from backend.data.managers.SubForumManager import (
 )
 from backend.data.models.SubForumModel import SubForum
 from backend.tests.blueprints import (
-    TestManagerFactory,
+    BlueprintTestCase,
     blueprint_test_fail,
     blueprint_test_raise,
     blueprint_test_success,
@@ -47,12 +44,9 @@ class TestSubForumManager(SubForumManager):
         pass
 
 
-class SubForumEndpointTestCase(unittest.TestCase):
+class SubForumEndpointTestCase(BlueprintTestCase):
     def setUp(self):
-        self.app = create_app()
-        self.test_client = self.app.test_client()
-
-        self.test_manager_factory = TestManagerFactory()
+        super().setUp()
 
         self.subforum_manager = TestSubForumManager()
         self.test_manager_factory.create_subforum_manager = (

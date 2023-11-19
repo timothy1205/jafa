@@ -1,13 +1,25 @@
-from typing import Callable
 import unittest
+from typing import Callable
+
 from flask import Flask, session
-from backend.tests import setup_test_context
+
+from backend.app import create_app
 from backend.constants import DATA
 from backend.data.managers.AbstractManagerFactory import AbstractManagerFactory
 from backend.data.managers.PostMananger import PostManager
 from backend.data.managers.SubForumManager import SubForumManager
 from backend.data.managers.UserManager import UserManager
 from backend.data.managers.VoteManager import VoteManager
+from backend.JafaConfigClass import jafa_config
+from backend.tests import setup_test_context
+
+
+class BlueprintTestCase(unittest.TestCase):
+    def setUp(self):
+        jafa_config.testing = True
+        self.app = create_app()
+
+        self.test_manager_factory = TestManagerFactory()
 
 
 class TestManagerFactory(AbstractManagerFactory):

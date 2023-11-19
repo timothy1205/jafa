@@ -1,6 +1,3 @@
-import unittest
-
-from backend.app import create_app
 from backend.blueprints.api.PostAPI import PostAPI
 from backend.data.managers.PostMananger import (
     InvalidPostBody,
@@ -22,7 +19,7 @@ from backend.data.managers.VoteManager import (
 from backend.data.models.PostModel import Post
 from backend.data.models.VoteModel import ContentType, Vote
 from backend.tests.blueprints import (
-    TestManagerFactory,
+    BlueprintTestCase,
     blueprint_test_fail,
     blueprint_test_raise,
     blueprint_test_success,
@@ -100,12 +97,9 @@ class TestVoteManager(VoteManager):
         pass
 
 
-class PostEndpointTestCase(unittest.TestCase):
+class PostEndpointTestCase(BlueprintTestCase):
     def setUp(self):
-        self.app = create_app()
-        self.test_client = self.app.test_client()
-
-        self.test_manager_factory = TestManagerFactory()
+        super().setUp()
 
         self.post_manager = TestPostManager()
         self.test_manager_factory.create_post_manager = lambda: self.post_manager
