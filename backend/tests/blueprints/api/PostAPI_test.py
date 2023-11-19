@@ -30,14 +30,8 @@ from backend.tests.blueprints import (
 from backend.utils import RolePermissionError
 
 
-def create_post(client, subforum, title, body):
-    return client.post(
-        CREATE_ENDPOINT, data=dict(subforum=subforum, title=title, body=body)
-    )
-
-
 class TestPostManager(PostManager):
-    def get_post(self, post_id: str) -> Post:
+    def get_post(self, post_id: str) -> Post:  # NOSONAR
         pass
 
     def create_post(
