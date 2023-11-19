@@ -6,7 +6,7 @@ from flask_cors import CORS
 from backend.blueprints.APIBlueprintManager import APIBlueprintManager
 from backend.blueprints.APIRouteManager import RouteBlueprintManager
 from backend.data.databases.DatabaseFactory import DatabaseFactory
-from backend.JafaConfig import JafaConfig
+from backend.JafaConfigClass import jafa_config
 
 
 def create_app() -> Flask:
@@ -16,11 +16,8 @@ def create_app() -> Flask:
     app = Flask(__name__)
     app.secret_key = token_hex(16)
 
-    # Load config
-    config = JafaConfig()
-
     # Initialize CORS
-    CORS(app, origins=config.cors_origins, supports_credentials=True)
+    CORS(app, origins=jafa_config.cors_origins, supports_credentials=True)
 
     # Register blueprint endpoints
     app.register_blueprint(APIBlueprintManager().get_blueprint())
@@ -32,13 +29,13 @@ def create_app() -> Flask:
         return "Jafa is running!"
 
     # Connect to database if we are not testing
-    if config.database_type != "testing":
-        database = DatabaseFactory.create_database(config.database_type)
+    if not jafa_config.testing:
+        database = DatabaseFactory.create_database(jafa_config.database_type)
         database.connect(
-            config.database_host,
-            config.database_port,
-            config.database_username,
-            config.database_password,
+            jafa_config.database_host,
+            jafa_config.database_port,
+            jafa_config.database_username,
+            jafa_config.database_password,
         )
         database.setup()
 
