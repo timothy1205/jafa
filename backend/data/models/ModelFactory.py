@@ -7,7 +7,7 @@ from backend.data.models.PostModel import PostModel
 from backend.data.models.SubForumModel import SubForumModel
 from backend.data.models.UserModel import UserModel
 from backend.data.models.VoteModel import VoteModel
-from backend.JafaConfig import JafaConfig
+from backend.JafaConfigClass import jafa_config
 
 
 class ModelFactory(AbstractModelFactory):
@@ -37,7 +37,7 @@ class ModelFactory(AbstractModelFactory):
         if ModelFactory._associations is None:
             ModelFactory.__setup_associations()
 
-        database = JafaConfig().database_type
+        database = jafa_config.database_type
         path = ModelFactory._associations[database + model_type + "model"]
         module = import_module(f"backend.data.models.{database}.{path}")
         return getattr(module, path)
