@@ -1,8 +1,5 @@
-import unittest
-
 from flask import session
 
-from backend.app import create_app
 from backend.blueprints.api.UserAPI import UserAPI
 from backend.constants import DATA
 from backend.data.managers.UserManager import (
@@ -13,7 +10,7 @@ from backend.data.managers.UserManager import (
 )
 from backend.data.models.UserModel import User
 from backend.tests.blueprints import (
-    TestManagerFactory,
+    BlueprintTestCase,
     blueprint_test_raise,
     setup_test_context,
 )
@@ -32,12 +29,9 @@ class TestUserManager(UserManager):
         pass
 
 
-class UserEndpointTestCase(unittest.TestCase):
+class UserEndpointTestCase(BlueprintTestCase):
     def setUp(self):
-        self.app = create_app()
-        self.test_client = self.app.test_client()
-
-        self.test_manager_factory = TestManagerFactory()
+        super().setUp()
 
         self.user_manager = TestUserManager()
         self.test_manager_factory.create_user_manager = lambda: self.user_manager
