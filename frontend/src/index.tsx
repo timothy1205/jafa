@@ -4,14 +4,14 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Experimental_CssVarsProvider as CssVarsProvider } from "@mui/material/styles";
-import "./index.css";
 import Base from "./routes/Base";
-import Root from "./routes/Root";
+import Root, { rootLoader } from "./routes/Root";
 import Subforum, { subforumLoader } from "./routes/Subforum";
 import reportWebVitals from "./reportWebVitals";
 import Login from "./routes/Login";
 import SubmitSubforum from "./routes/Submit/SubmitSubforum";
 import SubmitPost from "./routes/Submit/SubmitPost";
+import "./index.css";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -19,15 +19,15 @@ const root = ReactDOM.createRoot(
 
 const router = createBrowserRouter([
   {
-    path: "/",
     element: <Base />,
     children: [
       {
-        path: "",
+        path: "/:page?",
         element: <Root />,
+        loader: rootLoader,
       },
       {
-        path: "subforum/:subforum?",
+        path: "subforum/:subforum?/:page?",
         element: <Subforum />,
         loader: subforumLoader,
       },

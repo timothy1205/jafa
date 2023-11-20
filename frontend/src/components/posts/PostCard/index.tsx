@@ -22,7 +22,7 @@ interface PostCardProps {
   data: PostData;
 }
 
-export default function PostCard({ data }: PostCardProps) {
+export default function PostCard({ data }: Readonly<PostCardProps>) {
   return (
     <div className="postcard">
       <PostVote post_id={data.post_id} />
