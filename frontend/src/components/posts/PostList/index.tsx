@@ -1,32 +1,20 @@
-import React, { useEffect, useState } from "react";
-import { postList, handleError } from "../../../services/api";
 import PostCard, { PostData } from "../PostCard";
+import "./index.css";
 
 interface PostListProps {
-  subforum?: string;
+  posts?: Array<PostData>;
 }
 
-export default function PostList({ subforum }: PostListProps) {
-  const [posts, setPosts] = useState<Array<PostData>>([]);
-
-  useEffect(() => {
-    const getPostList = async () => {
-      try {
-        const res = await postList(subforum);
-        setPosts(res.data);
-      } catch (e) {
-        handleError(e);
-      }
-    };
-
-    getPostList();
-  }, [subforum]);
-
-  return (
-    <>
-      {posts.map((post) => (
-        <PostCard data={post} key={post.post_id}></PostCard>
-      ))}
-    </>
-  );
+export default function PostList({ posts }: Readonly<PostListProps>) {
+  if (posts && posts.length > 0) {
+    return (
+      <>
+        {posts.map((post) => (
+          <PostCard data={post} key={post.post_id}></PostCard>
+        ))}
+      </>
+    );
+  } else {
+    return <h1>No posts found...</h1>;
+  }
 }

@@ -12,9 +12,14 @@ export interface APIResponse {
 }
 
 const apiUrl = `${config.backendUrl}/api`;
+const routeUrl = `${config.backendUrl}/route`;
 
-export function postList(subforum?: string) {
-  return axios.get(`${apiUrl}/post/list`, { params: { subforum: subforum } });
+export function getRoot(page: number = 0) {
+  return axios.get(`${routeUrl}/root/${page}`);
+}
+
+export function getSubform(subforum: string, page: number = 0) {
+  return axios.get(`${routeUrl}/subforum/${subforum}/${page}`);
 }
 
 export function vote(post_id: string, is_like: boolean) {
