@@ -47,7 +47,7 @@ class UserManager(AbstractDataManager):
     def __valid_password(self, password: str):
         if not (PASSWORD_MIN <= len(password) <= PASSWORD_MAX):
             return False
-        if re.search("[\d]", password) is None:
+        if re.search("[\\d]", password) is None:
             return False
         if re.search("[A-Z]", password) is None:
             return False
