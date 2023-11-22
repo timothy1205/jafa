@@ -10,6 +10,7 @@ class JafaConfigClass:
     database_username: str | None
     database_password: str | None
     cors_origins: list[str]
+    testing: bool
 
     def __init__(self):
         self.database_type: str | None = os.getenv("DATABASE_TYPE")
