@@ -4229,22 +4229,22 @@ electron-to-chromium@^1.4.601:
   integrity sha512-X4ze/9Sc3QWs6h92yerwqv7aB/uU8vCjZcrMjA8N9R1pjMFRe44dLsck5FzLilOYvcXuDn93B+bpGYyufc70gQ==
 
 embla-carousel-react@^8.0.0-rc12:
-  version "8.0.0-rc15"
-  resolved "https://registry.yarnpkg.com/embla-carousel-react/-/embla-carousel-react-8.0.0-rc15.tgz#1f5528256896f5b9a8a49c743d56a522519d47e7"
-  integrity sha512-PePOkyPMWsUDNJKYRhUmGScYhex9mfpEiYiKT8OgwP/4K60plW0qk8cAXWvS9N61A/3RkUq7uz+hQsmhAtYMcA==
+  version "8.0.0-rc17"
+  resolved "https://registry.yarnpkg.com/embla-carousel-react/-/embla-carousel-react-8.0.0-rc17.tgz#277d4212eb95b6a29898b65660efe60d2075aa3a"
+  integrity sha512-x4aFprwFB+PQO9EsHHZsrDxARb0uYNBYn9mr5oDFdBdPez4M8G1r5yidWbUcT9pNUc8AQXC9sGzlfauBfBxVOw==
   dependencies:
-    embla-carousel "8.0.0-rc15"
-    embla-carousel-reactive-utils "8.0.0-rc15"
+    embla-carousel "8.0.0-rc17"
+    embla-carousel-reactive-utils "8.0.0-rc17"
 
-embla-carousel-reactive-utils@8.0.0-rc15:
-  version "8.0.0-rc15"
-  resolved "https://registry.yarnpkg.com/embla-carousel-reactive-utils/-/embla-carousel-reactive-utils-8.0.0-rc15.tgz#29309e19657944bc3fb6a908a2da5675c7d2a325"
-  integrity sha512-17Pr+N2vULFS8Lxzi2jaebwVloiFJLpdJMJLKJKQ26NzEmX8pVtHSu3uuTWc8HPwye5HFugqCPJ2QoWWhKs6Kg==
+embla-carousel-reactive-utils@8.0.0-rc17:
+  version "8.0.0-rc17"
+  resolved "https://registry.yarnpkg.com/embla-carousel-reactive-utils/-/embla-carousel-reactive-utils-8.0.0-rc17.tgz#a94934fdce7faa7464581d6c9f10d9e8ed63ca42"
+  integrity sha512-eluEOK/u5HdjYaTLC4bUG3iTCnyX7RsYix3il0aH4ZECOKa5fS+pVK2vrM17Mgw6C5Hyjcr3r3lfJtGerVzVsQ==
 
-embla-carousel@8.0.0-rc15:
-  version "8.0.0-rc15"
-  resolved "https://registry.yarnpkg.com/embla-carousel/-/embla-carousel-8.0.0-rc15.tgz#68e269bb1ead1422aa3078401947f0d85c6e1671"
-  integrity sha512-s7VPexK2h8VEYjEVQFnJAPcRnY5YqJYicFxKVVyWXP3Hk9FFDkT0kqVxMM1PcL187qHOUgmGVHOrfC8xWy3OKQ==
+embla-carousel@8.0.0-rc17:
+  version "8.0.0-rc17"
+  resolved "https://registry.yarnpkg.com/embla-carousel/-/embla-carousel-8.0.0-rc17.tgz#146dc802d8742b88834ac7ea34416b0f0e983e93"
+  integrity sha512-evF49b88VOitvqFtlvhvKVSu96Y8A+QSFdhok87Bfm8R7OYuk95FT+o8+M1GQLi/EhGDUlT193HTVAR0Wt2neQ==
 
 emittery@^0.10.2:
   version "0.10.2"
