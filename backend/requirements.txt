@@ -11,5 +11,5 @@ MarkupSafe==2.1.5
 Werkzeug==3.0.3
 zope.event==5.0
 zope.interface==6.3
-pymongo==4.7.1
+pymongo==4.7.2
 flask-cors==4.0.1
