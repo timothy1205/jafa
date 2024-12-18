@@ -4293,22 +4293,22 @@ electron-to-chromium@^1.5.4:
   integrity sha512-mBhODedOXg4v5QWwl21DjM5amzjmI1zw9EPrPK/5Wx7C8jt33bpZNrC7OhHUG3pxRtbLpr3W2dXT+Ph1SsfRZA==
 
 embla-carousel-react@^8.0.0-rc12:
-  version "8.3.0"
-  resolved "https://registry.yarnpkg.com/embla-carousel-react/-/embla-carousel-react-8.3.0.tgz#8aa6b9b77c3e900349a7215cb31b7ead6a84a715"
-  integrity sha512-P1FlinFDcIvggcErRjNuVqnUR8anyo8vLMIH8Rthgofw7Nj8qTguCa2QjFAbzxAUTQTPNNjNL7yt0BGGinVdFw==
+  version "8.5.1"
+  resolved "https://registry.yarnpkg.com/embla-carousel-react/-/embla-carousel-react-8.5.1.tgz#e06ff28cb53698d453ffad89423c23d725e9b010"
+  integrity sha512-z9Y0K84BJvhChXgqn2CFYbfEi6AwEr+FFVVKm/MqbTQ2zIzO1VQri6w67LcfpVF0AjbhwVMywDZqY4alYkjW5w==
   dependencies:
-    embla-carousel "8.3.0"
-    embla-carousel-reactive-utils "8.3.0"
+    embla-carousel "8.5.1"
+    embla-carousel-reactive-utils "8.5.1"
 
-embla-carousel-reactive-utils@8.3.0:
-  version "8.3.0"
-  resolved "https://registry.yarnpkg.com/embla-carousel-reactive-utils/-/embla-carousel-reactive-utils-8.3.0.tgz#75f177ed2f6bdafbaab8f869f936692d08cd488e"
-  integrity sha512-EYdhhJ302SC4Lmkx8GRsp0sjUhEN4WyFXPOk0kGu9OXZSRMmcBlRgTvHcq8eKJE1bXWBsOi1T83B+BSSVZSmwQ==
+embla-carousel-reactive-utils@8.5.1:
+  version "8.5.1"
+  resolved "https://registry.yarnpkg.com/embla-carousel-reactive-utils/-/embla-carousel-reactive-utils-8.5.1.tgz#3059ab2f72f04988a96694f700a772a72bb75ffb"
+  integrity sha512-n7VSoGIiiDIc4MfXF3ZRTO59KDp820QDuyBDGlt5/65+lumPHxX2JLz0EZ23hZ4eg4vZGUXwMkYv02fw2JVo/A==
 
-embla-carousel@8.3.0:
-  version "8.3.0"
-  resolved "https://registry.yarnpkg.com/embla-carousel/-/embla-carousel-8.3.0.tgz#dc27c63c405aa98320cb36893e4be2fbdc787ee1"
-  integrity sha512-Ve8dhI4w28qBqR8J+aMtv7rLK89r1ZA5HocwFz6uMB/i5EiC7bGI7y+AM80yAVUJw3qqaZYK7clmZMUR8kM3UA==
+embla-carousel@8.5.1:
+  version "8.5.1"
+  resolved "https://registry.yarnpkg.com/embla-carousel/-/embla-carousel-8.5.1.tgz#8d83217e831666f6df573b0d3727ff0ae9208002"
+  integrity sha512-JUb5+FOHobSiWQ2EJNaueCNT/cQU9L6XWBbWmorWPQT9bkbk+fhsuLr8wWrzXKagO3oWszBO7MSx+GfaRk4E6A==
 
 emittery@^0.10.2:
   version "0.10.2"
