@@ -1,6 +1,6 @@
 bcrypt==4.3.0
 blinker==1.9.0
-click==8.3.0
+click==8.3.1
 Flask==3.1.2
 gevent==23.9.1
 greenlet==3.2.4
