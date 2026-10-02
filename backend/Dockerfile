@@ -1,5 +1,5 @@
 # For more information, please refer to https://aka.ms/vscode-docker-python
-FROM python:3.13-alpine
+FROM python:3.14-alpine
 
 #Install all dependencies.
 RUN apk add --no-cache net-tools 
